@@ -1,5 +1,9 @@
 # AI Builder Skills
 
+![Claude Code](https://img.shields.io/badge/Claude_Code-compatible-blue)
+![Codex](https://img.shields.io/badge/Codex-compatible-orange)
+![License: MIT](https://img.shields.io/github/license/aimonj0729-ai/ai-builder-skills)
+
 Practical Claude Code and Codex skills for indie builders who want to turn fast-moving GitHub trends into product ideas, PRDs, issues, and launch-ready projects.
 
 This is not a prompt dump. Each skill is a reusable workflow for a real builder pain:
@@ -9,6 +13,28 @@ This is not a prompt dump. Each skill is a reusable workflow for a real builder 
 - PRDs that do not turn into buildable issues.
 - GitHub projects that look useful but are not packaged well enough to earn trust.
 - Recurring agent workflows that should become installable skills.
+
+## Who Is This For
+
+- **Indie builders** who ship side projects and want to move from "interesting repo" to "launched product" faster.
+- **AI product makers** who need repeatable workflows instead of blank chat boxes.
+- **Technical operators** who want useful leverage without building a heavy platform first.
+
+Most prompt packs stop at ideation. This package connects the full path from trend discovery to public launch.
+
+## Pipeline
+
+These skills chain into a discovery-to-launch pipeline:
+
+```
+github-radar ──> trend-to-product ──> idea-to-prd ──> prd-to-issues ──> [build] ──> launch-readiness
+  (scan)            (shape)             (scope)          (plan)                        (audit)
+
+                              workflow-to-skill
+                      (meta: package any step as a new skill)
+```
+
+You can use each skill standalone, or chain them for end-to-end product development.
 
 ## Skills
 
@@ -30,22 +56,35 @@ git clone https://github.com/aimonj0729-ai/ai-builder-skills.git
 cd ai-builder-skills
 ```
 
-Install into the common agent skills directory:
+Install into Claude Code commands:
 
 ```bash
-./scripts/install.sh
+./scripts/install.sh --claude
 ```
 
-Install into Codex's user skills directory instead:
+Install into Codex skills:
 
 ```bash
 ./scripts/install.sh --codex
 ```
 
+Install into the common agent skills directory (default):
+
+```bash
+./scripts/install.sh
+```
+
 Install into a custom directory:
 
 ```bash
-./scripts/install.sh ~/.agents/skills
+./scripts/install.sh ~/my-skills
+```
+
+Uninstall:
+
+```bash
+./scripts/install.sh --uninstall
+./scripts/install.sh --uninstall --claude
 ```
 
 Restart your agent after installing so it reloads skill metadata.
@@ -89,11 +128,24 @@ Use `workflow-to-skill`:
 Turn my daily research workflow into a reusable Codex/Claude skill with a concise SKILL.md.
 ```
 
-## Positioning
+### Chained Example
 
-AI coding agents are moving from "chat with a model" toward "install a workflow." This repo focuses on the layer most builders can actually own: sharp, repeatable skills that help people decide what to build, scope it, ship it, and present it well.
+Start from a trend and reach launch in five steps:
 
-The target user is an indie builder, AI product maker, or technical operator who wants useful leverage without building a heavy platform first.
+1. *"Scan today's GitHub Trending for AI coding agent opportunities."*
+2. *"Take the top opportunity from the radar report and shape it into a product brief."*
+3. *"Turn that product brief into a lean PRD."*
+4. *"Break the PRD into GitHub issues for a weekend first release."*
+5. *"Audit the repo for launch readiness before I post it."*
+
+## Examples
+
+The `examples/` directory contains sample outputs from real skill runs:
+
+- [GitHub Radar Report](examples/github-radar-report.md) — Trend scan identifying builder opportunities.
+- [Product Brief](examples/product-brief.md) — Trend-to-product output for this skill pack.
+- [PRD to Issues](examples/prd-to-issues.md) — PRD broken into implementation issues.
+- [Launch Readiness Audit](examples/launch-readiness.md) — Pre-launch repository audit.
 
 ## Design Principles
 
@@ -109,6 +161,10 @@ The target user is an indie builder, AI product maker, or technical operator who
 - Add a `demo-script` skill for turning a project into a short launch video script.
 - Add a `skill-evaluator` skill for testing whether a skill triggers correctly and produces useful output.
 - Add example reports from real GitHub Trending days.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding or improving skills.
 
 ## License
 

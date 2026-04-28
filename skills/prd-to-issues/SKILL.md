@@ -35,6 +35,8 @@ One paragraph describing what ships first.
 ### 1. Title
 
 Labels: `feature`, `mvp`
+Size: S / M / L
+Priority: P0 / P1 / P2
 
 Goal:
 
@@ -53,3 +55,17 @@ Dependencies:
 - Avoid vague tasks like "improve UX" or "add backend".
 - Keep the first issue small enough to start immediately.
 - Include docs and launch tasks when the project is public-facing.
+- Size S: under 2 hours. Size M: half day. Size L: full day or split further.
+- P0: blocks the first slice. P1: needed for launch. P2: nice to have.
+
+## Milestone Grouping
+
+Group issues into milestones when there is a natural release boundary:
+
+- **v0.1 (First Slice):** The smallest set of issues that proves the product promise.
+- **v0.2 (Polish):** Issues that improve quality, error handling, and edge cases.
+- **v1.0 (Launch):** Docs, examples, install path, and public-facing issues.
+
+## Next Step
+
+After building, run `launch-readiness` to audit the repository for README quality, install experience, trust signals, and conversion gaps before publishing.

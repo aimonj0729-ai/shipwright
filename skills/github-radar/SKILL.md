@@ -71,3 +71,7 @@ Name one concrete project, skill, workflow, or repo to create next.
 - If a repo is infrastructure, ask what smaller vertical version can exist.
 - If a repo is a skill collection, identify which skill has the clearest install-worthy pain.
 - Do not recommend copying brands, code, secrets, or restricted platform behavior.
+
+## Next Step
+
+Feed the best opportunity from your radar report into `trend-to-product` to shape it into a differentiated product idea with MVP scope.

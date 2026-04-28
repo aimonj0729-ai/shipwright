@@ -52,3 +52,7 @@ description: Use when ...
 - A skill that explains concepts the model already knows.
 - A skill that silently changes secrets, credentials, git history, or production systems.
 - A skill with ten outputs when the user needs one decision.
+
+## Context
+
+This is a meta-skill. Use it at any point in the pipeline when a repeated workflow should become an installable skill instead of a one-off prompt.

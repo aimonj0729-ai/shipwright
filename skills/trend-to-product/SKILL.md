@@ -18,6 +18,8 @@ Use this skill when the user has a trend or repository and wants to know what th
    - CLI.
    - MCP server.
    - Browser extension.
+   - Mobile app.
+   - Marketplace plugin or platform extension.
    - Dashboard.
    - SaaS.
    - Template repo.
@@ -69,3 +71,7 @@ Build steps in order.
 - Do not suggest illegal, unsafe, deceptive, or ToS-bypassing products.
 - Do not overfit to stars. Explain the customer pain behind the stars.
 - Favor projects that can earn trust with a clear README, example, and install path.
+
+## Next Step
+
+Take the product opportunity and pass it to `idea-to-prd` to create a lean PRD with user stories, requirements, and acceptance criteria.

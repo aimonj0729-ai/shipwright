@@ -54,3 +54,7 @@ If important details are missing, make reasonable assumptions and label them.
 - Requirements should describe behavior, not implementation guesses.
 - Acceptance criteria should be testable.
 - Keep one clear user in mind. Avoid "for everyone".
+
+## Next Step
+
+Hand the PRD to `prd-to-issues` to break it into GitHub-ready implementation issues ordered for a shippable first release.

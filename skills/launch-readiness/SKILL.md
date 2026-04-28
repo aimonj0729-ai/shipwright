@@ -20,6 +20,7 @@ Check the project from a first-time visitor's point of view:
 - Examples: realistic enough to show value.
 - Differentiation: explains why this exists.
 - Contribution path: issues, roadmap, or extension points.
+- Social launch: draft tweet thread, Hacker News post angle, Reddit post framing.
 
 ## Output Format
 
@@ -44,6 +45,12 @@ Ready / Almost ready / Not ready.
 
 Specific sections or copy to improve.
 
+## Social Launch Prep
+
+- Twitter/X thread: 3-5 tweets covering problem, solution, demo, and ask.
+- Hacker News: Show HN title and opening paragraph angle.
+- Reddit: subreddit targets and post framing.
+
 ## Launch Checklist
 
 - [ ] Item
@@ -55,3 +62,7 @@ Specific sections or copy to improve.
 - A project without a quickstart is not launch-ready.
 - A skill pack should include example prompts.
 - A developer tool should include at least one realistic input and output.
+
+## Related
+
+If you find yourself repeating any part of this audit as a workflow, use `workflow-to-skill` to package it as a reusable skill.
