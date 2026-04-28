@@ -75,7 +75,7 @@ Acceptance Criteria:
 - launch-readiness produces a verdict, conversion gaps, quick wins, trust risks, and launch checklist.
 - workflow-to-skill produces a clean SKILL.md skeleton with trigger, workflow, output format, and guardrails.
 
-Verification: Run launch-readiness against the ai-builder-skills repo itself. Use workflow-to-skill to package a sample workflow.
+Verification: Run launch-readiness against the shipwright repo itself. Use workflow-to-skill to package a sample workflow.
 
 Dependencies: None.
 

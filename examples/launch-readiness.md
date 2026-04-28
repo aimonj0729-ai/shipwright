@@ -1,6 +1,6 @@
 # Example: Launch Readiness Audit
 
-Project: ai-builder-skills
+Project: shipwright
 
 ## Launch Verdict
 
@@ -41,7 +41,7 @@ Almost ready. The core skills are solid and the pipeline concept is strong. The 
   4. Works with Claude Code and Codex. MIT licensed. Install in one command.
   5. Link to repo. "What workflow would you turn into a skill?"
 
-- **Hacker News:** "Show HN: AI Builder Skills — Claude Code skills for turning GitHub trends into shippable products"
+- **Hacker News:** "Show HN: Shipwright — Claude Code skills for turning GitHub trends into shippable products"
   Opening: "I kept doing the same thing every time I saw a hot repo: check if it's real, think about what I could build, scope a PRD, break it into issues, then forget to audit before posting. So I packaged each step as a reusable skill."
 
 - **Reddit:** Post to r/ClaudeAI, r/SideProject, r/indiehackers. Frame as "I packaged my product discovery workflow into installable skills" rather than "I made a prompt collection."

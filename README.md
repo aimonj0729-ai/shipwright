@@ -1,8 +1,8 @@
-# AI Builder Skills
+# Shipwright
 
 ![Claude Code](https://img.shields.io/badge/Claude_Code-compatible-blue)
 ![Codex](https://img.shields.io/badge/Codex-compatible-orange)
-![License: MIT](https://img.shields.io/github/license/aimonj0729-ai/ai-builder-skills)
+![License: MIT](https://img.shields.io/github/license/aimonj0729-ai/shipwright)
 
 Practical Claude Code and Codex skills for indie builders who want to turn fast-moving GitHub trends into product ideas, PRDs, issues, and launch-ready projects.
 
@@ -52,8 +52,8 @@ You can use each skill standalone, or chain them for end-to-end product developm
 Clone the repo:
 
 ```bash
-git clone https://github.com/aimonj0729-ai/ai-builder-skills.git
-cd ai-builder-skills
+git clone https://github.com/aimonj0729-ai/shipwright.git
+cd shipwright
 ```
 
 Install into Claude Code commands:

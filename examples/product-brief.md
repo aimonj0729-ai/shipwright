@@ -26,7 +26,7 @@ Most prompt packs stop at ideation. This package connects the full path from tre
 
 ## GitHub Launch Shape
 
-Repo name: `ai-builder-skills`
+Repo name: `shipwright`
 
 Promise: Practical Claude Code and Codex skills for turning trends into shippable products.
 

@@ -7,7 +7,7 @@ usage() {
   cat <<'USAGE'
 Usage: install.sh [OPTIONS] [DIRECTORY]
 
-Install ai-builder-skills into your agent's skill directory.
+Install Shipwright skills into your agent's skill directory.
 
 Options:
   --claude      Install into Claude Code commands (~/.claude/commands/)
