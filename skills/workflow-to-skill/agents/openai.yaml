@@ -1,0 +1,7 @@
+interface:
+  display_name: "Workflow To Skill"
+  short_description: "Package repeated agent workflows as installable skills"
+  brand_color: "#DB2777"
+  default_prompt: "Turn this repeated workflow into a concise installable skill"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Idea To PRD"
+  short_description: "Convert rough ideas into lean, buildable product specs"
+  brand_color: "#2563EB"
+  default_prompt: "Turn this idea into a lean PRD with scope, requirements, and acceptance criteria"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Trend To Product"
+  short_description: "Turn a hot repo or trend into a differentiated product idea"
+  brand_color: "#F97316"
+  default_prompt: "Analyze this trend as a product opportunity and define a focused MVP"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "GitHub Radar"
+  short_description: "Find useful tools and product ideas in GitHub trends"
+  brand_color: "#0EA5A4"
+  default_prompt: "Scan today's GitHub trends and tell me what is worth using, emulating, or ignoring"
+policy:
+  allow_implicit_invocation: true
