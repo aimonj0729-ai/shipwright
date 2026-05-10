@@ -6,7 +6,8 @@
     "type": "static-product-demo",
     "path": "site",
     "local_preview": "python3 -m http.server 4173 --directory site",
-    "github_pages_url": "https://aimonj0729-ai.github.io/shipwright/",
+    "live_url": "https://shipwright-launch.vercel.app",
+    "deployment": "vercel",
     "notes": "Prototype landing page and analyzer demo; executable audit workflows live under skills/."
   },
   "skills": [
