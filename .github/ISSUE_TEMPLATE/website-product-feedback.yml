@@ -1,0 +1,47 @@
+name: Website or product feedback
+description: Share feedback about the website, docs, positioning, or product experience.
+title: "[Feedback]: "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to share feedback. Specific examples help us improve faster.
+  - type: input
+    id: location
+    attributes:
+      label: Where did you notice this?
+      description: Add a page, feature, section, or link if possible.
+      placeholder: "Example: homepage hero, skill detail page, README install steps"
+    validations:
+      required: true
+  - type: dropdown
+    id: feedback_type
+    attributes:
+      label: Feedback type
+      options:
+        - "Clarity or copy"
+        - "Design or usability"
+        - "Documentation"
+        - "Product idea"
+        - "Other"
+    validations:
+      required: true
+  - type: textarea
+    id: feedback
+    attributes:
+      label: What should change?
+      description: Tell us what felt confusing, missing, broken, or worth improving.
+      placeholder: "I expected ..., but ..."
+    validations:
+      required: true
+  - type: textarea
+    id: positive
+    attributes:
+      label: What worked well?
+      description: Optional, but helpful so we preserve the good parts.
+  - type: textarea
+    id: context
+    attributes:
+      label: Extra context
+      description: Add screenshots, links, examples, or your user role if relevant.

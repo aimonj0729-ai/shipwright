@@ -1,0 +1,47 @@
+name: Skill request
+description: Suggest a new skill or an improvement to an existing skill.
+title: "[Skill Request]: "
+labels: ["enhancement", "skill-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tell us what workflow you want Shipwright to support. Rough ideas are welcome.
+  - type: input
+    id: skill_name
+    attributes:
+      label: Skill name or topic
+      placeholder: "Example: launch-readiness, browser QA, Stripe setup"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What job should this skill help users complete?
+      placeholder: "When I am trying to ..., I need help with ..."
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_behavior
+    attributes:
+      label: Proposed skill behavior
+      description: Describe the inputs, workflow, or output you would expect.
+      placeholder: "The skill should guide the agent to ..."
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example use cases
+      description: Share prompts, repositories, tools, or real scenarios this should support.
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Are you open to contributing?
+      options:
+        - "Yes, I can open a PR"
+        - "Yes, with guidance"
+        - "Not right now"
+    validations:
+      required: true

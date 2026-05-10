@@ -1,7 +1,14 @@
 {
   "name": "shipwright",
   "description": "Claude Code and Codex skills for turning trends into products and shipping trustworthy GitHub projects.",
-  "version": "0.2.0",
+  "version": "0.3.0",
+  "website": {
+    "type": "static-product-demo",
+    "path": "site",
+    "local_preview": "python3 -m http.server 4173 --directory site",
+    "github_pages_url": "https://aimonj0729-ai.github.io/shipwright/",
+    "notes": "Prototype landing page and analyzer demo; executable audit workflows live under skills/."
+  },
   "skills": [
     {
       "name": "github-radar",
