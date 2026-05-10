@@ -112,9 +112,10 @@ body {
   color: var(--ink);
   font-family: "IBM Plex Sans", "Helvetica Neue", sans-serif;
   background:
-    radial-gradient(circle at 12% 10%, rgba(224, 163, 49, 0.35), transparent 24rem),
-    radial-gradient(circle at 80% 12%, rgba(15, 118, 110, 0.24), transparent 28rem),
-    linear-gradient(135deg, #f5eddd 0%, #e8dcc8 48%, #d7c9af 100%);
+    radial-gradient(circle at 12% 10%, var(--bg-body-glow-a), transparent 24rem),
+    radial-gradient(circle at 80% 12%, var(--bg-body-glow-b), transparent 28rem),
+    var(--bg-body);
+  transition: background 300ms ease, color 300ms ease;
 }
 
 body::before {
@@ -123,8 +124,8 @@ body::before {
   z-index: -2;
   content: "";
   background-image:
-    linear-gradient(rgba(31, 42, 39, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(31, 42, 39, 0.08) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: linear-gradient(to bottom, black, transparent 80%);
 }
@@ -147,9 +148,14 @@ select {
   pointer-events: none;
   opacity: 0.22;
   background-image:
-    repeating-radial-gradient(circle at 30% 20%, rgba(23, 32, 29, 0.16) 0 1px, transparent 1px 5px),
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 8px);
+    repeating-radial-gradient(circle at 30% 20%, var(--grain-a) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(45deg, var(--grain-b) 0 1px, transparent 1px 8px);
   mix-blend-mode: multiply;
+}
+
+[data-theme="dark"] .grain {
+  opacity: 0.12;
+  mix-blend-mode: screen;
 }
 
 /* ── Header ── */
