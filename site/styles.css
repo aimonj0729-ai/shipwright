@@ -72,6 +72,8 @@ select {
   mix-blend-mode: multiply;
 }
 
+/* ── Header ── */
+
 .site-header {
   position: sticky;
   top: 0;
@@ -123,6 +125,7 @@ select {
   border-radius: 999px;
   font-size: 0.94rem;
   font-weight: 700;
+  transition: color 140ms ease, background 140ms ease;
 }
 
 .nav-links a:hover {
@@ -130,10 +133,14 @@ select {
   background: rgba(255, 247, 231, 0.78);
 }
 
+/* ── Layout ── */
+
 .section-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
 }
+
+/* ── Hero ── */
 
 .hero {
   display: grid;
@@ -212,6 +219,8 @@ h4 {
   align-items: center;
 }
 
+/* ── Buttons ── */
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -227,6 +236,11 @@ h4 {
 
 .button:hover {
   transform: translateY(-2px);
+}
+
+.button:active {
+  transform: translateY(0);
+  transition-duration: 60ms;
 }
 
 .button:focus-visible,
@@ -252,6 +266,11 @@ select:focus-visible {
   background: rgba(255, 247, 231, 0.68);
 }
 
+.button.ghost:hover {
+  border-color: rgba(31, 42, 39, 0.3);
+  background: rgba(255, 247, 231, 0.92);
+}
+
 .button.full {
   width: 100%;
 }
@@ -261,6 +280,8 @@ select:focus-visible {
   padding: 0 14px;
   font-size: 0.9rem;
 }
+
+/* ── Signal strip ── */
 
 .signal-strip {
   display: grid;
@@ -291,6 +312,8 @@ select:focus-visible {
   font-weight: 700;
 }
 
+/* ── Shared card styles ── */
+
 .inspection-card,
 .audit-form,
 .report-panel,
@@ -303,6 +326,8 @@ select:focus-visible {
   background: rgba(255, 247, 231, 0.72);
   box-shadow: var(--shadow);
 }
+
+/* ── Inspection card (hero) ── */
 
 .inspection-card {
   position: relative;
@@ -417,6 +442,8 @@ select:focus-visible {
   box-shadow: inset 0 0 0 2px rgba(224, 163, 49, 0.64);
 }
 
+/* ── Lists ── */
+
 .inspection-list,
 .finding-list,
 .check-list {
@@ -465,6 +492,8 @@ select:focus-visible {
   background: var(--amber);
 }
 
+/* ── Pain section ── */
+
 .pain-grid,
 .usage-guide,
 .workflow,
@@ -491,6 +520,14 @@ select:focus-visible {
 .workflow-steps article {
   padding: 24px;
   border-radius: var(--radius-md);
+  transition: transform 240ms ease, box-shadow 240ms ease;
+}
+
+.pain-cards article:hover,
+.guide-steps article:hover,
+.workflow-steps article:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 32px 64px rgba(23, 32, 29, 0.14);
 }
 
 .pain-cards span,
@@ -518,6 +555,52 @@ select:focus-visible {
   line-height: 1.55;
 }
 
+/* ── Audience section ── */
+
+.audience {
+  padding: 72px 0;
+}
+
+.audience-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.audience-cards article {
+  padding: 24px;
+  border: 1px solid rgba(31, 42, 39, 0.14);
+  border-radius: var(--radius-md);
+  background: rgba(255, 247, 231, 0.72);
+  box-shadow: var(--shadow);
+  transition: transform 240ms ease, box-shadow 240ms ease;
+}
+
+.audience-cards article:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 32px 64px rgba(23, 32, 29, 0.14);
+}
+
+.audience-icon {
+  display: inline-grid;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 20px;
+  place-items: center;
+  color: var(--sea);
+  border: 2px solid rgba(15, 118, 110, 0.22);
+  border-radius: 14px;
+  background: rgba(223, 244, 234, 0.42);
+}
+
+.audience-cards p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+/* ── Guide section ── */
+
 .guide-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 0.56fr);
@@ -531,6 +614,14 @@ select:focus-visible {
 
 .guide-steps article {
   min-height: 100%;
+}
+
+.guide-steps code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(31, 42, 39, 0.08);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.88em;
 }
 
 .runbook-card {
@@ -596,6 +687,8 @@ select:focus-visible {
   text-transform: uppercase;
 }
 
+/* ── Analyzer section ── */
+
 .analyzer {
   padding: 84px 0;
 }
@@ -649,6 +742,19 @@ select:focus-visible {
   border-radius: 16px;
   color: var(--ink);
   background: rgba(255, 247, 231, 0.86);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.audit-form input[type="text"]:focus,
+.audit-form select:focus {
+  border-color: var(--sea);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+  outline: none;
+}
+
+.audit-form input[type="text"][aria-invalid="true"] {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(184, 74, 53, 0.12);
 }
 
 .audit-form fieldset {
@@ -688,11 +794,80 @@ select:focus-visible {
   font-size: 0.92rem;
 }
 
+/* ── Sample repo buttons ── */
+
+.sample-repos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.sample-label {
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sample-btn {
+  padding: 5px 10px;
+  border: 1px solid rgba(31, 42, 39, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 247, 231, 0.52);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.sample-btn:hover {
+  border-color: var(--sea);
+  background: rgba(223, 244, 234, 0.42);
+}
+
+.sample-btn:active {
+  background: rgba(223, 244, 234, 0.7);
+}
+
+/* ── Analyze button spinner ── */
+
+.btn-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(242, 234, 219, 0.3);
+  border-top-color: var(--paper);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.btn-spinner[hidden] {
+  display: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Report panel ── */
+
 .report-panel {
   padding: 24px;
   background:
     linear-gradient(135deg, rgba(255, 247, 231, 0.92), rgba(223, 244, 234, 0.62)),
     rgba(255, 247, 231, 0.7);
+  transition: opacity 300ms ease;
+}
+
+.report-panel.is-loading {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .report-panel:focus {
@@ -720,6 +895,7 @@ select:focus-visible {
   display: grid;
   width: 92px;
   height: 92px;
+  flex-shrink: 0;
   place-items: center;
   border: 10px solid rgba(15, 118, 110, 0.18);
   border-top-color: var(--sea);
@@ -728,6 +904,25 @@ select:focus-visible {
   font-family: "IBM Plex Mono", monospace;
   font-size: 1.4rem;
   font-weight: 800;
+  transition: transform 400ms ease;
+}
+
+.score-ring.pulse {
+  animation: ring-pulse 500ms ease;
+}
+
+@keyframes ring-pulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.6;
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .target-summary {
@@ -806,9 +1001,166 @@ select:focus-visible {
   background: rgba(242, 234, 219, 0.58);
 }
 
+/* ── Checks detail (accordion) ── */
+
+.checks-detail {
+  margin-top: 28px;
+  border: 1px solid rgba(31, 42, 39, 0.14);
+  border-radius: var(--radius-md);
+  background: rgba(255, 247, 231, 0.6);
+  overflow: hidden;
+}
+
+.checks-detail summary {
+  padding: 18px 24px;
+  cursor: pointer;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 140ms ease;
+}
+
+.checks-detail summary:hover {
+  background: rgba(255, 247, 231, 0.9);
+}
+
+.checks-detail summary::before {
+  content: "+";
+  display: inline-grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--iron);
+  color: var(--paper);
+  font-size: 1.1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: transform 200ms ease;
+}
+
+.checks-detail[open] summary::before {
+  content: "\2212";
+  transform: rotate(180deg);
+}
+
+.checks-detail summary::-webkit-details-marker {
+  display: none;
+}
+
+.checks-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  padding: 0 24px 24px;
+}
+
+.checks-grid div {
+  padding: 18px;
+  border: 1px solid rgba(31, 42, 39, 0.1);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 247, 231, 0.55);
+}
+
+.checks-grid ul {
+  margin: 0;
+  padding: 0 0 0 18px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+/* ── Workflow section ── */
+
 .workflow-steps {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
+
+/* ── Honesty section ── */
+
+.honesty {
+  padding: 0 0 72px;
+}
+
+.honesty-card {
+  padding: 40px;
+  border: 2px dashed rgba(31, 42, 39, 0.2);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 90% 80%, rgba(15, 118, 110, 0.08), transparent 16rem),
+    rgba(255, 247, 231, 0.5);
+}
+
+.honesty-card h2 {
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+}
+
+.honesty-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.honesty-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.honesty-list li {
+  position: relative;
+  padding-left: 22px;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.honesty-list li::before {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.honesty-list.does li::before {
+  content: "\2713";
+  color: var(--sea);
+}
+
+.honesty-list.does-not li::before {
+  content: "\2717";
+  color: var(--copper);
+}
+
+.honesty-footer {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.honesty-footer a {
+  color: var(--sea);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: rgba(15, 118, 110, 0.3);
+  text-underline-offset: 3px;
+}
+
+.honesty-footer a:hover {
+  text-decoration-color: var(--sea);
+}
+
+/* ── CTA section ── */
 
 .cta {
   margin-top: 34px;
@@ -829,10 +1181,34 @@ select:focus-visible {
   color: var(--amber);
 }
 
+.cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
 .cta .button.primary {
   color: var(--iron);
   background: var(--paper-strong);
 }
+
+.cta .button.primary:hover {
+  background: #fff;
+}
+
+.cta-ghost {
+  color: var(--paper) !important;
+  border-color: rgba(242, 234, 219, 0.28) !important;
+  background: transparent !important;
+}
+
+.cta-ghost:hover {
+  border-color: rgba(242, 234, 219, 0.5) !important;
+  background: rgba(242, 234, 219, 0.08) !important;
+}
+
+/* ── Footer ── */
 
 .site-footer {
   width: min(1180px, calc(100% - 32px));
@@ -849,13 +1225,29 @@ select:focus-visible {
   font-weight: 800;
 }
 
+/* ── Scroll reveal ── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 600ms ease, transform 600ms ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Responsive: tablet ── */
+
 @media (max-width: 960px) {
   .hero,
   .pain-grid,
   .section-heading,
   .guide-layout,
   .analyzer-grid,
-  .report-columns {
+  .report-columns,
+  .honesty-columns {
     grid-template-columns: 1fr;
   }
 
@@ -873,7 +1265,21 @@ select:focus-visible {
   .workflow-steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .audience-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .checks-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .honesty-card {
+    padding: 28px;
+  }
 }
+
+/* ── Responsive: mobile ── */
 
 @media (max-width: 680px) {
   .site-header {
@@ -899,14 +1305,17 @@ select:focus-visible {
   .signal-strip,
   .pain-cards,
   .guide-steps,
-  .workflow-steps {
+  .workflow-steps,
+  .audience-cards,
+  .checks-grid {
     grid-template-columns: 1fr;
   }
 
   .hero-actions,
   .report-actions,
   .target-summary,
-  .report-header {
+  .report-header,
+  .cta-actions {
     align-items: stretch;
     flex-direction: column;
   }
@@ -914,6 +1323,7 @@ select:focus-visible {
   .score-ring {
     width: 82px;
     height: 82px;
+    align-self: center;
   }
 
   .button {
@@ -928,9 +1338,22 @@ select:focus-visible {
     padding: 30px;
   }
 
+  .honesty-card {
+    padding: 22px;
+  }
+
   .site-footer {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .sample-repos {
+    gap: 6px;
+  }
+
+  .sample-btn {
+    font-size: 0.74rem;
+    padding: 4px 8px;
   }
 }
 
@@ -942,5 +1365,10 @@ select:focus-visible {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
 }

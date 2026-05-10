@@ -27,6 +27,7 @@
       <nav class="nav-links" aria-label="Primary navigation">
         <a href="#guide">Guide</a>
         <a href="#analyzer">Analyzer</a>
+        <a href="#audience">Who</a>
         <a href="#workflow">Workflow</a>
         <a href="https://github.com/aimonj0729-ai/shipwright">GitHub</a>
       </nav>
@@ -111,6 +112,43 @@
         </div>
       </section>
 
+      <section id="audience" class="audience section-shell" aria-labelledby="audience-title">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Who is this for</p>
+          <h2 id="audience-title">Built for builders who ship fast and want it to actually work.</h2>
+        </div>
+        <div class="audience-cards">
+          <article>
+            <div class="audience-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/></svg>
+            </div>
+            <h3>Vibe coders</h3>
+            <p>You built it with Claude, Cursor, or Copilot in a weekend. Before you tweet the link, make sure it survives a stranger clicking "Get started."</p>
+          </article>
+          <article>
+            <div class="audience-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <h3>Indie hackers</h3>
+            <p>You're launching on Product Hunt next week. Shipwright catches the broken mobile layout and missing env vars before your first users do.</p>
+          </article>
+          <article>
+            <div class="audience-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <h3>Open source maintainers</h3>
+            <p>Your README says "easy setup" but a new contributor gives up at step 3. Shipwright walks the install path like a stranger and reports where it breaks.</p>
+          </article>
+          <article>
+            <div class="audience-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <h3>AI skill / MCP authors</h3>
+            <p>Your skill pack or MCP server looks done in the editor. Shipwright checks trigger descriptions, install paths, and security boundaries before publish.</p>
+          </article>
+        </div>
+      </section>
+
       <section id="guide" class="usage-guide section-shell" aria-labelledby="guide-title">
         <div class="section-heading">
           <div>
@@ -129,7 +167,7 @@
               <span>01</span>
               <h3>Paste the thing you want to ship.</h3>
               <p>
-                Use a GitHub repo, `owner/repo`, a localhost URL, or a public demo URL.
+                Use a GitHub repo, <code>owner/repo</code>, a localhost URL, or a public demo URL.
                 Shipwright is built for web apps, skill packs, MCP servers, CLIs, and templates.
               </p>
             </article>
@@ -180,8 +218,10 @@
 
       <section id="analyzer" class="analyzer section-shell" aria-labelledby="analyzer-title">
         <div class="section-heading">
-          <p class="eyebrow">Static product demo</p>
-          <h2 id="analyzer-title">Generate a launch QA report.</h2>
+          <div>
+            <p class="eyebrow">Static product demo</p>
+            <h2 id="analyzer-title">Generate a launch QA report.</h2>
+          </div>
           <p>
             This browser demo models the product experience. The open-source skills in
             the repo are the executable workflow for real Codex and Claude Code audits.
@@ -203,6 +243,14 @@
             <p class="input-error" id="targetError" role="alert" hidden>
               Enter a GitHub repo URL, owner/repo, or http(s) demo URL.
             </p>
+
+            <div class="sample-repos">
+              <span class="sample-label">Try a sample:</span>
+              <button class="sample-btn" type="button" data-url="https://github.com/aimonj0729-ai/shipwright" data-type="skill">Skill pack</button>
+              <button class="sample-btn" type="button" data-url="https://github.com/vercel/next.js" data-type="web">Web app</button>
+              <button class="sample-btn" type="button" data-url="https://github.com/anthropics/anthropic-sdk-python" data-type="cli">CLI tool</button>
+              <button class="sample-btn" type="button" data-url="https://github.com/modelcontextprotocol/servers" data-type="mcp">MCP server</button>
+            </div>
 
             <label for="projectType">Project type</label>
             <select id="projectType" name="projectType">
@@ -229,7 +277,10 @@
               </label>
             </fieldset>
 
-            <button class="button primary full" type="submit">Analyze launch risk</button>
+            <button class="button primary full" type="submit" id="analyzeBtn">
+              <span class="btn-text">Analyze launch risk</span>
+              <span class="btn-spinner" hidden aria-hidden="true"></span>
+            </button>
             <p class="form-note">
               No network call is made in this demo. The generated report shows the product shape
               and the exact audit categories Shipwright skills perform locally.
@@ -282,6 +333,48 @@
             </div>
           </article>
         </div>
+
+        <details class="checks-detail" id="checksDetail">
+          <summary>What does Shipwright actually check?</summary>
+          <div class="checks-grid">
+            <div>
+              <h4>Agent output review</h4>
+              <ul>
+                <li>Hallucinated feature claims</li>
+                <li>Fake buttons and dead links</li>
+                <li>TODO / FIXME / placeholder strings</li>
+                <li>Unverified integration references</li>
+              </ul>
+            </div>
+            <div>
+              <h4>Browser launch audit</h4>
+              <ul>
+                <li>Console errors and warnings</li>
+                <li>Network 4xx/5xx failures</li>
+                <li>Interactive element functionality</li>
+                <li>Mobile layout at 390px and 768px</li>
+              </ul>
+            </div>
+            <div>
+              <h4>README install audit</h4>
+              <ul>
+                <li>Missing env vars or API keys</li>
+                <li>Version constraint gaps</li>
+                <li>Expected output not shown</li>
+                <li>First-run path ambiguity</li>
+              </ul>
+            </div>
+            <div>
+              <h4>GitHub release checklist</h4>
+              <ul>
+                <li>Repo topics and description</li>
+                <li>Release notes completeness</li>
+                <li>Launch post copy quality</li>
+                <li>Contributor-facing next issues</li>
+              </ul>
+            </div>
+          </div>
+        </details>
       </section>
 
       <section id="workflow" class="workflow section-shell" aria-labelledby="workflow-title">
@@ -313,6 +406,40 @@
         </div>
       </section>
 
+      <section class="honesty section-shell" aria-labelledby="honesty-title">
+        <div class="honesty-card">
+          <div>
+            <p class="eyebrow">Honest status</p>
+            <h2 id="honesty-title">What this demo does and does not do.</h2>
+          </div>
+          <div class="honesty-columns">
+            <div class="honesty-col">
+              <h4>This demo does</h4>
+              <ul class="honesty-list does">
+                <li>Generate a structured launch QA report based on project type</li>
+                <li>Show the exact audit categories the real skills check</li>
+                <li>Produce a copyable/downloadable Markdown report for your agent</li>
+                <li>Model the product experience before the hosted version ships</li>
+              </ul>
+            </div>
+            <div class="honesty-col">
+              <h4>This demo does not</h4>
+              <ul class="honesty-list does-not">
+                <li>Clone your GitHub repository or read its files</li>
+                <li>Open a real browser to check console errors or mobile layout</li>
+                <li>Call any AI model or API to analyze code</li>
+                <li>Make network requests of any kind</li>
+              </ul>
+            </div>
+          </div>
+          <p class="honesty-footer">
+            For real, evidence-backed audits, install the
+            <a href="https://github.com/aimonj0729-ai/shipwright">open-source skills</a>
+            and run them locally with Claude Code or Codex.
+          </p>
+        </div>
+      </section>
+
       <section class="cta section-shell" aria-labelledby="cta-title">
         <p class="eyebrow">Open source first</p>
         <h2 id="cta-title">Ship fewer beautiful half-products.</h2>
@@ -320,9 +447,14 @@
           Start with the skills today. Turn this website into the hosted version when the
           workflow proves people keep coming back before every launch.
         </p>
-        <a class="button primary" href="https://github.com/aimonj0729-ai/shipwright">
-          View on GitHub
-        </a>
+        <div class="cta-actions">
+          <a class="button primary" href="https://github.com/aimonj0729-ai/shipwright">
+            View on GitHub
+          </a>
+          <a class="button ghost cta-ghost" href="#analyzer">
+            Try the demo
+          </a>
+        </div>
       </section>
     </main>
 
