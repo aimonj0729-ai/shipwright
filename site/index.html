@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
@@ -21,6 +21,7 @@
     </script>
   </head>
   <body>
+    <div class="scroll-progress" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
     <header class="site-header">
       <a class="brand" href="#top" aria-label="Shipwright home">
@@ -95,10 +96,12 @@
         </aside>
       </section>
 
+      <div class="section-divider" aria-hidden="true"><span></span></div>
+
       <section class="pain-grid section-shell" aria-labelledby="pain-title">
         <div>
           <p class="eyebrow">The pain</p>
-          <h2 id="pain-title">AI agents are great at producing finished-looking work.</h2>
+          <h2 id="pain-title" class="highlight-on-scroll">AI agents are great at producing finished-looking work.</h2>
         </div>
         <div class="pain-cards">
           <article>
@@ -118,6 +121,8 @@
           </article>
         </div>
       </section>
+
+      <div class="section-divider" aria-hidden="true"><span></span></div>
 
       <section id="audience" class="audience section-shell" aria-labelledby="audience-title">
         <div class="section-heading compact-heading">
@@ -155,6 +160,8 @@
           </article>
         </div>
       </section>
+
+      <div class="section-divider" aria-hidden="true"><span></span></div>
 
       <section id="guide" class="usage-guide section-shell" aria-labelledby="guide-title">
         <div class="section-heading">
@@ -220,6 +227,170 @@
               is part of the product: no fake green checks.
             </p>
           </aside>
+        </div>
+      </section>
+
+      <div class="section-divider" aria-hidden="true"><span></span></div>
+
+      <section id="inspection-radar" class="inspection-radar section-shell" aria-labelledby="radar-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Inspection radar</p>
+            <h2 id="radar-title">Plot the launch route before the public countdown.</h2>
+          </div>
+          <p>
+            A quiet control-room view of the checks Shipwright runs: each waypoint maps to a
+            launch risk, the evidence it needs, and the fix signal a builder should trust.
+          </p>
+        </div>
+
+        <div class="radar-layout">
+          <div class="radar-console" aria-label="Interactive launch inspection radar">
+            <div class="radar-toolbar">
+              <span>Launch Map 04</span>
+              <span>Signal: evidence required</span>
+            </div>
+
+            <div class="radar-screen">
+              <svg class="radar-svg" viewBox="0 0 760 480" role="img" aria-label="Launch route with inspection waypoints">
+                <defs>
+                  <pattern id="radarGrid" width="38" height="38" patternUnits="userSpaceOnUse">
+                    <path d="M 38 0 L 0 0 0 38" fill="none" stroke="currentColor" stroke-width="0.7" />
+                  </pattern>
+                  <radialGradient id="radarGlow" cx="50%" cy="50%" r="60%">
+                    <stop offset="0%" stop-color="currentColor" stop-opacity="0.2" />
+                    <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+                <rect width="760" height="480" fill="url(#radarGrid)" opacity="0.46" />
+                <circle class="radar-glow-disc" cx="382" cy="242" r="205" fill="url(#radarGlow)" />
+                <circle class="radar-ring" cx="382" cy="242" r="74" />
+                <circle class="radar-ring" cx="382" cy="242" r="142" />
+                <circle class="radar-ring" cx="382" cy="242" r="210" />
+                <path class="radar-route radar-route-shadow" d="M96 338 C190 212 262 390 356 270 S514 104 666 154" />
+                <path class="radar-route" d="M96 338 C190 212 262 390 356 270 S514 104 666 154" />
+                <path class="radar-branch" d="M356 270 C424 324 508 330 592 286" />
+                <path class="radar-branch danger" d="M512 194 C556 208 595 232 632 270" />
+                <g class="radar-risk-markers" aria-hidden="true">
+                  <path d="M596 280 l18 -31 l18 31 z" />
+                  <path d="M498 186 l14 -24 l14 24 z" />
+                </g>
+              </svg>
+
+              <div class="radar-sweep" aria-hidden="true"></div>
+
+              <button
+                class="radar-node is-active"
+                type="button"
+                style="--x: 13%; --y: 69%;"
+                aria-pressed="true"
+                data-code="01"
+                data-status="Green"
+                data-title="Repo intake"
+                data-detail="Confirm the target is real, parse the project type, and refuse vague launch claims before the audit begins."
+                data-target="https://github.com/aimonj0729-ai/shipwright"
+                data-type="skill"
+              >
+                <span>01</span>
+                <strong>Intake</strong>
+              </button>
+              <button
+                class="radar-node"
+                type="button"
+                style="--x: 32%; --y: 51%;"
+                aria-pressed="false"
+                data-code="02"
+                data-status="Watch"
+                data-title="Browser proof"
+                data-detail="Open the product path, record console and network health, then verify CTA, loading, empty, and error states."
+                data-target="https://github.com/vercel/next.js"
+                data-type="web"
+              >
+                <span>02</span>
+                <strong>Browser</strong>
+              </button>
+              <button
+                class="radar-node"
+                type="button"
+                style="--x: 52%; --y: 57%;"
+                aria-pressed="false"
+                data-code="03"
+                data-status="Risk"
+                data-title="README friction"
+                data-detail="Walk the install path like a stranger: env keys, version constraints, first successful output, and rollback notes."
+                data-target="https://github.com/aimonj0729-ai/shipwright"
+                data-type="template"
+              >
+                <span>03</span>
+                <strong>Install</strong>
+              </button>
+              <button
+                class="radar-node"
+                type="button"
+                style="--x: 67%; --y: 36%;"
+                aria-pressed="false"
+                data-code="04"
+                data-status="Watch"
+                data-title="Agent claim audit"
+                data-detail="Compare what the agent said was finished against working UI, code evidence, TODOs, placeholders, and dead links."
+                data-target="https://github.com/modelcontextprotocol/servers"
+                data-type="mcp"
+              >
+                <span>04</span>
+                <strong>Claims</strong>
+              </button>
+              <button
+                class="radar-node"
+                type="button"
+                style="--x: 84%; --y: 31%;"
+                aria-pressed="false"
+                data-code="05"
+                data-status="Clear"
+                data-title="Release package"
+                data-detail="Shape the launch payload: GitHub topics, release notes, proof-led post copy, and the next contributor issues."
+                data-target="https://github.com/anthropics/anthropic-sdk-python"
+                data-type="cli"
+              >
+                <span>05</span>
+                <strong>Release</strong>
+              </button>
+            </div>
+          </div>
+
+          <aside class="radar-detail-card" aria-live="polite" data-status="Green">
+            <div class="radar-detail-kicker">
+              <span id="radarCode">01</span>
+              <span id="radarStatus">Green</span>
+            </div>
+            <h3 id="radarTitle">Repo intake</h3>
+            <p id="radarDetail">
+              Confirm the target is real, parse the project type, and refuse vague launch claims
+              before the audit begins.
+            </p>
+            <div class="radar-detail-meter" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <p class="radar-action-note" id="radarActionNote">
+              Click a waypoint to preload the analyzer with a matching audit scenario.
+            </p>
+          </aside>
+        </div>
+
+        <div class="radar-checklist" aria-label="Radar inspection principles">
+          <article>
+            <span>Evidence</span>
+            <p>Every green light needs an observed browser state, command output, or file reference.</p>
+          </article>
+          <article>
+            <span>Risk</span>
+            <p>Markers call out launch blockers before they become public support requests.</p>
+          </article>
+          <article>
+            <span>Patch</span>
+            <p>The route ends with the smallest next fix, not a vague quality score.</p>
+          </article>
         </div>
       </section>
 
@@ -383,6 +554,8 @@
           </div>
         </details>
       </section>
+
+      <div class="section-divider" aria-hidden="true"><span></span></div>
 
       <section id="workflow" class="workflow section-shell" aria-labelledby="workflow-title">
         <div class="section-heading compact-heading">

@@ -10,6 +10,252 @@ document.querySelector("#themeToggle").addEventListener("click", () => {
   localStorage.setItem("shipwright-theme", next);
 });
 
+/* ── Text scramble effect ── */
+
+const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*";
+
+const scrambleText = (element, finalText, duration = 1200) => {
+  const length = finalText.length;
+  const startTime = performance.now();
+
+  const step = (now) => {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const revealed = Math.floor(progress * length);
+
+    let output = "";
+    for (let i = 0; i < length; i++) {
+      if (finalText[i] === " ") {
+        output += " ";
+      } else if (i < revealed) {
+        output += finalText[i];
+      } else {
+        output += CHARS[Math.floor(Math.random() * CHARS.length)];
+      }
+    }
+
+    element.textContent = output;
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      element.textContent = finalText;
+    }
+  };
+
+  requestAnimationFrame(step);
+};
+
+/* ── Hero text word-by-word reveal ── */
+
+const initHeroReveal = () => {
+  const h1 = document.querySelector(".hero-copy h1");
+  if (!h1) return;
+
+  const text = h1.textContent;
+  const words = text.split(" ");
+
+  h1.innerHTML = words
+    .map((word) => `<span class="hero-word"><span class="hero-word-inner">${word}</span></span>`)
+    .join(" ");
+
+  const wordEls = h1.querySelectorAll(".hero-word-inner");
+  wordEls.forEach((el, i) => {
+    el.style.animationDelay = `${i * 80 + 200}ms`;
+  });
+
+  const eyebrow = document.querySelector(".hero-copy .eyebrow");
+  if (eyebrow) {
+    const eyebrowText = eyebrow.textContent;
+    eyebrow.textContent = "";
+    eyebrow.style.opacity = "1";
+    window.setTimeout(() => scrambleText(eyebrow, eyebrowText, 1000), 100);
+  }
+};
+
+/* ── 3D tilt on inspection card ── */
+
+const initCardTilt = () => {
+  const card = document.querySelector(".inspection-card");
+  if (!card) return;
+
+  const hero = document.querySelector(".hero");
+
+  hero.addEventListener("mousemove", (e) => {
+    const rect = card.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const deltaX = (e.clientX - centerX) / rect.width;
+    const deltaY = (e.clientY - centerY) / rect.height;
+
+    const rotateY = deltaX * 8;
+    const rotateX = -deltaY * 6;
+
+    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+  });
+
+  hero.addEventListener("mouseleave", () => {
+    card.style.transform = "perspective(800px) rotateX(0) rotateY(0) scale(1)";
+  });
+};
+
+/* ── Animated gradient blobs in hero ── */
+
+const initHeroBlobs = () => {
+  const hero = document.querySelector(".hero");
+  if (!hero) return;
+
+  const blobContainer = document.createElement("div");
+  blobContainer.className = "hero-blobs";
+  blobContainer.setAttribute("aria-hidden", "true");
+
+  blobContainer.innerHTML = `
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  `;
+
+  hero.style.position = "relative";
+  hero.prepend(blobContainer);
+};
+
+/* ── Counter animation for signal strip ── */
+
+const animateCounter = (element, target, duration = 1200) => {
+  const isNumeric = !isNaN(target);
+  if (!isNumeric) return;
+
+  const startTime = performance.now();
+
+  const step = (now) => {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    element.textContent = String(Math.round(target * eased));
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    }
+  };
+
+  element.textContent = "0";
+  requestAnimationFrame(step);
+};
+
+const initCounters = () => {
+  const strip = document.querySelector(".signal-strip");
+  if (!strip) return;
+
+  const dts = strip.querySelectorAll("dt");
+  let fired = false;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !fired) {
+          fired = true;
+          dts.forEach((dt) => {
+            const text = dt.textContent.trim();
+            const num = parseInt(text, 10);
+            if (!isNaN(num) && text === String(num)) {
+              animateCounter(dt, num, 1400);
+            }
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  observer.observe(strip);
+};
+
+/* ── Staggered card entrance ── */
+
+const initStaggeredCards = () => {
+  const groups = document.querySelectorAll(
+    ".pain-cards, .audience-cards, .workflow-steps, .guide-steps, .radar-checklist"
+  );
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const cards = entry.target.querySelectorAll("article");
+          cards.forEach((card, i) => {
+            card.style.opacity = "0";
+            card.style.transform = "translateY(30px)";
+            window.setTimeout(() => {
+              card.style.transition = "opacity 500ms ease, transform 500ms ease";
+              card.style.opacity = "1";
+              card.style.transform = "translateY(0)";
+            }, i * 120);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  groups.forEach((group) => observer.observe(group));
+};
+
+/* ── Cursor glow on hero ── */
+
+const initCursorGlow = () => {
+  const hero = document.querySelector(".hero");
+  if (!hero) return;
+
+  const glow = document.createElement("div");
+  glow.className = "cursor-glow";
+  glow.setAttribute("aria-hidden", "true");
+  hero.append(glow);
+
+  hero.addEventListener("mousemove", (e) => {
+    const rect = hero.getBoundingClientRect();
+    glow.style.left = `${e.clientX - rect.left}px`;
+    glow.style.top = `${e.clientY - rect.top}px`;
+    glow.style.opacity = "1";
+  });
+
+  hero.addEventListener("mouseleave", () => {
+    glow.style.opacity = "0";
+  });
+};
+
+/* ── Magnetic button effect ── */
+
+const initMagneticButtons = () => {
+  const buttons = document.querySelectorAll(".button.primary");
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("mousemove", (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${x * 0.2}px, ${y * 0.3}px)`;
+    });
+
+    btn.addEventListener("mouseleave", () => {
+      btn.style.transform = "";
+    });
+  });
+};
+
+/* ── Floating inspection list items ── */
+
+const initFloatingFindings = () => {
+  const items = document.querySelectorAll(".inspection-list li");
+  items.forEach((li, i) => {
+    li.style.animationDelay = `${i * 0.6}s`;
+  });
+};
+
+/* ── Project profiles & analyzer (unchanged data) ── */
+
 const projectProfiles = {
   web: {
     label: "Web app",
@@ -443,9 +689,69 @@ document.querySelectorAll(".sample-btn").forEach((btn) => {
   });
 });
 
+/* ── Inspection radar waypoint details ── */
+
+const initInspectionRadar = () => {
+  const radar = document.querySelector("#inspection-radar");
+  if (!radar) return;
+
+  const nodes = [...radar.querySelectorAll(".radar-node")];
+  const detailCard = radar.querySelector(".radar-detail-card");
+  const code = radar.querySelector("#radarCode");
+  const status = radar.querySelector("#radarStatus");
+  const title = radar.querySelector("#radarTitle");
+  const detail = radar.querySelector("#radarDetail");
+  const actionNote = radar.querySelector("#radarActionNote");
+
+  if (!nodes.length || !detailCard || !code || !status || !title || !detail) {
+    return;
+  }
+
+  const setActiveNode = (node, options = {}) => {
+    const { applyToAnalyzer = false } = options;
+
+    nodes.forEach((candidate) => {
+      const isActive = candidate === node;
+      candidate.classList.toggle("is-active", isActive);
+      candidate.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+
+    code.textContent = node.dataset.code || "";
+    status.textContent = node.dataset.status || "";
+    title.textContent = node.dataset.title || "";
+    detail.textContent = node.dataset.detail || "";
+    detailCard.dataset.status = node.dataset.status || "";
+
+    if (applyToAnalyzer) {
+      if (node.dataset.target) {
+        targetInput.value = node.dataset.target;
+      }
+
+      if (node.dataset.type && projectProfiles[node.dataset.type]) {
+        projectType.value = node.dataset.type;
+      }
+
+      setTargetError();
+      renderReport();
+
+      if (actionNote) {
+        actionNote.textContent = `${node.dataset.title || "Waypoint"} loaded into the analyzer. Review the report or run the demo audit.`;
+      }
+    }
+  };
+
+  nodes.forEach((node) => {
+    node.addEventListener("click", () => setActiveNode(node, { applyToAnalyzer: true }));
+    node.addEventListener("pointerenter", () => setActiveNode(node));
+    node.addEventListener("focus", () => setActiveNode(node));
+  });
+
+  setActiveNode(nodes.find((node) => node.classList.contains("is-active")) || nodes[0]);
+};
+
 const initReveal = () => {
   const sections = document.querySelectorAll(
-    ".pain-grid, .audience, .usage-guide, .analyzer, .workflow, .honesty, .cta"
+    ".pain-grid, .audience, .usage-guide, .inspection-radar, .analyzer, .workflow, .honesty, .cta"
   );
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -469,6 +775,189 @@ const initReveal = () => {
 
   sections.forEach((section) => observer.observe(section));
 };
+
+/* ── Scroll progress bar ── */
+
+const initScrollProgress = () => {
+  const bar = document.querySelector(".scroll-progress");
+  if (!bar) return;
+
+  const update = () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const percent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = `${percent}%`;
+  };
+
+  window.addEventListener("scroll", update, { passive: true });
+  update();
+};
+
+/* ── Section divider line draw ── */
+
+const initDividers = () => {
+  const dividers = document.querySelectorAll(".section-divider");
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  dividers.forEach((d) => observer.observe(d));
+};
+
+/* ── Text highlight on scroll ── */
+
+const initTextHighlight = () => {
+  const elements = document.querySelectorAll(".highlight-on-scroll");
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          window.setTimeout(() => entry.target.classList.add("is-highlighted"), 300);
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.6 }
+  );
+
+  elements.forEach((el) => observer.observe(el));
+};
+
+/* ── Parallax on scroll ── */
+
+const initParallax = () => {
+  const targets = [
+    { el: document.querySelector(".pain-grid > div:first-child"), speed: 0.05 },
+    { el: document.querySelector(".inspection-card"), speed: -0.03 },
+  ].filter((t) => t.el);
+
+  if (targets.length === 0) return;
+
+  const update = () => {
+    const scrollY = window.scrollY;
+    targets.forEach(({ el, speed }) => {
+      const rect = el.getBoundingClientRect();
+      const center = rect.top + rect.height / 2;
+      const viewCenter = window.innerHeight / 2;
+      const offset = (center - viewCenter) * speed;
+      el.style.transform = `translateY(${offset}px)`;
+    });
+  };
+
+  window.addEventListener("scroll", update, { passive: true });
+};
+
+/* ── Horizontal slide-in for workflow steps ── */
+
+const initWorkflowSlides = () => {
+  const steps = document.querySelectorAll(".workflow-steps article");
+  if (steps.length === 0) return;
+
+  steps.forEach((step, i) => {
+    step.classList.add(i % 2 === 0 ? "slide-from-left" : "slide-from-right");
+  });
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const articles = entry.target.querySelectorAll("article");
+          articles.forEach((a, i) => {
+            window.setTimeout(() => a.classList.add("is-slid"), i * 150);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
+
+  const wrapper = document.querySelector(".workflow-steps");
+  if (wrapper) observer.observe(wrapper);
+};
+
+/* ── Audience icon pop-in ── */
+
+const initIconPop = () => {
+  const icons = document.querySelectorAll(".audience-icon");
+  icons.forEach((icon) => icon.classList.add("icon-pop"));
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const pops = entry.target.querySelectorAll(".icon-pop");
+          pops.forEach((p, i) => {
+            window.setTimeout(() => p.classList.add("is-popped"), i * 120 + 200);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
+
+  const section = document.querySelector(".audience-cards");
+  if (section) observer.observe(section);
+};
+
+/* ── Eyebrow reveal on scroll ── */
+
+const initEyebrowReveal = () => {
+  const eyebrows = document.querySelectorAll(
+    ".pain-grid .eyebrow, .audience .eyebrow, .usage-guide .eyebrow, .inspection-radar .eyebrow, .analyzer .eyebrow, .workflow .eyebrow, .honesty .eyebrow, .cta .eyebrow"
+  );
+
+  eyebrows.forEach((eb) => eb.classList.add("eyebrow-reveal"));
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-revealed");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.8 }
+  );
+
+  eyebrows.forEach((eb) => observer.observe(eb));
+};
+
+/* ── Init everything ── */
+
+const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+initScrollProgress();
+initInspectionRadar();
+
+if (!prefersReduced) {
+  initHeroReveal();
+  initCardTilt();
+  initHeroBlobs();
+  initCounters();
+  initStaggeredCards();
+  initCursorGlow();
+  initMagneticButtons();
+  initFloatingFindings();
+  initDividers();
+  initTextHighlight();
+  initParallax();
+  initWorkflowSlides();
+  initIconPop();
+  initEyebrowReveal();
+}
 
 initReveal();
 renderReport();

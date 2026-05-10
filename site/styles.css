@@ -258,16 +258,17 @@ p {
 
 h1,
 h2 {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: "Playfair Display", Georgia, serif;
   font-weight: 800;
-  letter-spacing: -0.055em;
+  letter-spacing: -0.02em;
 }
 
 h1 {
   max-width: 830px;
   margin-bottom: 24px;
-  font-size: clamp(2.8rem, 6vw, 5.2rem);
-  line-height: 0.92;
+  font-size: clamp(3rem, 6.5vw, 5.6rem);
+  font-style: italic;
+  line-height: 1.08;
 }
 
 h2 {
@@ -331,6 +332,7 @@ h4 {
 }
 
 .button:focus-visible,
+.radar-node:focus-visible,
 input:focus-visible,
 select:focus-visible {
   outline: 3px solid rgba(15, 118, 110, 0.35);
@@ -386,7 +388,7 @@ select:focus-visible {
 }
 
 .signal-strip dt {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: "Playfair Display", Georgia, serif;
   font-size: 2.2rem;
   font-weight: 800;
   line-height: 1;
@@ -405,6 +407,9 @@ select:focus-visible {
 .audit-form,
 .report-panel,
 .runbook-card,
+.radar-console,
+.radar-detail-card,
+.radar-checklist article,
 .pain-cards article,
 .guide-steps article,
 .workflow-steps article,
@@ -782,6 +787,313 @@ select:focus-visible {
   text-transform: uppercase;
 }
 
+/* ── Inspection radar section ── */
+
+.inspection-radar {
+  padding: 68px 0 84px;
+}
+
+.radar-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.55fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.radar-console {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  color: #fff7e7;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(224, 163, 49, 0.18), transparent 14rem),
+    radial-gradient(circle at 78% 18%, rgba(52, 211, 153, 0.14), transparent 18rem),
+    linear-gradient(145deg, #17231f, #0d1512);
+}
+
+.radar-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(242, 234, 219, 0.12);
+  color: rgba(242, 234, 219, 0.74);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.radar-screen {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 760 / 480;
+  min-height: 360px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(52, 211, 153, 0.12), transparent 18rem),
+    linear-gradient(180deg, rgba(255, 247, 231, 0.04), rgba(255, 247, 231, 0));
+}
+
+.radar-screen::before {
+  position: absolute;
+  inset: 26px;
+  border: 1px solid rgba(242, 234, 219, 0.1);
+  border-radius: 28px;
+  content: "";
+  pointer-events: none;
+}
+
+.radar-svg,
+.radar-sweep {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.radar-svg {
+  color: rgba(223, 244, 234, 0.32);
+}
+
+.radar-ring {
+  fill: none;
+  stroke: rgba(223, 244, 234, 0.22);
+  stroke-dasharray: 7 11;
+  stroke-width: 1.4;
+}
+
+.radar-glow-disc {
+  color: rgba(52, 211, 153, 0.8);
+}
+
+.radar-route,
+.radar-branch {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.radar-route {
+  stroke: var(--amber);
+  stroke-width: 4;
+  filter: drop-shadow(0 0 12px rgba(224, 163, 49, 0.45));
+}
+
+.radar-route-shadow {
+  stroke: rgba(0, 0, 0, 0.34);
+  stroke-width: 10;
+  filter: none;
+}
+
+.radar-branch {
+  stroke: rgba(223, 244, 234, 0.5);
+  stroke-dasharray: 8 12;
+  stroke-width: 2.2;
+}
+
+.radar-branch.danger {
+  stroke: rgba(239, 107, 91, 0.68);
+}
+
+.radar-risk-markers {
+  fill: rgba(239, 107, 91, 0.72);
+  stroke: rgba(255, 247, 231, 0.58);
+  stroke-width: 2;
+}
+
+.radar-sweep {
+  background: conic-gradient(from 210deg at 50% 50%, transparent 0 72%, rgba(52, 211, 153, 0.2) 78%, transparent 84% 100%);
+  mix-blend-mode: screen;
+  transform-origin: 50% 50%;
+  animation: radar-sweep 9s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes radar-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.radar-node {
+  --node-accent: var(--sea);
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  z-index: 2;
+  display: grid;
+  gap: 3px;
+  min-width: 88px;
+  padding: 10px 12px 9px;
+  border: 1px solid rgba(242, 234, 219, 0.28);
+  border-radius: 16px;
+  color: #fff7e7;
+  background: rgba(13, 21, 18, 0.74);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.radar-node[data-status="Watch"] {
+  --node-accent: var(--amber);
+}
+
+.radar-node[data-status="Risk"] {
+  --node-accent: var(--danger);
+}
+
+.radar-node[data-status="Clear"],
+.radar-node[data-status="Green"] {
+  --node-accent: var(--sea);
+}
+
+.radar-node::before {
+  position: absolute;
+  inset: -7px;
+  border: 1px solid color-mix(in srgb, var(--node-accent), transparent 40%);
+  border-radius: 22px;
+  content: "";
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.radar-node span {
+  color: var(--node-accent);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.radar-node strong {
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+}
+
+.radar-node:hover,
+.radar-node:focus-visible,
+.radar-node.is-active {
+  border-color: var(--node-accent);
+  background: rgba(13, 21, 18, 0.92);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--node-accent), transparent 45%), 0 18px 44px rgba(0, 0, 0, 0.36);
+  transform: translate(-50%, -54%);
+}
+
+.radar-node:hover::before,
+.radar-node:focus-visible::before,
+.radar-node.is-active::before {
+  opacity: 1;
+}
+
+.radar-detail-card {
+  --radar-accent: var(--sea);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+  padding: 26px;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--radar-accent), transparent 88%), transparent 44%),
+    var(--card-bg);
+}
+
+.radar-detail-card[data-status="Watch"] {
+  --radar-accent: var(--amber);
+}
+
+.radar-detail-card[data-status="Risk"] {
+  --radar-accent: var(--danger);
+}
+
+.radar-detail-card[data-status="Clear"],
+.radar-detail-card[data-status="Green"] {
+  --radar-accent: var(--sea);
+}
+
+.radar-detail-kicker {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 28px;
+  color: var(--radar-accent);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.radar-detail-card h3 {
+  margin-bottom: 12px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-style: italic;
+  line-height: 0.95;
+}
+
+.radar-detail-card p {
+  color: var(--muted);
+  font-size: 1.02rem;
+  line-height: 1.58;
+}
+
+.radar-detail-meter {
+  display: grid;
+  grid-template-columns: 1fr 0.72fr 0.44fr;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.radar-detail-meter span {
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--radar-accent), transparent 42%);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--radar-accent), transparent 65%);
+}
+
+.radar-action-note {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--radar-accent), transparent 72%);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--radar-accent), transparent 92%);
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.radar-checklist {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.radar-checklist article {
+  padding: 18px;
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+.radar-checklist span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--sea);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.radar-checklist p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 /* ── Analyzer section ── */
 
 .analyzer {
@@ -979,9 +1291,10 @@ select:focus-visible {
 
 .report-header h3 {
   margin: 0;
-  font-family: "Fraunces", Georgia, serif;
+  font-family: "Playfair Display", Georgia, serif;
   font-size: clamp(2.2rem, 5vw, 4.1rem);
-  letter-spacing: -0.05em;
+  font-style: italic;
+  letter-spacing: -0.02em;
 }
 
 .score-ring {
@@ -1438,6 +1751,244 @@ select:focus-visible {
   background: var(--code-bg);
 }
 
+/* ── Scroll progress bar ── */
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  z-index: 100;
+  background: linear-gradient(90deg, var(--sea), var(--amber), var(--copper));
+  transition: width 60ms linear;
+  box-shadow: 0 0 10px rgba(224, 163, 49, 0.4);
+}
+
+/* ── Section dividers ── */
+
+.section-divider {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.section-divider span {
+  display: block;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--amber), var(--sea), transparent);
+  transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.section-divider.is-visible span {
+  width: 100%;
+}
+
+/* ── Text highlight on scroll ── */
+
+.highlight-on-scroll {
+  background-image: linear-gradient(120deg, rgba(224, 163, 49, 0.25) 0%, rgba(224, 163, 49, 0.25) 100%);
+  background-repeat: no-repeat;
+  background-size: 0% 40%;
+  background-position: 0 88%;
+  transition: background-size 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.highlight-on-scroll.is-highlighted {
+  background-size: 100% 40%;
+}
+
+[data-theme="dark"] .highlight-on-scroll {
+  background-image: linear-gradient(120deg, rgba(224, 163, 49, 0.15) 0%, rgba(224, 163, 49, 0.15) 100%);
+}
+
+/* ── Parallax layers ── */
+
+.parallax-slow {
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+/* ── Horizontal slide-in for workflow steps ── */
+
+.slide-from-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 600ms ease, transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.slide-from-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 600ms ease, transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.slide-from-left.is-slid,
+.slide-from-right.is-slid {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── Audience icon bounce-in ── */
+
+.icon-pop {
+  transform: scale(0);
+  transition: transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.icon-pop.is-popped {
+  transform: scale(1);
+}
+
+/* ── Eyebrow dash-in ── */
+
+.eyebrow-reveal {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+
+.eyebrow-reveal.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── Hero word reveal animation ── */
+
+.hero-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.hero-word-inner {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(100%) rotateX(-40deg);
+  animation: word-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes word-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+}
+
+/* ── Animated gradient blobs ── */
+
+.hero-blobs {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: var(--radius-lg);
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  mix-blend-mode: screen;
+}
+
+[data-theme="dark"] .blob {
+  opacity: 0.25;
+}
+
+.blob-1 {
+  width: 340px;
+  height: 340px;
+  top: -60px;
+  left: -40px;
+  background: rgba(224, 163, 49, 0.4);
+  animation: blob-drift-1 12s ease-in-out infinite alternate;
+}
+
+.blob-2 {
+  width: 280px;
+  height: 280px;
+  top: 40%;
+  right: -60px;
+  background: rgba(15, 118, 110, 0.35);
+  animation: blob-drift-2 14s ease-in-out infinite alternate;
+}
+
+.blob-3 {
+  width: 220px;
+  height: 220px;
+  bottom: -30px;
+  left: 30%;
+  background: rgba(200, 107, 60, 0.3);
+  animation: blob-drift-3 10s ease-in-out infinite alternate;
+}
+
+@keyframes blob-drift-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(60px, 40px) scale(1.15); }
+}
+
+@keyframes blob-drift-2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-50px, -30px) scale(1.2); }
+}
+
+@keyframes blob-drift-3 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, -50px) scale(1.1); }
+}
+
+/* ── Cursor glow ── */
+
+.cursor-glow {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(224, 163, 49, 0.15), transparent 70%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 400ms ease;
+  z-index: 0;
+  mix-blend-mode: screen;
+}
+
+[data-theme="dark"] .cursor-glow {
+  background: radial-gradient(circle, rgba(224, 163, 49, 0.1), transparent 70%);
+}
+
+/* ── Inspection card tilt ── */
+
+.inspection-card {
+  transition: transform 300ms ease, box-shadow 300ms ease;
+  will-change: transform;
+}
+
+/* ── Floating inspection items ── */
+
+.inspection-list li {
+  animation: float-subtle 3s ease-in-out infinite alternate;
+}
+
+@keyframes float-subtle {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(4px); }
+}
+
+/* ── Hero content z-index above blobs ── */
+
+.hero-copy,
+.inspection-card {
+  position: relative;
+  z-index: 1;
+}
+
 /* ── Scroll reveal ── */
 
 .reveal {
@@ -1458,6 +2009,7 @@ select:focus-visible {
   .pain-grid,
   .section-heading,
   .guide-layout,
+  .radar-layout,
   .analyzer-grid,
   .report-columns,
   .honesty-columns {
@@ -1475,6 +2027,7 @@ select:focus-visible {
 
   .pain-cards,
   .guide-steps,
+  .radar-checklist,
   .workflow-steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1512,12 +2065,13 @@ select:focus-visible {
   }
 
   h1 {
-    font-size: clamp(2.4rem, 10vw, 3.4rem);
+    font-size: clamp(2.6rem, 10vw, 3.6rem);
   }
 
   .signal-strip,
   .pain-cards,
   .guide-steps,
+  .radar-checklist,
   .workflow-steps,
   .audience-cards,
   .checks-grid {
@@ -1567,6 +2121,54 @@ select:focus-visible {
   .sample-btn {
     font-size: 0.74rem;
     padding: 4px 8px;
+  }
+
+  .inspection-radar {
+    padding: 46px 0 62px;
+  }
+
+  .radar-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .radar-screen {
+    display: grid;
+    gap: 10px;
+    min-height: 0;
+    padding: 22px;
+    aspect-ratio: auto;
+  }
+
+  .radar-screen::before {
+    inset: 12px;
+    border-radius: 20px;
+  }
+
+  .radar-svg,
+  .radar-sweep {
+    opacity: 0.52;
+  }
+
+  .radar-node {
+    position: relative;
+    left: auto;
+    top: auto;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    min-width: 0;
+    width: 100%;
+    transform: none;
+  }
+
+  .radar-node:hover,
+  .radar-node:focus-visible,
+  .radar-node.is-active {
+    transform: translateY(-2px);
+  }
+
+  .radar-detail-card {
+    min-height: 0;
   }
 }
 
