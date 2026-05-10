@@ -1,3 +1,15 @@
+const storedTheme = localStorage.getItem("shipwright-theme");
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+const initialTheme = storedTheme || (prefersDark ? "dark" : "light");
+document.documentElement.setAttribute("data-theme", initialTheme);
+
+document.querySelector("#themeToggle").addEventListener("click", () => {
+  const current = document.documentElement.getAttribute("data-theme");
+  const next = current === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  localStorage.setItem("shipwright-theme", next);
+});
+
 const projectProfiles = {
   web: {
     label: "Web app",

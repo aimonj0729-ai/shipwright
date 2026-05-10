@@ -171,11 +171,12 @@ select {
   width: min(1180px, calc(100% - 32px));
   margin: 16px auto 0;
   padding: 12px 14px;
-  border: 1px solid rgba(31, 42, 39, 0.14);
+  border: 1px solid var(--header-border);
   border-radius: 999px;
-  background: rgba(242, 234, 219, 0.78);
-  box-shadow: 0 10px 36px rgba(31, 42, 39, 0.1);
+  background: var(--header-bg);
+  box-shadow: 0 10px 36px var(--header-shadow);
   backdrop-filter: blur(18px);
+  transition: background 300ms ease, border-color 300ms ease;
 }
 
 .brand,
@@ -216,7 +217,7 @@ select {
 
 .nav-links a:hover {
   color: var(--ink);
-  background: rgba(255, 247, 231, 0.78);
+  background: var(--nav-hover-bg);
 }
 
 /* ── Layout ── */
@@ -339,22 +340,22 @@ select:focus-visible {
 .button.primary {
   color: var(--paper);
   background: var(--iron);
-  box-shadow: 0 14px 30px rgba(31, 42, 39, 0.2);
+  box-shadow: 0 14px 30px var(--header-shadow);
 }
 
 .button.primary:hover {
-  background: #101714;
+  opacity: 0.9;
 }
 
 .button.ghost {
-  color: var(--iron);
-  border-color: rgba(31, 42, 39, 0.18);
-  background: rgba(255, 247, 231, 0.68);
+  color: var(--ink);
+  border-color: var(--ghost-border);
+  background: var(--ghost-bg);
 }
 
 .button.ghost:hover {
-  border-color: rgba(31, 42, 39, 0.3);
-  background: rgba(255, 247, 231, 0.92);
+  border-color: var(--line);
+  background: var(--nav-hover-bg);
 }
 
 .button.full {
@@ -379,9 +380,9 @@ select:focus-visible {
 
 .signal-strip div {
   padding: 18px;
-  border: 1px solid rgba(31, 42, 39, 0.13);
+  border: 1px solid var(--signal-border);
   border-radius: var(--radius-sm);
-  background: rgba(255, 247, 231, 0.46);
+  background: var(--signal-bg);
 }
 
 .signal-strip dt {
@@ -408,9 +409,10 @@ select:focus-visible {
 .guide-steps article,
 .workflow-steps article,
 .cta {
-  border: 1px solid rgba(31, 42, 39, 0.14);
-  background: rgba(255, 247, 231, 0.72);
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
   box-shadow: var(--shadow);
+  transition: background 300ms ease, border-color 300ms ease;
 }
 
 /* ── Inspection card (hero) ── */
@@ -428,9 +430,15 @@ select:focus-visible {
   inset: 0;
   content: "";
   background:
-    linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.52), transparent),
-    radial-gradient(circle at 20% 10%, rgba(200, 107, 60, 0.22), transparent 12rem);
+    linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.32), transparent),
+    radial-gradient(circle at 20% 10%, rgba(200, 107, 60, 0.18), transparent 12rem);
   pointer-events: none;
+}
+
+[data-theme="dark"] .inspection-card::before {
+  background:
+    linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.06), transparent),
+    radial-gradient(circle at 20% 10%, rgba(200, 107, 60, 0.12), transparent 12rem);
 }
 
 .card-topline,
@@ -656,11 +664,11 @@ select:focus-visible {
 
 .audience-cards article {
   padding: 24px;
-  border: 1px solid rgba(31, 42, 39, 0.14);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-md);
-  background: rgba(255, 247, 231, 0.72);
+  background: var(--card-bg);
   box-shadow: var(--shadow);
-  transition: transform 240ms ease, box-shadow 240ms ease;
+  transition: transform 240ms ease, box-shadow 240ms ease, background 300ms ease;
 }
 
 .audience-cards article:hover {
@@ -677,7 +685,8 @@ select:focus-visible {
   color: var(--sea);
   border: 2px solid rgba(15, 118, 110, 0.22);
   border-radius: 14px;
-  background: rgba(223, 244, 234, 0.42);
+  background: var(--foam);
+  opacity: 0.85;
 }
 
 .audience-cards p {
@@ -824,10 +833,10 @@ select:focus-visible {
   width: 100%;
   min-height: 50px;
   padding: 0 14px;
-  border: 1px solid rgba(31, 42, 39, 0.16);
+  border: 1px solid var(--input-border);
   border-radius: 16px;
   color: var(--ink);
-  background: rgba(255, 247, 231, 0.86);
+  background: var(--input-bg);
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
@@ -847,13 +856,13 @@ select:focus-visible {
   display: grid;
   gap: 8px;
   padding: 14px;
-  border: 1px solid rgba(31, 42, 39, 0.14);
+  border: 1px solid var(--card-border);
   border-radius: 18px;
 }
 
 .input-error {
   margin: -4px 0 4px;
-  color: #8f2e22;
+  color: var(--error-color);
   font-size: 0.9rem;
   font-weight: 700;
   line-height: 1.35;
@@ -900,9 +909,9 @@ select:focus-visible {
 
 .sample-btn {
   padding: 5px 10px;
-  border: 1px solid rgba(31, 42, 39, 0.14);
+  border: 1px solid var(--card-border);
   border-radius: 999px;
-  background: rgba(255, 247, 231, 0.52);
+  background: var(--signal-bg);
   color: var(--ink);
   cursor: pointer;
   font-size: 0.8rem;
@@ -912,11 +921,11 @@ select:focus-visible {
 
 .sample-btn:hover {
   border-color: var(--sea);
-  background: rgba(223, 244, 234, 0.42);
+  background: var(--foam);
 }
 
 .sample-btn:active {
-  background: rgba(223, 244, 234, 0.7);
+  opacity: 0.8;
 }
 
 /* ── Analyze button spinner ── */
@@ -945,10 +954,8 @@ select:focus-visible {
 
 .report-panel {
   padding: 24px;
-  background:
-    linear-gradient(135deg, rgba(255, 247, 231, 0.92), rgba(223, 244, 234, 0.62)),
-    rgba(255, 247, 231, 0.7);
-  transition: opacity 300ms ease;
+  background: var(--report-bg);
+  transition: opacity 300ms ease, background 300ms ease;
 }
 
 .report-panel.is-loading {
@@ -1019,9 +1026,9 @@ select:focus-visible {
 .target-summary span {
   min-width: 0;
   padding: 8px 10px;
-  border: 1px solid rgba(31, 42, 39, 0.12);
+  border: 1px solid var(--badge-border);
   border-radius: 999px;
-  background: rgba(255, 247, 231, 0.78);
+  background: var(--badge-bg);
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.82rem;
   overflow-wrap: anywhere;
@@ -1043,9 +1050,9 @@ select:focus-visible {
 
 .finding-list li {
   padding: 14px;
-  border: 1px solid rgba(31, 42, 39, 0.1);
+  border: 1px solid var(--card-border);
   border-radius: 16px;
-  background: rgba(255, 247, 231, 0.55);
+  background: var(--finding-bg);
 }
 
 .finding-list strong {
@@ -1082,18 +1089,18 @@ select:focus-visible {
 
 .markdown-box {
   padding: 18px;
-  border: 1px dashed rgba(31, 42, 39, 0.28);
+  border: 1px dashed var(--markdown-border);
   border-radius: 20px;
-  background: rgba(242, 234, 219, 0.58);
+  background: var(--markdown-bg);
 }
 
 /* ── Checks detail (accordion) ── */
 
 .checks-detail {
   margin-top: 28px;
-  border: 1px solid rgba(31, 42, 39, 0.14);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-md);
-  background: rgba(255, 247, 231, 0.6);
+  background: var(--check-detail-bg);
   overflow: hidden;
 }
 
@@ -1112,7 +1119,7 @@ select:focus-visible {
 }
 
 .checks-detail summary:hover {
-  background: rgba(255, 247, 231, 0.9);
+  background: var(--check-detail-hover);
 }
 
 .checks-detail summary::before {
@@ -1148,9 +1155,9 @@ select:focus-visible {
 
 .checks-grid div {
   padding: 18px;
-  border: 1px solid rgba(31, 42, 39, 0.1);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-sm);
-  background: rgba(255, 247, 231, 0.55);
+  background: var(--check-item-bg);
 }
 
 .checks-grid ul {
@@ -1175,11 +1182,11 @@ select:focus-visible {
 
 .honesty-card {
   padding: 40px;
-  border: 2px dashed rgba(31, 42, 39, 0.2);
+  border: 2px dashed var(--honesty-border);
   border-radius: var(--radius-lg);
   background:
     radial-gradient(circle at 90% 80%, rgba(15, 118, 110, 0.08), transparent 16rem),
-    rgba(255, 247, 231, 0.5);
+    var(--honesty-bg);
 }
 
 .honesty-card h2 {
@@ -1275,12 +1282,28 @@ select:focus-visible {
 }
 
 .cta .button.primary {
-  color: var(--iron);
-  background: var(--paper-strong);
+  color: #1f2a27;
+  background: #fff7e7;
 }
 
 .cta .button.primary:hover {
   background: #fff;
+}
+
+[data-theme="dark"] .cta {
+  background:
+    radial-gradient(circle at 85% 20%, rgba(224, 163, 49, 0.18), transparent 17rem),
+    #0e1513;
+  border-color: rgba(232, 224, 208, 0.1);
+}
+
+[data-theme="dark"] .cta .button.primary {
+  color: #0e1513;
+  background: #e8e0d0;
+}
+
+[data-theme="dark"] .cta .eyebrow {
+  color: var(--amber);
 }
 
 .cta-ghost {
@@ -1301,7 +1324,7 @@ select:focus-visible {
   margin: 0 auto;
   padding: 24px 0 40px;
   color: var(--muted);
-  border-top: 1px solid rgba(31, 42, 39, 0.14);
+  border-top: 1px solid var(--card-border);
   font-size: 0.94rem;
 }
 
@@ -1309,6 +1332,110 @@ select:focus-visible {
   color: var(--ink);
   font-family: "IBM Plex Mono", monospace;
   font-weight: 800;
+}
+
+/* ── Theme toggle ── */
+
+.theme-toggle {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--card-border);
+  border-radius: 50%;
+  background: var(--signal-bg);
+  color: var(--ink);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 140ms ease, border-color 140ms ease, transform 160ms ease;
+}
+
+.theme-toggle:hover {
+  background: var(--nav-hover-bg);
+  transform: scale(1.08);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.theme-toggle .icon-moon {
+  display: block;
+}
+
+.theme-toggle .icon-sun {
+  display: none;
+}
+
+[data-theme="dark"] .theme-toggle .icon-moon {
+  display: none;
+}
+
+[data-theme="dark"] .theme-toggle .icon-sun {
+  display: block;
+}
+
+[data-theme="dark"] .brand-mark {
+  background: var(--amber);
+  color: #1a2320;
+}
+
+[data-theme="dark"] .pain-cards span,
+[data-theme="dark"] .guide-steps span,
+[data-theme="dark"] .workflow-steps span {
+  background: var(--sea);
+  color: #0e1513;
+}
+
+[data-theme="dark"] .checks-detail summary::before {
+  background: var(--sea);
+  color: #0e1513;
+}
+
+[data-theme="dark"] .score-ring {
+  border-color: rgba(52, 211, 153, 0.2);
+  border-top-color: var(--sea);
+  border-right-color: var(--amber);
+}
+
+[data-theme="dark"] .severity.p1 {
+  background: var(--copper);
+}
+
+[data-theme="dark"] .severity.p0 {
+  background: var(--danger);
+}
+
+[data-theme="dark"] .severity.p2 {
+  background: var(--amber);
+  color: #1a2320;
+}
+
+[data-theme="dark"] .runbook-card {
+  background:
+    radial-gradient(circle at 16% 10%, rgba(224, 163, 49, 0.14), transparent 12rem),
+    linear-gradient(145deg, #1a2822, #0e1513);
+  border-color: rgba(232, 224, 208, 0.1);
+}
+
+[data-theme="dark"] .shipyard-window {
+  background:
+    linear-gradient(135deg, rgba(52, 211, 153, 0.2), rgba(18, 28, 24, 0.98)),
+    #0e1513;
+}
+
+[data-theme="dark"] .status-dot {
+  color: #0e1513;
+}
+
+[data-theme="dark"] .guide-steps code {
+  background: var(--code-bg);
 }
 
 /* ── Scroll reveal ── */
