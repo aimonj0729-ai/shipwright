@@ -1,0 +1,53 @@
+name: Launch QA bug
+description: Report a bug found while testing Shipwright Web or a skill before launch.
+title: "[Launch QA]: "
+labels: ["bug", "launch-qa"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Shipwright. Please include the smallest repro you can.
+  - type: input
+    id: area
+    attributes:
+      label: Affected area
+      description: Page, workflow, command, or skill where you saw the issue.
+      placeholder: "Example: /skills page, install flow, skill preview"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: What should someone do to see the bug?
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: "What did you expect to happen?"
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: "What happened instead?"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, OS, device, or CLI version if relevant.
+      placeholder: "Example: Chrome 124 on macOS, mobile Safari"
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots, logs, or links
+      description: Add anything that helps us verify the issue faster.

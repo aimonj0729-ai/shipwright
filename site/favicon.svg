@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Shipwright">
+  <rect width="64" height="64" rx="16" fill="#1f2a27"/>
+  <path d="M14 40h36l-6 9H20l-6-9Z" fill="#e0a331"/>
+  <path d="M20 18h24v19H20V18Z" fill="#f2eadb"/>
+  <path d="M25 24h14M25 30h10" stroke="#0f766e" stroke-width="4" stroke-linecap="round"/>
+  <path d="M46 37l5-7 5 7h-10Z" fill="#c86b3c"/>
+</svg>

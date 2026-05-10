@@ -1,0 +1,7 @@
+interface:
+  display_name: "Launch Readiness"
+  short_description: "Audit GitHub projects before public launch"
+  brand_color: "#7C3AED"
+  default_prompt: "Audit this repo for launch readiness and give me the highest-impact fixes"
+policy:
+  allow_implicit_invocation: true

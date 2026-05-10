@@ -1,0 +1,7 @@
+interface:
+  display_name: "PRD To Issues"
+  short_description: "Break product specs into GitHub-ready implementation issues"
+  brand_color: "#16A34A"
+  default_prompt: "Convert this PRD into GitHub issues ordered by a shippable first release"
+policy:
+  allow_implicit_invocation: true

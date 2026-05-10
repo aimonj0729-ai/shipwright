@@ -1,0 +1,7 @@
+interface:
+  display_name: "README Install Audit"
+  short_description: "Test whether a repo is installable by a first-time user"
+  brand_color: "#2563EB"
+  default_prompt: "Audit this README from a first-time user's install path"
+policy:
+  allow_implicit_invocation: true
