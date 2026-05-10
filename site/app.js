@@ -431,6 +431,9 @@ const escapeHtml = (value) =>
     return entities[character];
   });
 
+const reportEmpty = document.querySelector("#reportEmpty");
+const reportContent = document.querySelector("#reportContent");
+
 const targetPattern = /^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/;
 
 const parseTarget = (target) => {
@@ -481,6 +484,20 @@ const setTargetError = (message = "") => {
 const scoreOffset = (target) => {
   const total = [...target].reduce((sum, character) => sum + character.charCodeAt(0), 0);
   return (total % 9) - 4;
+};
+
+const detectProjectType = (url) => {
+  const lower = url.toLowerCase();
+  if (/mcp|server/.test(lower)) return "mcp";
+  if (/template|starter|boilerplate/.test(lower)) return "template";
+  if (/skill|command|agent/.test(lower)) return "skill";
+  if (/cli|sdk|tool|api/.test(lower)) return "cli";
+  return "web";
+};
+
+const showReport = () => {
+  if (reportEmpty) reportEmpty.hidden = true;
+  if (reportContent) reportContent.hidden = false;
 };
 
 const selectedChannels = () =>
@@ -589,6 +606,7 @@ const renderReport = () => {
   nextPatch.textContent = profile.nextPatch;
 
   animateScore(score);
+  showReport();
 
   currentMarkdown = buildMarkdown({ target, profile, score, channels });
   return true;
@@ -683,11 +701,67 @@ downloadReport.addEventListener("click", () => {
 document.querySelectorAll(".sample-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
     targetInput.value = btn.dataset.url;
-    projectType.value = btn.dataset.type;
+    projectType.value = btn.dataset.type || detectProjectType(btn.dataset.url);
     setTargetError();
     targetInput.focus();
   });
 });
+
+/* ── Hero quick-start form ── */
+
+const heroQuickForm = document.querySelector("#heroQuickForm");
+const quickInput = document.querySelector("#quickInput");
+
+if (heroQuickForm && quickInput) {
+  const submitHeroForm = (url, type) => {
+    targetInput.value = url;
+    if (type && projectProfiles[type]) {
+      projectType.value = type;
+    } else {
+      projectType.value = detectProjectType(url);
+    }
+    setTargetError();
+
+    btnText.textContent = "Analyzing…";
+    btnSpinner.hidden = false;
+    analyzeBtn.disabled = true;
+    reportPanel.classList.add("is-loading");
+
+    const analyzerSection = document.querySelector("#analyzer");
+    if (analyzerSection) {
+      analyzerSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    window.setTimeout(() => {
+      const rendered = renderReport();
+      btnText.textContent = "Analyze launch risk";
+      btnSpinner.hidden = true;
+      analyzeBtn.disabled = false;
+      reportPanel.classList.remove("is-loading");
+
+      if (rendered) {
+        window.setTimeout(() => reportPanel.scrollIntoView({ behavior: "smooth", block: "center" }), 200);
+      }
+    }, 800);
+  };
+
+  heroQuickForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const url = quickInput.value.trim();
+    if (!url) {
+      quickInput.focus();
+      return;
+    }
+    submitHeroForm(url);
+  });
+
+  document.querySelectorAll(".quick-sample").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      quickInput.value = btn.dataset.url;
+      submitHeroForm(btn.dataset.url, btn.dataset.type);
+    });
+  });
+}
 
 /* ── Inspection radar waypoint details ── */
 
@@ -960,4 +1034,3 @@ if (!prefersReduced) {
 }
 
 initReveal();
-renderReport();

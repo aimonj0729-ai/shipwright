@@ -29,8 +29,8 @@
         <span>Shipwright</span>
       </a>
       <nav class="nav-links" aria-label="Primary navigation">
-        <a href="#guide">Guide</a>
         <a href="#analyzer">Analyzer</a>
+        <a href="#guide">Guide</a>
         <a href="#audience">Who</a>
         <a href="#workflow">Workflow</a>
         <a href="https://github.com/aimonj0729-ai/shipwright">GitHub</a>
@@ -47,16 +47,34 @@
           <p class="eyebrow">Launch QA for vibe-coded projects</p>
           <h1>Before you ship the AI-built app, make it survive first contact.</h1>
           <p class="hero-lede">
-            Paste a GitHub repo or demo URL. Shipwright turns agent output into a
-            launch-readiness report: browser health, README install friction,
-            fake-complete features, GitHub metadata, and the next fixes that matter.
+            <span class="hero-lede-badge" aria-hidden="true"></span>
+            Paste a GitHub repo or demo URL. Shipwright generates a launch-readiness
+            report in seconds — browser health, README friction, fake-complete features,
+            and the next fixes that matter.
           </p>
-          <div class="hero-actions">
-            <a class="button primary" href="#analyzer">Run the demo audit</a>
-            <a class="button ghost" href="#guide">Read the guide</a>
-            <a class="button ghost" href="https://github.com/aimonj0729-ai/shipwright">
-              Install the skills
-            </a>
+          <form class="hero-quick-start" id="heroQuickForm">
+            <div class="quick-input-wrap">
+              <input
+                id="quickInput"
+                type="text"
+                placeholder="owner/repo or https://github.com/user/project"
+                autocomplete="off"
+                aria-label="Repository or demo URL"
+              />
+              <button class="button primary" type="submit">Analyze</button>
+            </div>
+            <div class="quick-samples">
+              <span>Try a sample:</span>
+              <button type="button" class="quick-sample" data-url="https://github.com/vercel/next.js" data-type="web">Web app</button>
+              <button type="button" class="quick-sample" data-url="https://github.com/aimonj0729-ai/shipwright" data-type="skill">Skill pack</button>
+              <button type="button" class="quick-sample" data-url="https://github.com/modelcontextprotocol/servers" data-type="mcp">MCP server</button>
+              <button type="button" class="quick-sample" data-url="https://github.com/anthropics/anthropic-sdk-python" data-type="cli">CLI tool</button>
+            </div>
+          </form>
+          <div class="hero-secondary">
+            <a href="#guide">Read the guide</a>
+            <span class="dot-sep">&middot;</span>
+            <a href="https://github.com/aimonj0729-ai/shipwright">View on GitHub</a>
           </div>
           <dl class="signal-strip" aria-label="Product signals">
             <div>
@@ -122,43 +140,170 @@
         </div>
       </section>
 
-      <div class="section-divider" aria-hidden="true"><span></span></div>
+      <section id="analyzer" class="analyzer section-shell" aria-labelledby="analyzer-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Try it now</p>
+            <h2 id="analyzer-title">Generate a launch QA report.</h2>
+          </div>
+          <p>
+            Paste any GitHub repo URL or owner/repo. The demo generates a structured
+            report you can copy into Claude Code or Codex as a fix plan.
+          </p>
+        </div>
 
-      <section id="audience" class="audience section-shell" aria-labelledby="audience-title">
-        <div class="section-heading compact-heading">
-          <p class="eyebrow">Who is this for</p>
-          <h2 id="audience-title">Built for builders who ship fast and want it to actually work.</h2>
+        <div class="analyzer-grid">
+          <form class="audit-form" id="auditForm">
+            <label for="targetInput">Repository or demo URL</label>
+            <input
+              id="targetInput"
+              name="target"
+              type="text"
+              placeholder="https://github.com/user/project or http://localhost:3000"
+              autocomplete="off"
+              aria-describedby="targetError"
+            />
+            <p class="input-error" id="targetError" role="alert" hidden>
+              Enter a GitHub repo URL, owner/repo, or http(s) demo URL.
+            </p>
+
+            <div class="sample-repos">
+              <span class="sample-label">Try a sample:</span>
+              <button class="sample-btn" type="button" data-url="https://github.com/aimonj0729-ai/shipwright" data-type="skill">Skill pack</button>
+              <button class="sample-btn" type="button" data-url="https://github.com/vercel/next.js" data-type="web">Web app</button>
+              <button class="sample-btn" type="button" data-url="https://github.com/anthropics/anthropic-sdk-python" data-type="cli">CLI tool</button>
+              <button class="sample-btn" type="button" data-url="https://github.com/modelcontextprotocol/servers" data-type="mcp">MCP server</button>
+            </div>
+
+            <label for="projectType">Project type</label>
+            <select id="projectType" name="projectType">
+              <option value="web">Web app / landing page</option>
+              <option value="skill">Skill pack</option>
+              <option value="mcp">MCP server</option>
+              <option value="cli">CLI / developer tool</option>
+              <option value="template">Template repo</option>
+            </select>
+
+            <fieldset>
+              <legend>Launch channel</legend>
+              <label class="check-row">
+                <input type="checkbox" name="channels" value="GitHub" checked />
+                <span>GitHub</span>
+              </label>
+              <label class="check-row">
+                <input type="checkbox" name="channels" value="X" checked />
+                <span>X / LinkedIn</span>
+              </label>
+              <label class="check-row">
+                <input type="checkbox" name="channels" value="Product Hunt" />
+                <span>Product Hunt</span>
+              </label>
+            </fieldset>
+
+            <button class="button primary full" type="submit" id="analyzeBtn">
+              <span class="btn-text">Analyze launch risk</span>
+              <span class="btn-spinner" hidden aria-hidden="true"></span>
+            </button>
+            <p class="form-note">
+              No network call is made. The report models the product shape and
+              audit categories Shipwright skills perform locally.
+            </p>
+          </form>
+
+          <article class="report-panel" id="reportPanel" aria-live="polite" aria-atomic="true" tabindex="-1">
+            <div class="report-empty" id="reportEmpty">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <p>Paste a repo URL and click <strong>Analyze</strong> to generate your launch QA report.</p>
+            </div>
+            <div class="report-content" id="reportContent" hidden>
+              <div class="report-header">
+                <div>
+                  <p class="eyebrow">Launch verdict</p>
+                  <h3 id="verdictTitle">Almost ready</h3>
+                </div>
+                <div class="score-ring" id="scoreRing" aria-label="Launch score 76 out of 100">
+                  <span id="scoreValue">76</span>
+                </div>
+              </div>
+
+              <div class="target-summary">
+                <span id="targetBadge">aimonj0729-ai/shipwright</span>
+                <span id="typeBadge">Skill pack</span>
+              </div>
+
+              <div class="report-section">
+                <h4>Critical findings</h4>
+                <ul id="findingsList" class="finding-list"></ul>
+              </div>
+
+              <div class="report-section report-columns">
+                <div>
+                  <h4>Audit coverage</h4>
+                  <ul id="coverageList" class="check-list"></ul>
+                </div>
+                <div>
+                  <h4>Launch metadata</h4>
+                  <ul id="metadataList" class="check-list"></ul>
+                </div>
+              </div>
+
+              <div class="report-section markdown-box">
+                <h4>Next patch</h4>
+                <p id="nextPatch">
+                  Add expected install output, include a demo report above the fold, and verify the
+                  first-use path from a clean checkout.
+                </p>
+              </div>
+
+              <div class="report-actions">
+                <button class="button ghost compact" id="copyReport" type="button">Copy report</button>
+                <button class="button ghost compact" id="downloadReport" type="button">Download .md</button>
+              </div>
+            </div>
+          </article>
         </div>
-        <div class="audience-cards">
-          <article>
-            <div class="audience-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/></svg>
+
+        <details class="checks-detail" id="checksDetail">
+          <summary>What does Shipwright actually check?</summary>
+          <div class="checks-grid">
+            <div>
+              <h4>Agent output review</h4>
+              <ul>
+                <li>Hallucinated feature claims</li>
+                <li>Fake buttons and dead links</li>
+                <li>TODO / FIXME / placeholder strings</li>
+                <li>Unverified integration references</li>
+              </ul>
             </div>
-            <h3>Vibe coders</h3>
-            <p>You built it with Claude, Cursor, or Copilot in a weekend. Before you tweet the link, make sure it survives a stranger clicking "Get started."</p>
-          </article>
-          <article>
-            <div class="audience-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <div>
+              <h4>Browser launch audit</h4>
+              <ul>
+                <li>Console errors and warnings</li>
+                <li>Network 4xx/5xx failures</li>
+                <li>Interactive element functionality</li>
+                <li>Mobile layout at 390px and 768px</li>
+              </ul>
             </div>
-            <h3>Indie hackers</h3>
-            <p>You're launching on Product Hunt next week. Shipwright catches the broken mobile layout and missing env vars before your first users do.</p>
-          </article>
-          <article>
-            <div class="audience-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <div>
+              <h4>README install audit</h4>
+              <ul>
+                <li>Missing env vars or API keys</li>
+                <li>Version constraint gaps</li>
+                <li>Expected output not shown</li>
+                <li>First-run path ambiguity</li>
+              </ul>
             </div>
-            <h3>Open source maintainers</h3>
-            <p>Your README says "easy setup" but a new contributor gives up at step 3. Shipwright walks the install path like a stranger and reports where it breaks.</p>
-          </article>
-          <article>
-            <div class="audience-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            <div>
+              <h4>GitHub release checklist</h4>
+              <ul>
+                <li>Repo topics and description</li>
+                <li>Release notes completeness</li>
+                <li>Launch post copy quality</li>
+                <li>Contributor-facing next issues</li>
+              </ul>
             </div>
-            <h3>AI skill / MCP authors</h3>
-            <p>Your skill pack or MCP server looks done in the editor. Shipwright checks trigger descriptions, install paths, and security boundaries before publish.</p>
-          </article>
-        </div>
+          </div>
+        </details>
       </section>
 
       <div class="section-divider" aria-hidden="true"><span></span></div>
@@ -227,6 +372,45 @@
               is part of the product: no fake green checks.
             </p>
           </aside>
+        </div>
+      </section>
+
+      <div class="section-divider" aria-hidden="true"><span></span></div>
+
+      <section id="audience" class="audience section-shell" aria-labelledby="audience-title">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Who is this for</p>
+          <h2 id="audience-title">Built for builders who ship fast and want it to actually work.</h2>
+        </div>
+        <div class="audience-cards">
+          <article>
+            <div class="audience-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/></svg>
+            </div>
+            <h3>Vibe coders</h3>
+            <p>You built it with Claude, Cursor, or Copilot in a weekend. Before you tweet the link, make sure it survives a stranger clicking "Get started."</p>
+          </article>
+          <article>
+            <div class="audience-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <h3>Indie hackers</h3>
+            <p>You're launching on Product Hunt next week. Shipwright catches the broken mobile layout and missing env vars before your first users do.</p>
+          </article>
+          <article>
+            <div class="audience-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <h3>Open source maintainers</h3>
+            <p>Your README says "easy setup" but a new contributor gives up at step 3. Shipwright walks the install path like a stranger and reports where it breaks.</p>
+          </article>
+          <article>
+            <div class="audience-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <h3>AI skill / MCP authors</h3>
+            <p>Your skill pack or MCP server looks done in the editor. Shipwright checks trigger descriptions, install paths, and security boundaries before publish.</p>
+          </article>
         </div>
       </section>
 
@@ -392,167 +576,6 @@
             <p>The route ends with the smallest next fix, not a vague quality score.</p>
           </article>
         </div>
-      </section>
-
-      <section id="analyzer" class="analyzer section-shell" aria-labelledby="analyzer-title">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Static product demo</p>
-            <h2 id="analyzer-title">Generate a launch QA report.</h2>
-          </div>
-          <p>
-            This browser demo models the product experience. The open-source skills in
-            the repo are the executable workflow for real Codex and Claude Code audits.
-          </p>
-        </div>
-
-        <div class="analyzer-grid">
-          <form class="audit-form" id="auditForm">
-            <label for="targetInput">Repository or demo URL</label>
-            <input
-              id="targetInput"
-              name="target"
-              type="text"
-              value="https://github.com/aimonj0729-ai/shipwright"
-              placeholder="https://github.com/user/project or http://localhost:3000"
-              autocomplete="off"
-              aria-describedby="targetError"
-            />
-            <p class="input-error" id="targetError" role="alert" hidden>
-              Enter a GitHub repo URL, owner/repo, or http(s) demo URL.
-            </p>
-
-            <div class="sample-repos">
-              <span class="sample-label">Try a sample:</span>
-              <button class="sample-btn" type="button" data-url="https://github.com/aimonj0729-ai/shipwright" data-type="skill">Skill pack</button>
-              <button class="sample-btn" type="button" data-url="https://github.com/vercel/next.js" data-type="web">Web app</button>
-              <button class="sample-btn" type="button" data-url="https://github.com/anthropics/anthropic-sdk-python" data-type="cli">CLI tool</button>
-              <button class="sample-btn" type="button" data-url="https://github.com/modelcontextprotocol/servers" data-type="mcp">MCP server</button>
-            </div>
-
-            <label for="projectType">Project type</label>
-            <select id="projectType" name="projectType">
-              <option value="web">Web app / landing page</option>
-              <option value="skill">Skill pack</option>
-              <option value="mcp">MCP server</option>
-              <option value="cli">CLI / developer tool</option>
-              <option value="template">Template repo</option>
-            </select>
-
-            <fieldset>
-              <legend>Launch channel</legend>
-              <label class="check-row">
-                <input type="checkbox" name="channels" value="GitHub" checked />
-                <span>GitHub</span>
-              </label>
-              <label class="check-row">
-                <input type="checkbox" name="channels" value="X" checked />
-                <span>X / LinkedIn</span>
-              </label>
-              <label class="check-row">
-                <input type="checkbox" name="channels" value="Product Hunt" />
-                <span>Product Hunt</span>
-              </label>
-            </fieldset>
-
-            <button class="button primary full" type="submit" id="analyzeBtn">
-              <span class="btn-text">Analyze launch risk</span>
-              <span class="btn-spinner" hidden aria-hidden="true"></span>
-            </button>
-            <p class="form-note">
-              No network call is made in this demo. The generated report shows the product shape
-              and the exact audit categories Shipwright skills perform locally.
-            </p>
-          </form>
-
-          <article class="report-panel" id="reportPanel" aria-live="polite" aria-atomic="true" tabindex="-1">
-            <div class="report-header">
-              <div>
-                <p class="eyebrow">Launch verdict</p>
-                <h3 id="verdictTitle">Almost ready</h3>
-              </div>
-              <div class="score-ring" id="scoreRing" aria-label="Launch score 76 out of 100">
-                <span id="scoreValue">76</span>
-              </div>
-            </div>
-
-            <div class="target-summary">
-              <span id="targetBadge">aimonj0729-ai/shipwright</span>
-              <span id="typeBadge">Skill pack</span>
-            </div>
-
-            <div class="report-section">
-              <h4>Critical findings</h4>
-              <ul id="findingsList" class="finding-list"></ul>
-            </div>
-
-            <div class="report-section report-columns">
-              <div>
-                <h4>Audit coverage</h4>
-                <ul id="coverageList" class="check-list"></ul>
-              </div>
-              <div>
-                <h4>Launch metadata</h4>
-                <ul id="metadataList" class="check-list"></ul>
-              </div>
-            </div>
-
-            <div class="report-section markdown-box">
-              <h4>Next patch</h4>
-              <p id="nextPatch">
-                Add expected install output, include a demo report above the fold, and verify the
-                first-use path from a clean checkout.
-              </p>
-            </div>
-
-            <div class="report-actions">
-              <button class="button ghost compact" id="copyReport" type="button">Copy report</button>
-              <button class="button ghost compact" id="downloadReport" type="button">Download .md</button>
-            </div>
-          </article>
-        </div>
-
-        <details class="checks-detail" id="checksDetail">
-          <summary>What does Shipwright actually check?</summary>
-          <div class="checks-grid">
-            <div>
-              <h4>Agent output review</h4>
-              <ul>
-                <li>Hallucinated feature claims</li>
-                <li>Fake buttons and dead links</li>
-                <li>TODO / FIXME / placeholder strings</li>
-                <li>Unverified integration references</li>
-              </ul>
-            </div>
-            <div>
-              <h4>Browser launch audit</h4>
-              <ul>
-                <li>Console errors and warnings</li>
-                <li>Network 4xx/5xx failures</li>
-                <li>Interactive element functionality</li>
-                <li>Mobile layout at 390px and 768px</li>
-              </ul>
-            </div>
-            <div>
-              <h4>README install audit</h4>
-              <ul>
-                <li>Missing env vars or API keys</li>
-                <li>Version constraint gaps</li>
-                <li>Expected output not shown</li>
-                <li>First-run path ambiguity</li>
-              </ul>
-            </div>
-            <div>
-              <h4>GitHub release checklist</h4>
-              <ul>
-                <li>Repo topics and description</li>
-                <li>Release notes completeness</li>
-                <li>Launch post copy quality</li>
-                <li>Contributor-facing next issues</li>
-              </ul>
-            </div>
-          </div>
-        </details>
       </section>
 
       <div class="section-divider" aria-hidden="true"><span></span></div>
