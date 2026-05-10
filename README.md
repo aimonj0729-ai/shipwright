@@ -40,7 +40,9 @@ You can use each skill standalone, or chain them for end-to-end product developm
 
 ## Website / Product Demo
 
-The `site/` directory contains a static product demo for Shipwright: a launch QA landing page with an interactive analyzer mockup, Markdown report generation, and copy/download actions. It is intentionally a prototype wrapper around the open-source skills, not the executable audit engine itself.
+**Live site: [shipwright-launch.vercel.app](https://shipwright-launch.vercel.app)**
+
+The `site/` directory contains the product demo for Shipwright: a launch QA landing page with an interactive analyzer, Markdown report generation, and copy/download actions. It is intentionally a prototype wrapper around the open-source skills, not the executable audit engine itself.
 
 Preview it locally:
 
@@ -49,8 +51,6 @@ python3 -m http.server 4173 --directory site
 ```
 
 Then open `http://localhost:4173`.
-
-To publish it with GitHub Pages, deploy the contents of `site/` through a Pages workflow or publish them to a `gh-pages` branch. Once Pages is enabled for this repository, the expected project URL is `https://aimonj0729-ai.github.io/shipwright/`.
 
 ## Skills
 
