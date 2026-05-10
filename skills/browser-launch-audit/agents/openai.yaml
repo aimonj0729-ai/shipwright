@@ -1,0 +1,7 @@
+interface:
+  display_name: "Browser Launch Audit"
+  short_description: "Verify web apps in a real browser before shipping"
+  brand_color: "#0F766E"
+  default_prompt: "Open this app in the browser and audit whether it is ready to launch"
+policy:
+  allow_implicit_invocation: true

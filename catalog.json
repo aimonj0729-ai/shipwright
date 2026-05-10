@@ -1,0 +1,67 @@
+{
+  "name": "shipwright",
+  "description": "Claude Code and Codex skills for turning trends into products and shipping trustworthy GitHub projects.",
+  "version": "0.2.0",
+  "skills": [
+    {
+      "name": "github-radar",
+      "category": "research",
+      "path": "skills/github-radar",
+      "use_when": "Scanning GitHub Trending, Explore, or hot repositories for builder opportunities."
+    },
+    {
+      "name": "trend-to-product",
+      "category": "product",
+      "path": "skills/trend-to-product",
+      "use_when": "Turning a hot repository, trend, or competitor into a differentiated MVP."
+    },
+    {
+      "name": "idea-to-prd",
+      "category": "product",
+      "path": "skills/idea-to-prd",
+      "use_when": "Converting a rough product idea into a lean PRD."
+    },
+    {
+      "name": "prd-to-issues",
+      "category": "planning",
+      "path": "skills/prd-to-issues",
+      "use_when": "Breaking a PRD into GitHub-ready issues."
+    },
+    {
+      "name": "launch-readiness",
+      "category": "launch",
+      "path": "skills/launch-readiness",
+      "use_when": "Auditing a GitHub project before public promotion."
+    },
+    {
+      "name": "browser-launch-audit",
+      "category": "qa",
+      "path": "skills/browser-launch-audit",
+      "use_when": "Verifying a web app or demo URL in a real browser before shipping."
+    },
+    {
+      "name": "readme-install-audit",
+      "category": "qa",
+      "path": "skills/readme-install-audit",
+      "use_when": "Testing whether a first-time user can install and use a repo from the README."
+    },
+    {
+      "name": "agent-output-review",
+      "category": "qa",
+      "path": "skills/agent-output-review",
+      "use_when": "Reviewing AI-generated work for hallucinated claims, fake-complete features, and missing verification."
+    },
+    {
+      "name": "github-release-checklist",
+      "category": "launch",
+      "path": "skills/github-release-checklist",
+      "use_when": "Preparing repo metadata, release notes, launch copy, and final release blockers."
+    },
+    {
+      "name": "workflow-to-skill",
+      "category": "skill-building",
+      "path": "skills/workflow-to-skill",
+      "use_when": "Turning a repeated agent workflow into an installable skill."
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 ![Codex](https://img.shields.io/badge/Codex-compatible-orange)
 ![License: MIT](https://img.shields.io/github/license/aimonj0729-ai/shipwright)
 
-Practical Claude Code and Codex skills for indie builders who want to turn fast-moving GitHub trends into product ideas, PRDs, issues, and launch-ready projects.
+Practical Claude Code and Codex skills for indie builders who want to turn fast-moving GitHub trends into product ideas, PRDs, issues, launch-ready repositories, and browser-tested projects.
 
 This is not a prompt dump. Each skill is a reusable workflow for a real builder pain:
 
@@ -12,6 +12,8 @@ This is not a prompt dump. Each skill is a reusable workflow for a real builder 
 - Ideas that never become scoped products.
 - PRDs that do not turn into buildable issues.
 - GitHub projects that look useful but are not packaged well enough to earn trust.
+- AI-generated apps that look done in code but break in the browser.
+- README files that sound polished but fail for first-time users.
 - Recurring agent workflows that should become installable skills.
 
 ## Who Is This For
@@ -45,7 +47,22 @@ You can use each skill standalone, or chain them for end-to-end product developm
 | `idea-to-prd` | Convert a rough product idea into a lean PRD with assumptions, scope, and acceptance criteria. |
 | `prd-to-issues` | Break a PRD into GitHub-ready implementation issues ordered by delivery sequence. |
 | `launch-readiness` | Audit a GitHub project before launch for README, install, demo, trust, and conversion gaps. |
+| `browser-launch-audit` | Verify a web app, localhost build, or demo URL in a real browser before shipping. |
+| `readme-install-audit` | Test whether a first-time user can install and use a repo from the README alone. |
+| `agent-output-review` | Catch hallucinated, incomplete, or fake-complete AI-generated work before accepting it. |
+| `github-release-checklist` | Package a repo for public GitHub release with metadata, release notes, and launch copy. |
 | `workflow-to-skill` | Turn a repeated agent workflow into a clean, installable skill. |
+
+## Launch QA Pack
+
+The v2 focus is the last mile of AI-built projects:
+
+1. `agent-output-review` checks whether the agent actually built what it claimed.
+2. `browser-launch-audit` opens the project and verifies the real user experience.
+3. `readme-install-audit` follows the public install path like a stranger would.
+4. `github-release-checklist` turns the verified repo into a launchable GitHub package.
+
+Use these together when you are about to publish a vibe-coded app, skill pack, template, MCP server, CLI, or open source developer tool.
 
 ## Install
 
@@ -122,6 +139,30 @@ Use `launch-readiness`:
 Audit this repository for launch readiness before I post it on GitHub, X, and Product Hunt.
 ```
 
+Use `browser-launch-audit`:
+
+```text
+Open http://localhost:3000 and audit whether this app is ready to launch. Check console errors, broken interactions, mobile layout, and trust gaps.
+```
+
+Use `readme-install-audit`:
+
+```text
+Follow this repo's README like a first-time user and tell me exactly where installation or first-use breaks.
+```
+
+Use `agent-output-review`:
+
+```text
+Review the work this agent just produced. Is it actually usable, or did it leave fake buttons, missing setup, or unverified claims?
+```
+
+Use `github-release-checklist`:
+
+```text
+Prepare this repository for a public GitHub release. Give me metadata, release notes, topics, launch copy, and the last blockers.
+```
+
 Use `workflow-to-skill`:
 
 ```text
@@ -146,6 +187,7 @@ The `examples/` directory contains sample outputs from real skill runs:
 - [Product Brief](examples/product-brief.md) — Trend-to-product output for this skill pack.
 - [PRD to Issues](examples/prd-to-issues.md) — PRD broken into implementation issues.
 - [Launch Readiness Audit](examples/launch-readiness.md) — Pre-launch repository audit.
+- [Launch QA Report](examples/launch-qa-report.md) — Browser, README, and release-readiness audit for AI-built projects.
 
 ## Design Principles
 
@@ -159,6 +201,8 @@ The `examples/` directory contains sample outputs from real skill runs:
 
 - Add a `repo-positioning` skill for improving names, descriptions, topics, and README conversion.
 - Add a `demo-script` skill for turning a project into a short launch video script.
+- Add an `agent-memory-audit` skill for cleaning stale or risky long-term agent memory.
+- Add an `industry-workflow-template` skill for turning vertical examples into installable agent workflows.
 - Add a `skill-evaluator` skill for testing whether a skill triggers correctly and produces useful output.
 - Add example reports from real GitHub Trending days.
 

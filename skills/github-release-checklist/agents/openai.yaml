@@ -1,0 +1,7 @@
+interface:
+  display_name: "GitHub Release Checklist"
+  short_description: "Package a repo for a trustworthy GitHub launch"
+  brand_color: "#111827"
+  default_prompt: "Prepare this repository for a GitHub release and write the launch checklist"
+policy:
+  allow_implicit_invocation: true

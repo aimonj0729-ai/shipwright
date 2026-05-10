@@ -1,0 +1,7 @@
+interface:
+  display_name: "Agent Output Review"
+  short_description: "Catch hallucinated or incomplete AI-generated work"
+  brand_color: "#B45309"
+  default_prompt: "Review this agent output and tell me whether it is actually usable"
+policy:
+  allow_implicit_invocation: true
