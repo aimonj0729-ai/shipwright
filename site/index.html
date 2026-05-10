@@ -25,6 +25,7 @@
         <span>Shipwright</span>
       </a>
       <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#guide">Guide</a>
         <a href="#analyzer">Analyzer</a>
         <a href="#workflow">Workflow</a>
         <a href="https://github.com/aimonj0729-ai/shipwright">GitHub</a>
@@ -43,6 +44,7 @@
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#analyzer">Run the demo audit</a>
+            <a class="button ghost" href="#guide">Read the guide</a>
             <a class="button ghost" href="https://github.com/aimonj0729-ai/shipwright">
               Install the skills
             </a>
@@ -106,6 +108,73 @@
             <h3>The launch page has no sharp promise.</h3>
             <p>Strangers need a quickstart, proof, limitations, and GitHub metadata before they trust it.</p>
           </article>
+        </div>
+      </section>
+
+      <section id="guide" class="usage-guide section-shell" aria-labelledby="guide-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Usage guide</p>
+            <h2 id="guide-title">Use Shipwright in two modes.</h2>
+          </div>
+          <p>
+            The website is the product demo and report builder. The installed skills are the
+            real agent workflow for evidence-backed browser, README, and release audits.
+          </p>
+        </div>
+
+        <div class="guide-layout">
+          <div class="guide-steps" aria-label="Website usage steps">
+            <article>
+              <span>01</span>
+              <h3>Paste the thing you want to ship.</h3>
+              <p>
+                Use a GitHub repo, `owner/repo`, a localhost URL, or a public demo URL.
+                Shipwright is built for web apps, skill packs, MCP servers, CLIs, and templates.
+              </p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Generate the launch risk report.</h3>
+              <p>
+                Choose the project type and launch channels. The demo report shows the exact
+                categories Shipwright checks: fake-complete work, browser health, install path,
+                and GitHub packaging.
+              </p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Turn findings into the next patch.</h3>
+              <p>
+                Copy or download the Markdown report, then give it to Codex or Claude Code as
+                the fix plan before posting the project publicly.
+              </p>
+            </article>
+          </div>
+
+          <aside class="runbook-card" aria-label="Real audit guide">
+            <div class="runbook-topline">
+              <span>Real audit mode</span>
+              <span>Codex / Claude Code</span>
+            </div>
+            <p>
+              For a real audit, install the skills and ask your agent to run the checks
+              against your local repo or URL.
+            </p>
+            <pre><code>./scripts/install.sh --codex</code></pre>
+            <div class="prompt-card">
+              <span>Example prompt</span>
+              <p>
+                Open http://localhost:3000 and run a Shipwright launch QA audit.
+                Check browser errors, README install friction, fake-complete agent output,
+                mobile layout, and GitHub release readiness.
+              </p>
+            </div>
+            <p class="guide-note">
+              The hosted demo does not clone repos or run browser automation yet. That honesty
+              is part of the product: no fake green checks.
+            </p>
+          </aside>
         </div>
       </section>
 
