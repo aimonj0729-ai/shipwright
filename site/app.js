@@ -1470,6 +1470,19 @@ const initFeatureNav = () => {
 
   if (sections.length === 0) return;
 
+  const centerActiveButton = (button) => {
+    const navRect = nav.getBoundingClientRect();
+    const buttonRect = button.getBoundingClientRect();
+    const currentLeft = nav.scrollLeft;
+    const buttonCenter = buttonRect.left - navRect.left + currentLeft + buttonRect.width / 2;
+    const targetLeft = buttonCenter - nav.clientWidth / 2;
+
+    nav.scrollTo({
+      left: Math.max(0, targetLeft),
+      behavior: "smooth",
+    });
+  };
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -1482,7 +1495,7 @@ const initFeatureNav = () => {
           if (window.innerWidth <= 680) {
             const activeBtn = buttons.find((btn) => btn.dataset.target === id);
             if (activeBtn) {
-              activeBtn.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+              centerActiveButton(activeBtn);
             }
           }
         }
