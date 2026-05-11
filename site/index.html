@@ -38,7 +38,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@500;600;700;800&family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700;6..96,800;6..96,900&family=Epilogue:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
@@ -141,9 +141,66 @@
         </aside>
       </section>
 
-      <div class="section-divider" aria-hidden="true"><span></span></div>
+      <nav class="feature-nav" id="featureNav" aria-label="Features">
+        <a href="#ai-chat-section" class="feature-nav-btn" data-target="ai-chat-section">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Plan</span>
+        </a>
+        <a href="#analyzer" class="feature-nav-btn" data-target="analyzer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Audit</span>
+        </a>
+        <a href="#skills-catalog" class="feature-nav-btn" data-target="skills-catalog">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          <span>Skills</span>
+        </a>
+        <a href="#workflow" class="feature-nav-btn" data-target="workflow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span>Workflow</span>
+        </a>
+      </nav>
 
-      <section class="pain-grid section-shell" aria-labelledby="pain-title">
+      <section id="mission-control" class="mission-control section-shell" aria-labelledby="mission-title">
+        <div class="mission-copy">
+          <p class="eyebrow">Choose the job</p>
+          <h2 id="mission-title">Four doors. One clean launch path.</h2>
+          <p>
+            Shipwright is no longer just a pretty audit page. Pick the work you need now:
+            shape an idea, inspect a project, install reusable skills, or run the full
+            agent workflow.
+          </p>
+        </div>
+        <div class="mission-grid" aria-label="Shipwright function areas">
+          <a class="mission-card route-plan" href="#ai-chat-section">
+            <span class="mission-index">01</span>
+            <strong>Plan from a rough idea</strong>
+            <p>Let the AI Planner ask follow-up questions and turn a vague website concept into a buildable plan.</p>
+            <em>Start with an idea</em>
+          </a>
+          <a class="mission-card route-audit" href="#analyzer">
+            <span class="mission-index">02</span>
+            <strong>Audit a repo or demo</strong>
+            <p>Paste a GitHub URL or live demo and get a launch-readiness report with the next patch.</p>
+            <em>Run launch QA</em>
+          </a>
+          <a class="mission-card route-skills" href="#skills-catalog">
+            <span class="mission-index">03</span>
+            <strong>Install the workflow</strong>
+            <p>Use the open-source skills inside Codex or Claude Code for evidence-backed local checks.</p>
+            <em>Browse skills</em>
+          </a>
+          <a class="mission-card route-flow" href="#workflow">
+            <span class="mission-index">04</span>
+            <strong>Ship with a sequence</strong>
+            <p>Move from agent claims to browser proof, install proof, release copy, and public launch.</p>
+            <em>See workflow</em>
+          </a>
+        </div>
+      </section>
+
+      <div class="wave-divider" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,15 1440,30 L1440,60 L0,60Z" fill="currentColor"/></svg></div>
+
+      <section class="pain-grid dark-section" aria-labelledby="pain-title">
         <div>
           <p class="eyebrow">The pain</p>
           <h2 id="pain-title" class="highlight-on-scroll">AI agents are great at producing finished-looking work.</h2>
@@ -338,7 +395,7 @@
         </details>
       </section>
 
-      <div class="section-divider" aria-hidden="true"><span></span></div>
+      <div class="wave-divider" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,15 1440,30 L1440,60 L0,60Z" fill="currentColor"/></svg></div>
 
       <section id="guide" class="usage-guide section-shell" aria-labelledby="guide-title">
         <div class="section-heading">
@@ -407,7 +464,7 @@
         </div>
       </section>
 
-      <div class="section-divider" aria-hidden="true"><span></span></div>
+      <div class="wave-divider" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,15 1440,30 L1440,60 L0,60Z" fill="currentColor"/></svg></div>
 
       <section id="audience" class="audience section-shell" aria-labelledby="audience-title">
         <div class="section-heading compact-heading">
@@ -446,7 +503,7 @@
         </div>
       </section>
 
-      <div class="section-divider" aria-hidden="true"><span></span></div>
+      <div class="wave-divider" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,15 1440,30 L1440,60 L0,60Z" fill="currentColor"/></svg></div>
 
       <section id="inspection-radar" class="inspection-radar section-shell" aria-labelledby="radar-title">
         <div class="section-heading">
@@ -610,7 +667,7 @@
         </div>
       </section>
 
-      <div class="section-divider" aria-hidden="true"><span></span></div>
+      <div class="wave-divider" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,15 1440,30 L1440,60 L0,60Z" fill="currentColor"/></svg></div>
 
       <section id="workflow" class="workflow section-shell" aria-labelledby="workflow-title">
         <div class="section-heading compact-heading">
@@ -654,7 +711,7 @@
                 <li>Generate a structured launch QA report based on project type</li>
                 <li>Show the exact audit categories the real skills check</li>
                 <li>Produce a copyable/downloadable Markdown report for your agent</li>
-                <li>Model the product experience before the hosted version ships</li>
+                <li>Offer AI-powered website planning (BYOK — bring your own API key)</li>
               </ul>
             </div>
             <div class="honesty-col">
@@ -662,8 +719,8 @@
               <ul class="honesty-list does-not">
                 <li>Clone your GitHub repository or read its files</li>
                 <li>Open a real browser to check console errors or mobile layout</li>
-                <li>Call any AI model or API to analyze code</li>
-                <li>Make network requests of any kind</li>
+                <li>Store your API key on any server (key stays in your browser only)</li>
+                <li>Make requests without your explicit API key configuration</li>
               </ul>
             </div>
           </div>
@@ -732,6 +789,44 @@
         </div>
       </section>
 
+      <section id="ai-chat-section" class="ai-chat-section section-shell" aria-labelledby="ai-chat-title">
+        <div class="planner-shell">
+          <div class="planner-copy">
+            <p class="eyebrow">AI-powered planning</p>
+            <h2 id="ai-chat-title">Start messy. Leave with a build brief.</h2>
+            <p class="ai-chat-lede">
+              Tell the AI Planner your website idea. It asks targeted questions about users,
+              features, proof, stack, and visual direction, then turns the answers into a
+              complete website creation plan.
+            </p>
+            <div class="ai-chat-demo-cta">
+              <button class="button primary" id="openAiChatFromSection" type="button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Start AI Planner
+              </button>
+              <span class="ai-chat-key-hint">BYOK — key stays in localStorage and only calls your chosen API endpoint.</span>
+            </div>
+          </div>
+          <div class="planner-steps" aria-label="AI planner workflow">
+            <article>
+              <span>Ask</span>
+              <strong>Clarify the real user</strong>
+              <p>Audience, pain, proof, constraints, and what the first visit must accomplish.</p>
+            </article>
+            <article>
+              <span>Shape</span>
+              <strong>Turn answers into scope</strong>
+              <p>MVP features, page map, content blocks, design direction, and launch risks.</p>
+            </article>
+            <article>
+              <span>Review</span>
+              <strong>Send it through Shipwright</strong>
+              <p>Use the generated brief as the input, then audit the finished site before sharing.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section class="cta section-shell" aria-labelledby="cta-title">
         <p class="eyebrow">Open source first</p>
         <h2 id="cta-title">Ship fewer beautiful half-products.</h2>
@@ -760,6 +855,54 @@
         <a href="https://github.com/aimonj0729-ai/shipwright">GitHub</a>
       </div>
     </footer>
+
+    <button class="ai-chat-fab" id="aiChatFab" aria-label="Open AI Planner" type="button">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </button>
+
+    <aside class="ai-chat-panel" id="aiChatPanel" hidden>
+      <div class="ai-chat-header">
+        <h3>AI Website Planner</h3>
+        <div class="ai-chat-header-actions">
+          <button class="ai-header-btn" id="aiSettingsBtn" type="button" aria-label="AI Settings" title="Settings">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+          <button class="ai-header-btn" id="aiChatClose" type="button" aria-label="Close chat">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="ai-chat-messages" id="aiChatMessages"></div>
+      <form class="ai-chat-input-bar" id="aiChatForm">
+        <textarea id="aiChatInput" placeholder="Describe your website idea..." rows="1"></textarea>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </form>
+    </aside>
+
+    <dialog class="ai-settings-dialog" id="aiSettingsDialog">
+      <form method="dialog" class="ai-settings-form">
+        <h3>AI Planner Settings</h3>
+        <label>
+          <span>API Key</span>
+          <input type="password" id="aiApiKey" placeholder="sk-..." autocomplete="off" />
+        </label>
+        <label>
+          <span>API Base URL</span>
+          <input type="url" id="aiBaseUrl" placeholder="https://api.gptsapi.net" autocomplete="off" />
+        </label>
+        <label>
+          <span>Model</span>
+          <input type="text" id="aiModel" placeholder="claude-sonnet-4-20250514" autocomplete="off" />
+        </label>
+        <p class="ai-key-note">Your API key is stored in your browser only (localStorage). It is never sent to any server other than the API endpoint you specify above.</p>
+        <div class="ai-settings-actions">
+          <button type="button" class="button ghost compact" id="aiSettingsCancel">Cancel</button>
+          <button type="submit" class="button primary compact" id="aiSettingsSave">Save</button>
+        </div>
+      </form>
+    </dialog>
 
     <button class="back-to-top" id="backToTop" aria-label="Back to top" hidden>
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">

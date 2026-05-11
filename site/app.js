@@ -176,7 +176,7 @@ const initCounters = () => {
 
 const initStaggeredCards = () => {
   const groups = document.querySelectorAll(
-    ".pain-cards, .audience-cards, .workflow-steps, .guide-steps, .radar-checklist"
+    ".mission-grid, .pain-cards, .audience-cards, .workflow-steps, .guide-steps, .radar-checklist, .planner-steps"
   );
 
   const observer = new IntersectionObserver(
@@ -904,9 +904,23 @@ const initInspectionRadar = () => {
   setActiveNode(nodes.find((node) => node.classList.contains("is-active")) || nodes[0]);
 };
 
+const revealVariants = {
+  "mission-control": "reveal-scale",
+  "pain-grid": "reveal-left",
+  "audience": "reveal",
+  "usage-guide": "reveal",
+  "inspection-radar": "reveal",
+  "analyzer": "reveal",
+  "ai-chat-section": "reveal-left",
+  "workflow": "reveal-bounce",
+  "honesty": "reveal",
+  "skills-catalog": "reveal-scale",
+  "cta": "reveal",
+};
+
 const initReveal = () => {
   const sections = document.querySelectorAll(
-    ".pain-grid, .audience, .usage-guide, .inspection-radar, .analyzer, .workflow, .honesty, .skills-catalog, .cta"
+    ".mission-control, .pain-grid, .audience, .usage-guide, .inspection-radar, .analyzer, .ai-chat-section, .workflow, .honesty, .skills-catalog, .cta"
   );
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -914,7 +928,10 @@ const initReveal = () => {
     return;
   }
 
-  sections.forEach((section) => section.classList.add("reveal"));
+  sections.forEach((section) => {
+    const variant = Object.entries(revealVariants).find(([cls]) => section.classList.contains(cls));
+    section.classList.add(variant ? variant[1] : "reveal");
+  });
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -942,16 +959,19 @@ const initScrollProgress = () => {
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     const percent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
     bar.style.width = `${percent}%`;
+
+    const hue = 30 + (percent / 100) * 220;
+    bar.style.background = `linear-gradient(90deg, hsl(${hue - 30}, 72%, 52%), hsl(${hue}, 60%, 48%), hsl(${hue + 30}, 55%, 55%))`;
   };
 
   window.addEventListener("scroll", update, { passive: true });
   update();
 };
 
-/* ── Section divider line draw ── */
+/* ── Wave divider reveal ── */
 
 const initDividers = () => {
-  const dividers = document.querySelectorAll(".section-divider");
+  const dividers = document.querySelectorAll(".wave-divider");
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -962,7 +982,7 @@ const initDividers = () => {
         }
       });
     },
-    { threshold: 0.5 }
+    { threshold: 0.3 }
   );
 
   dividers.forEach((d) => observer.observe(d));
@@ -1070,7 +1090,7 @@ const initIconPop = () => {
 
 const initEyebrowReveal = () => {
   const eyebrows = document.querySelectorAll(
-    ".pain-grid .eyebrow, .audience .eyebrow, .usage-guide .eyebrow, .inspection-radar .eyebrow, .analyzer .eyebrow, .workflow .eyebrow, .honesty .eyebrow, .skills-catalog .eyebrow, .cta .eyebrow"
+    ".mission-control .eyebrow, .pain-grid .eyebrow, .audience .eyebrow, .usage-guide .eyebrow, .inspection-radar .eyebrow, .analyzer .eyebrow, .ai-chat-section .eyebrow, .workflow .eyebrow, .honesty .eyebrow, .skills-catalog .eyebrow, .cta .eyebrow"
   );
 
   eyebrows.forEach((eb) => eb.classList.add("eyebrow-reveal"));
@@ -1109,6 +1129,371 @@ const initBackToTop = () => {
   });
 };
 
+/* ── AI Chat — BYOK (Bring Your Own Key) ── */
+
+const AI_STORAGE_KEY = "shipwright-api-key";
+const AI_STORAGE_BASE = "shipwright-api-base";
+const AI_STORAGE_MODEL = "shipwright-api-model";
+const AI_DEFAULT_BASE = "https://api.gptsapi.net";
+const AI_DEFAULT_MODEL = "claude-sonnet-4-20250514";
+
+const AI_SYSTEM_PROMPT = `You are Shipwright AI Planner, an expert website planning assistant. When a user describes a website idea, your job is to ask smart follow-up questions to clarify:
+- Target users and their main pain point
+- Core features (MVP scope)
+- Tech stack preferences
+- Design style and branding direction
+- Content strategy
+
+Ask 1-2 questions at a time. Be concise and actionable. When you have enough information (usually after 3-4 exchanges), produce a structured website creation plan with these sections:
+1. Project Overview
+2. Target Audience
+3. Core Features (prioritized)
+4. Tech Stack Recommendation
+5. Page Structure
+6. Design Direction
+7. MVP Timeline Estimate
+8. Next Steps
+
+Write the plan in Markdown format.`;
+
+const MOCK_CONVERSATION = [
+  { role: "user", content: "I want to build a landing page for my AI writing tool that helps bloggers write faster." },
+  { role: "assistant", content: "Great idea! Two quick questions to sharpen the scope:\n\n1. **Who exactly are your target bloggers?** (e.g., solo creators, content teams, niche like tech/travel?)\n2. **What's the primary action** you want visitors to take — sign up for a waitlist, start a free trial, or something else?" },
+  { role: "user", content: "Solo content creators who publish weekly. I want them to join a waitlist with email." },
+  { role: "assistant", content: "Clear target. A couple more things:\n\n1. **Do you have a brand style** already? (colors, logo, fonts — or starting from scratch?)\n2. **What proof do you have** that the tool works? (demo video, sample output, beta user quotes?)" },
+  { role: "user", content: "Starting from scratch on brand. I have 3 beta user testimonials and a 30-second demo GIF." },
+  { role: "assistant", content: "Perfect — that's enough to build a high-converting page. Here's your plan:\n\n## Website Creation Plan\n\n### 1. Project Overview\nSingle-page landing for an AI writing tool targeting solo bloggers. Goal: collect waitlist emails with a compelling demo.\n\n### 2. Target Audience\nSolo content creators publishing 1-4 posts/week. Pain: writing takes too long, editing is tedious.\n\n### 3. Core Features\n- Hero with clear value proposition + waitlist CTA\n- Demo GIF section with before/after comparison\n- 3 testimonial cards from beta users\n- Feature highlights (3-4 key capabilities)\n- FAQ section addressing \"will AI replace my voice?\" concerns\n- Footer with waitlist CTA repeat\n\n### 4. Tech Stack\n- **Static HTML/CSS/JS** (no framework needed for a landing page)\n- **Formspree or ConvertKit** for email collection\n- **GitHub Pages** for free hosting\n- **Cloudflare** for CDN + analytics\n\n### 5. Page Structure\n`Hero → Demo → Social Proof → Features → FAQ → Final CTA → Footer`\n\n### 6. Design Direction\n- Clean, minimal with generous whitespace\n- Accent color: warm purple or teal (signals creativity + tech)\n- Typography: Sans-serif body + display heading font\n- Dark mode support\n\n### 7. MVP Timeline\n- Design: 1 day\n- Build: 2 days\n- Content + polish: 1 day\n- **Total: ~4 days to launch**\n\n### 8. Next Steps\n1. Write the hero headline and subheadline\n2. Prepare the demo GIF and testimonials\n3. Set up email collection form\n4. Build and deploy" },
+];
+
+let aiChatHistory = [];
+let aiStreamController = null;
+
+const getAIConfig = () => ({
+  key: localStorage.getItem(AI_STORAGE_KEY) || "",
+  base: localStorage.getItem(AI_STORAGE_BASE) || AI_DEFAULT_BASE,
+  model: localStorage.getItem(AI_STORAGE_MODEL) || AI_DEFAULT_MODEL,
+});
+
+const hasAIKey = () => {
+  const { key } = getAIConfig();
+  return key.length > 5;
+};
+
+const simpleMarkdown = (text) =>
+  text
+    .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^### (.+)$/gm, '<h4>$1</h4>')
+    .replace(/^## (.+)$/gm, '<h3 style="margin:12px 0 6px;font-size:1rem;">$1</h3>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>)/gs, (match) => `<ul style="margin:6px 0;padding-left:18px;">${match}</ul>`)
+    .replace(/\n{2,}/g, '<br/><br/>')
+    .replace(/\n/g, '<br/>');
+
+const addMessage = (role, content, isDemo) => {
+  const messagesEl = document.querySelector("#aiChatMessages");
+  if (!messagesEl) return;
+
+  const msg = document.createElement("div");
+  msg.className = `ai-msg ${role}${isDemo ? " demo-tag" : ""}`;
+  msg.innerHTML = role === "assistant" ? simpleMarkdown(content) : escapeHtml(content);
+
+  if (role === "assistant" && content.includes("## ")) {
+    const reviewBtn = document.createElement("button");
+    reviewBtn.className = "ai-review-btn";
+    reviewBtn.textContent = "Review with Shipwright";
+    reviewBtn.addEventListener("click", () => {
+      const analyzerSection = document.querySelector("#analyzer");
+      if (analyzerSection) analyzerSection.scrollIntoView({ behavior: "smooth" });
+    });
+    msg.append(reviewBtn);
+  }
+
+  messagesEl.append(msg);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+};
+
+const showTypingIndicator = () => {
+  const messagesEl = document.querySelector("#aiChatMessages");
+  if (!messagesEl) return;
+
+  const typing = document.createElement("div");
+  typing.className = "ai-msg-typing";
+  typing.id = "aiTyping";
+  typing.innerHTML = "<span></span><span></span><span></span>";
+  messagesEl.append(typing);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+};
+
+const removeTypingIndicator = () => {
+  const typing = document.querySelector("#aiTyping");
+  if (typing) typing.remove();
+};
+
+const runMockConversation = async () => {
+  const messagesEl = document.querySelector("#aiChatMessages");
+  if (!messagesEl) return;
+  messagesEl.innerHTML = "";
+
+  for (const msg of MOCK_CONVERSATION) {
+    showTypingIndicator();
+    await new Promise((r) => setTimeout(r, 600 + Math.random() * 400));
+    removeTypingIndicator();
+    addMessage(msg.role, msg.content, true);
+  }
+
+  const notice = document.createElement("div");
+  notice.className = "ai-demo-notice";
+  notice.innerHTML = 'This was a demo conversation. <a id="openSettingsFromDemo">Configure your API key</a> to chat with real AI.';
+  messagesEl.append(notice);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  document.querySelector("#openSettingsFromDemo")?.addEventListener("click", () => {
+    document.querySelector("#aiSettingsDialog")?.showModal();
+  });
+};
+
+const sendAIMessage = async (userMessage) => {
+  if (!hasAIKey()) {
+    await runMockConversation();
+    return;
+  }
+
+  const { key, base, model } = getAIConfig();
+
+  aiChatHistory.push({ role: "user", content: userMessage });
+  addMessage("user", userMessage, false);
+  showTypingIndicator();
+
+  const sendBtn = document.querySelector(".ai-send-btn");
+  if (sendBtn) sendBtn.disabled = true;
+
+  try {
+    aiStreamController = new AbortController();
+
+    const response = await fetch(`${base}/v1/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${key}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: "system", content: AI_SYSTEM_PROMPT },
+          ...aiChatHistory,
+        ],
+        stream: true,
+        max_tokens: 2048,
+      }),
+      signal: aiStreamController.signal,
+    });
+
+    if (!response.ok) {
+      removeTypingIndicator();
+      const errText = await response.text().catch(() => "Unknown error");
+      addMessage("assistant", `API Error (${response.status}): ${errText}\n\nCheck your API key and base URL in Settings.`, false);
+      if (sendBtn) sendBtn.disabled = false;
+      return;
+    }
+
+    removeTypingIndicator();
+
+    const messagesEl = document.querySelector("#aiChatMessages");
+    const msgEl = document.createElement("div");
+    msgEl.className = "ai-msg assistant";
+    messagesEl.append(msgEl);
+
+    let fullContent = "";
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() || "";
+
+      for (const line of lines) {
+        if (!line.startsWith("data: ")) continue;
+        const data = line.slice(6).trim();
+        if (data === "[DONE]") break;
+
+        try {
+          const parsed = JSON.parse(data);
+          const delta = parsed.choices?.[0]?.delta?.content;
+          if (delta) {
+            fullContent += delta;
+            msgEl.innerHTML = simpleMarkdown(fullContent);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+          }
+        } catch {
+          // skip malformed chunks
+        }
+      }
+    }
+
+    if (fullContent && fullContent.includes("## ")) {
+      const reviewBtn = document.createElement("button");
+      reviewBtn.className = "ai-review-btn";
+      reviewBtn.textContent = "Review with Shipwright";
+      reviewBtn.addEventListener("click", () => {
+        const analyzerSection = document.querySelector("#analyzer");
+        if (analyzerSection) analyzerSection.scrollIntoView({ behavior: "smooth" });
+      });
+      msgEl.append(reviewBtn);
+    }
+
+    aiChatHistory.push({ role: "assistant", content: fullContent });
+  } catch (err) {
+    removeTypingIndicator();
+    if (err.name !== "AbortError") {
+      addMessage("assistant", `Connection error: ${err.message}\n\nCheck your API base URL and network connection.`, false);
+    }
+  } finally {
+    if (sendBtn) sendBtn.disabled = false;
+    aiStreamController = null;
+  }
+};
+
+const initAIChat = () => {
+  const fab = document.querySelector("#aiChatFab");
+  const panel = document.querySelector("#aiChatPanel");
+  const closeBtn = document.querySelector("#aiChatClose");
+  const settingsBtn = document.querySelector("#aiSettingsBtn");
+  const dialog = document.querySelector("#aiSettingsDialog");
+  const chatForm = document.querySelector("#aiChatForm");
+  const chatInput = document.querySelector("#aiChatInput");
+  const sectionBtn = document.querySelector("#openAiChatFromSection");
+  const cancelBtn = document.querySelector("#aiSettingsCancel");
+
+  if (!fab || !panel) return;
+
+  const openPanel = () => {
+    panel.hidden = false;
+    fab.style.display = "none";
+    chatInput?.focus();
+
+    if (!document.querySelector("#aiChatMessages")?.children.length) {
+      if (hasAIKey()) {
+        addMessage("assistant", "Hi! I'm Shipwright AI Planner. Tell me about the website you want to build, and I'll ask the right questions to help you create a complete plan.\n\nWhat's your idea?", false);
+      } else {
+        runMockConversation();
+      }
+    }
+  };
+
+  const closePanel = () => {
+    panel.hidden = true;
+    fab.style.display = "";
+  };
+
+  fab.addEventListener("click", openPanel);
+  closeBtn?.addEventListener("click", closePanel);
+  sectionBtn?.addEventListener("click", openPanel);
+
+  settingsBtn?.addEventListener("click", () => dialog?.showModal());
+  cancelBtn?.addEventListener("click", () => dialog?.close());
+
+  const apiKeyInput = document.querySelector("#aiApiKey");
+  const baseUrlInput = document.querySelector("#aiBaseUrl");
+  const modelInput = document.querySelector("#aiModel");
+
+  if (dialog) {
+    dialog.addEventListener("close", () => {});
+
+    const saveBtn = document.querySelector("#aiSettingsSave");
+    saveBtn?.addEventListener("click", (e) => {
+      e.preventDefault();
+      const key = apiKeyInput?.value.trim() || "";
+      const base = baseUrlInput?.value.trim() || AI_DEFAULT_BASE;
+      const model = modelInput?.value.trim() || AI_DEFAULT_MODEL;
+
+      if (key) localStorage.setItem(AI_STORAGE_KEY, key);
+      else localStorage.removeItem(AI_STORAGE_KEY);
+
+      localStorage.setItem(AI_STORAGE_BASE, base);
+      localStorage.setItem(AI_STORAGE_MODEL, model);
+      dialog.close();
+
+      const messagesEl = document.querySelector("#aiChatMessages");
+      if (messagesEl) {
+        messagesEl.innerHTML = "";
+        aiChatHistory = [];
+        if (hasAIKey()) {
+          addMessage("assistant", "Settings saved! Tell me about the website you want to build.", false);
+        }
+      }
+    });
+
+    const config = getAIConfig();
+    if (apiKeyInput) apiKeyInput.value = config.key;
+    if (baseUrlInput) baseUrlInput.value = config.base;
+    if (modelInput) modelInput.value = config.model;
+  }
+
+  chatForm?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const message = chatInput?.value.trim();
+    if (!message) return;
+    chatInput.value = "";
+    chatInput.style.height = "auto";
+    sendAIMessage(message);
+  });
+
+  chatInput?.addEventListener("input", () => {
+    chatInput.style.height = "auto";
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + "px";
+  });
+
+  chatInput?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      chatForm?.requestSubmit();
+    }
+  });
+};
+
+/* ── Feature navigation with active tracking ── */
+
+const initFeatureNav = () => {
+  const nav = document.querySelector("#featureNav");
+  if (!nav) return;
+
+  const buttons = [...nav.querySelectorAll(".feature-nav-btn")];
+  const sectionIds = buttons.map((btn) => btn.dataset.target).filter(Boolean);
+  const sections = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
+
+  if (sections.length === 0) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          buttons.forEach((btn) => {
+            btn.classList.toggle("is-active", btn.dataset.target === id);
+          });
+
+          if (window.innerWidth <= 680) {
+            const activeBtn = buttons.find((btn) => btn.dataset.target === id);
+            if (activeBtn) {
+              activeBtn.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+            }
+          }
+        }
+      });
+    },
+    { threshold: 0.2, rootMargin: "-80px 0px -50% 0px" }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+};
+
 /* ── Init everything ── */
 
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1116,6 +1501,8 @@ const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").mat
 initScrollProgress();
 initInspectionRadar();
 initBackToTop();
+initFeatureNav();
+initAIChat();
 
 if (!prefersReduced) {
   initHeroReveal();
