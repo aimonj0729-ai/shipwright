@@ -40,7 +40,7 @@ You can use each skill standalone, or chain them for end-to-end product developm
 
 ## Website / Product Demo
 
-**Live site: [shipwright-launch.vercel.app](https://shipwright-launch.vercel.app)**
+**Live site: [shipwright.com.cn](https://shipwright.com.cn)**
 
 The `site/` directory contains the product demo for Shipwright: a launch QA landing page with an interactive analyzer, Markdown report generation, and copy/download actions. It is intentionally a prototype wrapper around the open-source skills, not the executable audit engine itself.
 
@@ -199,9 +199,14 @@ The `examples/` directory contains sample outputs from real skill runs:
 
 - [GitHub Radar Report](examples/github-radar-report.md) — Trend scan identifying builder opportunities.
 - [Product Brief](examples/product-brief.md) — Trend-to-product output for this skill pack.
+- [Idea to PRD](examples/idea-to-prd.md) — Lean PRD for a daily GitHub radar digest tool.
 - [PRD to Issues](examples/prd-to-issues.md) — PRD broken into implementation issues.
 - [Launch Readiness Audit](examples/launch-readiness.md) — Pre-launch repository audit.
-- [Launch QA Report](examples/launch-qa-report.md) — Browser, README, and release-readiness audit for AI-built projects.
+- [Browser Launch Audit](examples/browser-launch-audit.md) — Browser QA catching ghost buttons and hydration errors.
+- [README Install Audit](examples/readme-install-audit.md) — First-time install path audit for a CLI tool.
+- [Agent Output Review](examples/agent-output-review.md) — Review of AI-generated dashboard with fake auth and empty exports.
+- [Launch QA Report](examples/launch-qa-report.md) — Combined browser, README, and release-readiness audit.
+- [Workflow to Skill](examples/workflow-to-skill.md) — Packaging a repeated audit workflow into an installable skill.
 
 ## Design Principles
 

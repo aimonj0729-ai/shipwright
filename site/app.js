@@ -273,10 +273,25 @@ const projectProfiles = {
         detail: "Check 390px and 768px widths for clipped nav, overflowing cards, and unreadable form controls.",
       },
       {
+        severity: "P1",
+        title: "Console errors undermine first impressions",
+        detail: "Check DevTools for hydration mismatches, failed network requests, and unhandled promise rejections.",
+      },
+      {
         severity: "P2",
         title: "README should show expected output",
         detail: "Add the first successful terminal output or screenshot so users know the app is working.",
       },
+      {
+        severity: "P2",
+        title: "Empty states need design, not blank space",
+        detail: "New users with zero data should see a helpful message and CTA, not an empty table.",
+      },
+    ],
+    quickWins: [
+      "Add a verified screenshot to the README showing the app running.",
+      "Set a proper page title and meta description for link previews.",
+      "Add a favicon and og:image so shared links look professional.",
     ],
     nextPatch:
       "Run the browser-launch-audit skill on the demo URL, then add one verified screenshot and a README section showing the first successful run.",
@@ -292,6 +307,11 @@ const projectProfiles = {
         detail: "Each skill should explain when an agent should invoke it, including common words users actually type.",
       },
       {
+        severity: "P1",
+        title: "Example outputs prove value faster than docs",
+        detail: "Include at least one sample report per skill so users can preview what they get before installing.",
+      },
+      {
         severity: "P2",
         title: "Install path needs a restart reminder",
         detail: "Tell Claude Code and Codex users exactly where skills are linked and when to restart the agent.",
@@ -301,6 +321,11 @@ const projectProfiles = {
         title: "Example prompts are the fastest proof",
         detail: "Add one copy-paste prompt per skill and a sample report for the full workflow.",
       },
+    ],
+    quickWins: [
+      "Add a chained-use example showing skills piped together in sequence.",
+      "Include a sample output file for at least one core skill.",
+      "Add badges for compatible agents (Claude Code, Codex) at the top of README.",
     ],
     nextPatch:
       "Add one Launch QA sample report, then run readme-install-audit from a clean checkout to prove the install path.",
@@ -326,10 +351,20 @@ const projectProfiles = {
         detail: "When tool calls fail, return structured errors that help the LLM retry or explain the failure to the user.",
       },
       {
+        severity: "P1",
+        title: "Tool listing should show realistic examples",
+        detail: "Document each tool with a realistic input, expected output, and failure scenario.",
+      },
+      {
         severity: "P2",
         title: "Tool examples need before/after output",
         detail: "Show one realistic request, the tool call shape, and the resulting output.",
       },
+    ],
+    quickWins: [
+      "Add a permissions table showing what the server reads, writes, and calls.",
+      "Include a one-command test that verifies the server starts and responds.",
+      "Add a troubleshooting section for common connection errors.",
     ],
     nextPatch:
       "Write the security and permissions section first, then add client-specific config snippets before public launch.",
@@ -354,6 +389,16 @@ const projectProfiles = {
         title: "Install choices need a recommended path",
         detail: "If npm, brew, uv, or curl are possible, pick one default and move alternatives below.",
       },
+      {
+        severity: "P2",
+        title: "Version and help flags should exist",
+        detail: "Users expect --version and --help to work. Missing flags signal an unfinished tool.",
+      },
+    ],
+    quickWins: [
+      "Add expected terminal output after the quickstart command in the README.",
+      "Document the minimum runtime version (Node, Python, Go, etc.).",
+      "Add a --help screenshot or output block to the README.",
     ],
     nextPatch:
       "Make the README quickstart a three-command path: install, run sample, inspect expected output.",
@@ -378,6 +423,16 @@ const projectProfiles = {
         title: "Roadmap should be scoped",
         detail: "Separate starter-template goals from full SaaS platform ambitions.",
       },
+      {
+        severity: "P2",
+        title: "License and attribution need clarity",
+        detail: "State whether forks should keep the original license or can relicense freely.",
+      },
+    ],
+    quickWins: [
+      "Add a 'Customize this first' checklist at the top of the README.",
+      "Replace placeholder text with clearly marked TODO comments.",
+      "Include a 'Use This Template' button setup guide for GitHub.",
     ],
     nextPatch:
       "Add a 'Customize this first' section and run agent-output-review against all template placeholder claims.",
@@ -515,17 +570,30 @@ const findingTemplate = (finding) => `
 
 const simpleListTemplate = (items) => items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
 
+const extractRepoName = (target) => {
+  if (target.includes("/")) {
+    const parts = target.split("/");
+    return parts[parts.length - 1];
+  }
+  return target;
+};
+
 const buildMarkdown = ({ target, profile, score, channels }) => {
+  const repoName = extractRepoName(target);
   const findings = profile.findings
     .map((finding) => `- **${finding.severity}**: ${finding.title} — ${finding.detail}`)
     .join("\n");
+  const quickWins = (profile.quickWins || [])
+    .map((item) => `- [ ] ${item}`)
+    .join("\n");
   const metadata = channels.map((channel) => `- ${metadataByChannel[channel]}`).join("\n");
+  const timestamp = new Date().toISOString().split("T")[0];
 
   return `# Shipwright Launch QA Report
 
 ## Verdict
 
-**${profile.verdict}** (${score}/100)
+**${profile.verdict}** (${score}/100) for **${repoName}**
 
 ## Target
 
@@ -536,7 +604,7 @@ const buildMarkdown = ({ target, profile, score, channels }) => {
 ## Critical Findings
 
 ${findings}
-
+${quickWins ? `\n## Quick Wins\n\n${quickWins}\n` : ""}
 ## Audit Coverage
 
 ${coverageItems.map((item) => `- ${item}`).join("\n")}
@@ -551,7 +619,8 @@ ${profile.nextPatch}
 
 ---
 
-> This report was generated by the static Shipwright website demo. Run the open-source Shipwright skills locally for evidence-backed browser, README, and release audits.
+> Generated by Shipwright v0.3.0 on ${timestamp}
+> This is a static demo report. Run the open-source skills locally for evidence-backed audits.
 > https://github.com/aimonj0729-ai/shipwright
 `;
 };
@@ -594,16 +663,28 @@ const renderReport = () => {
   const channels = selectedChannels();
   const score = Math.max(42, Math.min(94, profile.baseScore + scoreOffset(target)));
 
+  const repoName = extractRepoName(target);
+
   verdictTitle.textContent = profile.verdict;
   scoreRing.setAttribute("aria-label", `Launch score ${score} out of 100`);
   targetBadge.textContent = target;
   typeBadge.textContent = profile.label;
   findingsList.innerHTML = profile.findings.map(findingTemplate).join("");
+
+  const quickWinsList = document.querySelector("#quickWinsList");
+  const quickWinsSection = document.querySelector("#quickWinsSection");
+  if (quickWinsList && quickWinsSection && profile.quickWins && profile.quickWins.length > 0) {
+    quickWinsSection.hidden = false;
+    quickWinsList.innerHTML = profile.quickWins.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+  } else if (quickWinsSection) {
+    quickWinsSection.hidden = true;
+  }
+
   coverageList.innerHTML = simpleListTemplate(coverageItems);
   metadataList.innerHTML = simpleListTemplate(
     (channels.length ? channels : ["GitHub"]).map((channel) => metadataByChannel[channel])
   );
-  nextPatch.textContent = profile.nextPatch;
+  nextPatch.textContent = profile.nextPatch.replace(/the project|this project/gi, repoName);
 
   animateScore(score);
   showReport();
@@ -825,7 +906,7 @@ const initInspectionRadar = () => {
 
 const initReveal = () => {
   const sections = document.querySelectorAll(
-    ".pain-grid, .audience, .usage-guide, .inspection-radar, .analyzer, .workflow, .honesty, .cta"
+    ".pain-grid, .audience, .usage-guide, .inspection-radar, .analyzer, .workflow, .honesty, .skills-catalog, .cta"
   );
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -989,7 +1070,7 @@ const initIconPop = () => {
 
 const initEyebrowReveal = () => {
   const eyebrows = document.querySelectorAll(
-    ".pain-grid .eyebrow, .audience .eyebrow, .usage-guide .eyebrow, .inspection-radar .eyebrow, .analyzer .eyebrow, .workflow .eyebrow, .honesty .eyebrow, .cta .eyebrow"
+    ".pain-grid .eyebrow, .audience .eyebrow, .usage-guide .eyebrow, .inspection-radar .eyebrow, .analyzer .eyebrow, .workflow .eyebrow, .honesty .eyebrow, .skills-catalog .eyebrow, .cta .eyebrow"
   );
 
   eyebrows.forEach((eb) => eb.classList.add("eyebrow-reveal"));
@@ -1009,12 +1090,32 @@ const initEyebrowReveal = () => {
   eyebrows.forEach((eb) => observer.observe(eb));
 };
 
+/* ── Back to top button ── */
+
+const initBackToTop = () => {
+  const btn = document.querySelector("#backToTop");
+  if (!btn) return;
+
+  const toggle = () => {
+    const shouldShow = window.scrollY > window.innerHeight;
+    btn.classList.toggle("is-visible", shouldShow);
+  };
+
+  window.addEventListener("scroll", toggle, { passive: true });
+  toggle();
+
+  btn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+};
+
 /* ── Init everything ── */
 
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 initScrollProgress();
 initInspectionRadar();
+initBackToTop();
 
 if (!prefersReduced) {
   initHeroReveal();

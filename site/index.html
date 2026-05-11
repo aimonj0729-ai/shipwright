@@ -8,7 +8,33 @@
       content="Shipwright checks AI-built projects before launch: browser QA, README install friction, fake-complete agent output, and GitHub release packaging."
     />
     <title>Shipwright - Launch QA for AI-built projects</title>
+    <link rel="canonical" href="https://shipwright.com.cn" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://shipwright.com.cn" />
+    <meta property="og:title" content="Shipwright - Launch QA for AI-built projects" />
+    <meta
+      property="og:description"
+      content="Shipwright checks AI-built projects before launch: browser QA, README install friction, fake-complete agent output, and GitHub release packaging."
+    />
+    <meta property="og:image" content="https://shipwright.com.cn/og-image.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Shipwright - Launch QA for AI-built projects" />
+    <meta name="twitter:description" content="10 reusable skills that audit AI-built projects before launch. Browser QA, README install paths, agent output review, and GitHub release packaging." />
+    <meta name="twitter:image" content="https://shipwright.com.cn/og-image.svg" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Shipwright",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "description": "Reusable Claude Code and Codex skills for auditing AI-built projects before launch.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://github.com/aimonj0729-ai/shipwright",
+      "license": "https://opensource.org/licenses/MIT"
+    }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -21,6 +47,7 @@
     </script>
   </head>
   <body>
+    <a href="#analyzer" class="skip-link">Skip to analyzer</a>
     <div class="scroll-progress" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
     <header class="site-header">
@@ -78,8 +105,8 @@
           </div>
           <dl class="signal-strip" aria-label="Product signals">
             <div>
-              <dt>4</dt>
-              <dd>launch QA skills</dd>
+              <dt>10</dt>
+              <dd>reusable skills</dd>
             </div>
             <div>
               <dt>10 min</dt>
@@ -234,6 +261,11 @@
               <div class="report-section">
                 <h4>Critical findings</h4>
                 <ul id="findingsList" class="finding-list"></ul>
+              </div>
+
+              <div class="report-section" id="quickWinsSection" hidden>
+                <h4>Quick wins</h4>
+                <ul id="quickWinsList" class="check-list quick-wins-list"></ul>
               </div>
 
               <div class="report-section report-columns">
@@ -643,6 +675,63 @@
         </div>
       </section>
 
+      <section id="skills-catalog" class="skills-catalog section-shell" aria-labelledby="catalog-title">
+        <p class="eyebrow">All 10 skills</p>
+        <h2 id="catalog-title">From trend discovery to launch.</h2>
+        <div class="catalog-grid">
+          <article class="catalog-card">
+            <span class="catalog-tag">Discovery</span>
+            <h4>github-radar</h4>
+            <p>Scan GitHub Trending and separate tools, opportunities, and hype traps.</p>
+          </article>
+          <article class="catalog-card">
+            <span class="catalog-tag">Discovery</span>
+            <h4>trend-to-product</h4>
+            <p>Turn a hot repo or trend into a differentiated product opportunity.</p>
+          </article>
+          <article class="catalog-card">
+            <span class="catalog-tag">Planning</span>
+            <h4>idea-to-prd</h4>
+            <p>Convert a rough idea into a lean PRD with scope and acceptance criteria.</p>
+          </article>
+          <article class="catalog-card">
+            <span class="catalog-tag">Planning</span>
+            <h4>prd-to-issues</h4>
+            <p>Break a PRD into GitHub-ready issues ordered by delivery sequence.</p>
+          </article>
+          <article class="catalog-card">
+            <span class="catalog-tag">QA</span>
+            <h4>launch-readiness</h4>
+            <p>Audit a project for README, install, demo, trust, and conversion gaps.</p>
+          </article>
+          <article class="catalog-card">
+            <span class="catalog-tag">QA</span>
+            <h4>browser-launch-audit</h4>
+            <p>Verify a web app in a real browser before shipping.</p>
+          </article>
+          <article class="catalog-card">
+            <span class="catalog-tag">QA</span>
+            <h4>readme-install-audit</h4>
+            <p>Test if a first-time user can install from the README alone.</p>
+          </article>
+          <article class="catalog-card">
+            <span class="catalog-tag">QA</span>
+            <h4>agent-output-review</h4>
+            <p>Catch hallucinated or fake-complete AI-generated work.</p>
+          </article>
+          <article class="catalog-card">
+            <span class="catalog-tag">Launch</span>
+            <h4>github-release-checklist</h4>
+            <p>Package a repo for public release with metadata and launch copy.</p>
+          </article>
+          <article class="catalog-card">
+            <span class="catalog-tag">Meta</span>
+            <h4>workflow-to-skill</h4>
+            <p>Turn a repeated workflow into a clean, installable skill.</p>
+          </article>
+        </div>
+      </section>
+
       <section class="cta section-shell" aria-labelledby="cta-title">
         <p class="eyebrow">Open source first</p>
         <h2 id="cta-title">Ship fewer beautiful half-products.</h2>
@@ -661,10 +750,22 @@
       </section>
     </main>
 
-    <footer class="site-footer">
-      <span>Shipwright</span>
-      <span>Built for Claude Code, Codex, and builders who actually open the browser.</span>
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-top">
+        <span class="footer-brand">Shipwright</span>
+        <span class="footer-tagline">Built for Claude Code, Codex, and builders who actually open the browser.</span>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 Shipwright. MIT License.</span>
+        <a href="https://github.com/aimonj0729-ai/shipwright">GitHub</a>
+      </div>
     </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="Back to top" hidden>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M10 16V4M4 10l6-6 6 6"/>
+      </svg>
+    </button>
 
     <script src="./app.js" type="module"></script>
   </body>
