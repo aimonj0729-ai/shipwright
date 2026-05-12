@@ -693,35 +693,148 @@ const renderReport = () => {
   return true;
 };
 
-form.addEventListener("submit", (event) => {
+const DOCTOR_API = "https://shipwright-topaz.vercel.app/api/doctor";
+
+const severityLabel = {
+  P0: "P0 · Launch blocker",
+  P1: "P1 · Critical",
+  P2: "P2 · Improvement",
+  P3: "P3 · Suggestion",
+};
+
+const renderLiveReport = (report) => {
+  const target = report.inputValue;
+  const score = report.score;
+  const verdict =
+    score >= 90 ? "Launch ready" :
+    score >= 75 ? "Almost ready" :
+    score >= 60 ? "Needs work" :
+    score >= 40 ? "Not ready" : "Major gaps";
+
+  verdictTitle.textContent = verdict;
+  scoreRing.setAttribute("aria-label", `Launch score ${score} out of 100`);
+  targetBadge.textContent = report.checks?.github?.name || target;
+  typeBadge.textContent = `${report.grade} grade · ${report.inputType}`;
+
+  const findingsHtml = (report.findings || [])
+    .filter((f) => f.severity === "P0" || f.severity === "P1")
+    .slice(0, 6)
+    .map(
+      (f) => `
+        <li class="finding-item">
+          <div class="finding-head">
+            <span class="finding-severity sev-${f.severity}">${severityLabel[f.severity] || f.severity}</span>
+            <strong>${escapeHtml(f.title)}</strong>
+          </div>
+          <p class="finding-body">${escapeHtml(f.description)}</p>
+          <p class="finding-fix"><strong>Fix:</strong> ${escapeHtml(f.fix)}</p>
+        </li>`
+    )
+    .join("");
+  findingsList.innerHTML = findingsHtml || "<li class=\"finding-item\"><strong>No P0/P1 findings — looking good.</strong></li>";
+
+  const quickWinsList = document.querySelector("#quickWinsList");
+  const quickWinsSection = document.querySelector("#quickWinsSection");
+  const quickWins = report.summary?.quickWins || [];
+  if (quickWinsList && quickWinsSection && quickWins.length > 0) {
+    quickWinsSection.hidden = false;
+    quickWinsList.innerHTML = quickWins.map((q) => `<li>${escapeHtml(q.title)} — ${escapeHtml(q.fix)}</li>`).join("");
+  } else if (quickWinsSection) {
+    quickWinsSection.hidden = true;
+  }
+
+  const coverage = [];
+  if (report.checks?.github) coverage.push(`GitHub repo (${report.checks.github.stars ?? 0} stars, ${report.checks.github.license || "no license"})`);
+  if (report.checks?.readme) coverage.push(`README analyzed (${report.checks.readme.wordCount} words, score ${report.checks.readme.score}/100)`);
+  if (report.checks?.browser) coverage.push(`Live URL ${report.checks.browser.reachable ? "reachable" : "unreachable"}${report.checks.browser.statusCode ? ` (HTTP ${report.checks.browser.statusCode})` : ""}`);
+  if (coverage.length === 0) coverage.push("Idea-mode guidance only");
+  coverageList.innerHTML = simpleListTemplate(coverage);
+
+  const meta = [
+    `Score: ${report.score}/100 (${report.grade})`,
+    `Launch blockers: ${report.summary.launchBlockers}`,
+    `Critical issues: ${report.summary.criticalIssues}`,
+    `Checked at: ${new Date(report.timestamp).toLocaleString()}`,
+  ];
+  metadataList.innerHTML = simpleListTemplate(meta);
+
+  const topFinding = report.findings[0];
+  nextPatch.textContent = topFinding
+    ? `${topFinding.title} — ${topFinding.fix}`
+    : "No critical patches needed. Ship it.";
+
+  animateScore(score);
+  showReport();
+
+  const mdLines = [
+    `# Shipwright Doctor Report`,
+    ``,
+    `**Target:** ${target}`,
+    `**Score:** ${score}/100 (${report.grade})`,
+    `**Verdict:** ${verdict}`,
+    `**Checked:** ${new Date(report.timestamp).toISOString()}`,
+    ``,
+    `## Summary`,
+    `- Launch blockers: ${report.summary.launchBlockers}`,
+    `- Critical issues: ${report.summary.criticalIssues}`,
+    `- Improvements: ${report.summary.improvements}`,
+    `- Suggestions: ${report.summary.suggestions}`,
+    ``,
+    `## Findings`,
+    ...(report.findings || []).map((f) => `### [${f.severity}] ${f.title}\n\n- **Description:** ${f.description}\n- **Evidence:** ${f.evidence}\n- **Impact:** ${f.impact}\n- **Fix:** ${f.fix}${f.claudePrompt ? `\n- **Claude prompt:** \`${f.claudePrompt}\`` : ""}`),
+  ];
+  currentMarkdown = mdLines.join("\n");
+};
+
+const detectInputType = (raw) => {
+  const v = raw.trim();
+  if (/^https?:\/\/(www\.)?github\.com\//i.test(v)) return "github";
+  if (/^[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+$/.test(v)) return "github";
+  if (/^https?:\/\//i.test(v)) return "url";
+  return "github";
+};
+
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const parsedTarget = parseTarget(targetInput.value);
-  if (!parsedTarget.valid) {
-    setTargetError(parsedTarget.error);
+  const raw = targetInput.value.trim();
+  if (!raw) {
+    setTargetError("Enter a GitHub repo URL, owner/repo, or http(s) demo URL.");
     targetInput.focus();
     return;
   }
+  setTargetError();
 
-  btnText.textContent = "Analyzing…";
+  btnText.textContent = "Checking…";
   btnSpinner.hidden = false;
   analyzeBtn.disabled = true;
   reportPanel.classList.add("is-loading");
 
-  window.setTimeout(() => {
-    const rendered = renderReport();
+  try {
+    const inputType = detectInputType(raw);
+    const res = await fetch(DOCTOR_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: inputType, value: raw }),
+    });
+
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => null);
+      throw new Error(errBody?.error || `Server error: ${res.status}`);
+    }
+
+    const report = await res.json();
+    renderLiveReport(report);
+    reportPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+    window.setTimeout(() => reportPanel.focus({ preventScroll: true }), 220);
+  } catch (err) {
+    setTargetError(err && err.message ? err.message : "Network error — please try again.");
+  } finally {
     btnText.textContent = "Analyze launch risk";
     btnSpinner.hidden = true;
     analyzeBtn.disabled = false;
     reportPanel.classList.remove("is-loading");
-
-    if (!rendered) {
-      return;
-    }
-
-    reportPanel.scrollIntoView({ behavior: "smooth", block: "center" });
-    window.setTimeout(() => reportPanel.focus({ preventScroll: true }), 220);
-  }, 800);
+  }
 });
 
 const setButtonStatus = (button, message, resetMessage) => {

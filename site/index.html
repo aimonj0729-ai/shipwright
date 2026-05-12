@@ -236,8 +236,9 @@
             <h2 id="analyzer-title">Generate a launch QA report.</h2>
           </div>
           <p>
-            Paste any GitHub repo URL or owner/repo. The demo generates a structured
-            report you can copy into Claude Code or Codex as a fix plan.
+            Paste any GitHub repo URL, owner/repo, or live site URL. Doctor runs real
+            checks against GitHub and the live site, then produces a fix plan you can
+            paste into Claude Code or Codex.
           </p>
         </div>
 
@@ -294,8 +295,8 @@
               <span class="btn-spinner" hidden aria-hidden="true"></span>
             </button>
             <p class="form-note">
-              No network call is made. The report models the product shape and
-              audit categories Shipwright skills perform locally.
+              Real check via Shipwright Doctor API. Fetches GitHub repo metadata,
+              analyzes README, and probes live URLs. No data is stored.
             </p>
           </form>
 
