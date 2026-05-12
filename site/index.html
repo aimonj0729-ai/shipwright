@@ -236,9 +236,10 @@
             <h2 id="analyzer-title">Generate a launch QA report.</h2>
           </div>
           <p>
-            Paste any GitHub repo URL, owner/repo, or live site URL. Doctor runs real
-            checks against GitHub and the live site, then produces a fix plan you can
-            paste into Claude Code or Codex.
+            Paste any GitHub repo URL or owner/repo. Doctor calls the GitHub public
+            API directly from your browser, analyzes the README, and produces a fix
+            plan you can paste into Claude Code or Codex. Nothing is sent to any
+            server.
           </p>
         </div>
 
@@ -249,7 +250,7 @@
               id="targetInput"
               name="target"
               type="text"
-              placeholder="https://github.com/user/project or http://localhost:3000"
+              placeholder="https://github.com/user/project or user/project"
               autocomplete="off"
               aria-describedby="targetError"
             />
@@ -295,8 +296,8 @@
               <span class="btn-spinner" hidden aria-hidden="true"></span>
             </button>
             <p class="form-note">
-              Real check via Shipwright Doctor API. Fetches GitHub repo metadata,
-              analyzes README, and probes live URLs. No data is stored.
+              Runs entirely in your browser via GitHub's public API (60 req/hr per IP).
+              Nothing is sent to any server, no API key required.
             </p>
           </form>
 

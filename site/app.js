@@ -693,13 +693,204 @@ const renderReport = () => {
   return true;
 };
 
-const DOCTOR_API = "https://shipwright-topaz.vercel.app/api/doctor";
+/* ─────────────────────────────────────────────────────────────
+ * Browser-native Doctor: runs entirely in the visitor's browser.
+ * No backend. Uses GitHub public REST API (CORS-enabled).
+ * ───────────────────────────────────────────────────────────── */
+
+const GITHUB_API = "https://api.github.com";
 
 const severityLabel = {
   P0: "P0 · Launch blocker",
   P1: "P1 · Critical",
   P2: "P2 · Improvement",
   P3: "P3 · Suggestion",
+};
+
+const parseGitHubUrl = (input) => {
+  const cleaned = String(input).trim()
+    .replace(/\.git$/i, "")
+    .replace(/[?#].*$/, "")
+    .replace(/\/+$/, "");
+  let m = cleaned.match(/github\.com\/([A-Za-z0-9._-]+)\/([A-Za-z0-9._-]+)/);
+  if (m) return { owner: m[1], repo: m[2] };
+  m = cleaned.match(/^([A-Za-z0-9._-]+)\/([A-Za-z0-9._-]+)$/);
+  if (m) return { owner: m[1], repo: m[2] };
+  return null;
+};
+
+const decodeBase64Utf8 = (b64) => {
+  const cleaned = b64.replace(/\s/g, "");
+  const binary = atob(cleaned);
+  const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+  return new TextDecoder("utf-8").decode(bytes);
+};
+
+const ghFindings = (repoData) => {
+  const findings = [];
+  if (repoData.archived) {
+    findings.push({ id: "github-archived", title: "Repository is archived", severity: "P0", category: "GitHub",
+      description: "Marked as archived — no new contributions accepted.",
+      evidence: "GitHub API: archived = true",
+      impact: "Users will assume the project is abandoned.",
+      fix: "Unarchive the repo if it's still actively maintained." });
+  }
+  if (!repoData.description) {
+    findings.push({ id: "github-no-description", title: "Repository has no description", severity: "P1", category: "GitHub",
+      description: "The repo has no description on GitHub.",
+      evidence: "GitHub API: description = null",
+      impact: "Appears low-effort in search results and social shares.",
+      fix: "Add a one-line description in repo settings." });
+  }
+  if (!repoData.topics || repoData.topics.length === 0) {
+    findings.push({ id: "github-no-topics", title: "No topics/tags set", severity: "P2", category: "GitHub",
+      description: "Repository has no topics set.", evidence: "GitHub API: topics = []",
+      impact: "Harder to discover via GitHub search and explore.",
+      fix: "Add 3-5 relevant topics in repo settings." });
+  }
+  if (!repoData.license) {
+    findings.push({ id: "github-no-license", title: "No license file detected", severity: "P1", category: "GitHub",
+      description: "GitHub did not detect a license for this repository.",
+      evidence: "GitHub API: license = null",
+      impact: "Without a license, others legally cannot use or contribute to the code.",
+      fix: "Add a LICENSE file. MIT or Apache-2.0 are common." });
+  }
+  const days = Math.floor((Date.now() - new Date(repoData.pushed_at).getTime()) / 86400000);
+  if (days > 180) {
+    findings.push({ id: "github-stale", title: "Repository appears stale", severity: "P2", category: "GitHub",
+      description: `Last push was ${days} days ago.`, evidence: `pushed_at: ${repoData.pushed_at}`,
+      impact: "Users may perceive the project as unmaintained.",
+      fix: "Push an update, even if just documentation improvements." });
+  }
+  return findings;
+};
+
+const readmeFindings = (content) => {
+  const findings = [];
+  const hasTitle = /^#\s+\S/.test(content);
+  const firstNewline = content.indexOf("\n");
+  const afterTitle = firstNewline === -1 ? "" : content.slice(firstNewline + 1);
+  const nextHeadingIdx = afterTitle.search(/^#{1,6}\s/m);
+  const preamble = nextHeadingIdx === -1 ? afterTitle.slice(0, 500) : afterTitle.slice(0, nextHeadingIdx);
+  const preambleWords = preamble.trim().split(/\s+/).filter(Boolean);
+  const hasDescription = preambleWords.length >= 8;
+  const hasInstallation = /^#{1,3}\s*(install|getting\s*started|setup|quick\s*start)/im.test(content);
+  const hasUsage = /^#{1,3}\s*(usage|how\s*to\s*use|examples?|demo)/im.test(content);
+  const hasLicense = /^#{1,3}\s*license/im.test(content);
+  const hasBadges = /\[!\[.*?\]\(.*?\)\]/.test(content);
+  const wordCount = content.split(/\s+/).filter(Boolean).length;
+
+  if (!hasTitle) findings.push({ id: "readme-no-title", title: "README missing title", severity: "P1", category: "README",
+    description: "README does not start with a heading.", evidence: "No '# Title' on first line",
+    impact: "Visitors cannot immediately identify what this project is.",
+    fix: "Add a `# Project Name` heading as the first line." });
+  if (!hasDescription) findings.push({ id: "readme-no-description", title: "README missing description", severity: "P1", category: "README",
+    description: "No substantive description after the title.", evidence: `Preamble word count: ${preambleWords.length}`,
+    impact: "Visitors won't understand what this project does in the first 10 seconds.",
+    fix: "Add 1-2 sentences below the title explaining what the project does and who it's for." });
+  if (!hasInstallation) findings.push({ id: "readme-no-install", title: "README missing installation instructions", severity: "P0", category: "README",
+    description: "No installation or setup section found.", evidence: "No install/setup/getting-started heading",
+    impact: "Users cannot figure out how to run the project.",
+    fix: "Add a ## Installation section with step-by-step commands.",
+    claudePrompt: "Add a ## Getting Started section to README.md with installation commands." });
+  if (!hasUsage) findings.push({ id: "readme-no-usage", title: "README missing usage examples", severity: "P1", category: "README",
+    description: "No usage or examples section found.", evidence: "No usage/examples/demo heading",
+    impact: "Users won't know how to actually use the project after installing.",
+    fix: "Add a ## Usage section with code examples or screenshots." });
+  if (!hasLicense) findings.push({ id: "readme-no-license", title: "README missing license section", severity: "P2", category: "README",
+    description: "No license section in README.", evidence: "No ## License heading detected.",
+    impact: "Users may avoid using the project due to unclear licensing.",
+    fix: "Add a ## License section referencing your LICENSE file." });
+  if (!hasBadges) findings.push({ id: "readme-no-badges", title: "No badges in README", severity: "P3", category: "README",
+    description: "README has no status badges.", evidence: "No badge markdown pattern found.",
+    impact: "Project appears less professional at a glance.",
+    fix: "Add badges for build status, version, or license." });
+  if (wordCount < 50) findings.push({ id: "readme-too-short", title: "README is very short", severity: "P1", category: "README",
+    description: `README has only ${wordCount} words.`, evidence: `Word count: ${wordCount}`,
+    impact: "Insufficient documentation.",
+    fix: "Expand the README with description, installation, usage, and examples." });
+
+  return { findings, wordCount };
+};
+
+const computeScore = (findings) => {
+  const dd = { P0: 25, P1: 15, P2: 8, P3: 3 };
+  let s = 100;
+  for (const f of findings) s -= dd[f.severity] || 0;
+  return Math.max(0, Math.min(100, s));
+};
+
+const computeGrade = (s) => s >= 90 ? "A" : s >= 75 ? "B" : s >= 60 ? "C" : s >= 40 ? "D" : "F";
+
+const dedupe = (findings) => {
+  const seen = new Set();
+  return findings.filter((f) => seen.has(f.id) ? false : seen.add(f.id));
+};
+
+const runDoctorInBrowser = async (rawInput) => {
+  const githubParsed = parseGitHubUrl(rawInput);
+  if (githubParsed) {
+    const { owner, repo } = githubParsed;
+    const repoRes = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`);
+    if (repoRes.status === 404) {
+      return { ok: false, error: `Repository ${owner}/${repo} not found or private.` };
+    }
+    if (repoRes.status === 403) {
+      return { ok: false, error: "GitHub rate limit hit (60 req/hr per IP). Wait an hour or use a different network." };
+    }
+    if (!repoRes.ok) {
+      return { ok: false, error: `GitHub API error: ${repoRes.status}` };
+    }
+    const repoData = await repoRes.json();
+
+    let readmeContent = null;
+    try {
+      const readmeRes = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/readme`);
+      if (readmeRes.ok) {
+        const r = await readmeRes.json();
+        readmeContent = decodeBase64Utf8(r.content);
+      }
+    } catch {}
+
+    const gh = ghFindings(repoData);
+    if (!readmeContent) {
+      gh.push({ id: "github-no-readme", title: "No README file", severity: "P0", category: "GitHub",
+        description: "Repository has no README.", evidence: "GitHub /readme returned 404",
+        impact: "Visitors have no idea what this project is.",
+        fix: "Create a README.md with description, install, and usage." });
+    }
+    const rd = readmeContent ? readmeFindings(readmeContent) : { findings: [], wordCount: 0 };
+    const all = dedupe([...gh, ...rd.findings]);
+    const score = computeScore(all);
+    return {
+      ok: true,
+      report: {
+        score, grade: computeGrade(score), inputType: "github", inputValue: `${owner}/${repo}`,
+        timestamp: new Date().toISOString(),
+        findings: all,
+        summary: {
+          launchBlockers: all.filter((f) => f.severity === "P0").length,
+          criticalIssues: all.filter((f) => f.severity === "P1").length,
+          improvements: all.filter((f) => f.severity === "P2").length,
+          suggestions: all.filter((f) => f.severity === "P3").length,
+          quickWins: all.filter((f) => f.severity === "P2" || f.severity === "P3").slice(0, 3),
+        },
+        checks: {
+          github: { name: repoData.name, stars: repoData.stargazers_count, license: repoData.license?.spdx_id, topics: repoData.topics },
+          readme: readmeContent ? { wordCount: rd.wordCount, score: 100 - rd.findings.length * 10 } : null,
+        },
+      },
+    };
+  }
+
+  if (/^https?:\/\//i.test(rawInput)) {
+    return {
+      ok: false,
+      error: "Browser-only mode can't probe arbitrary URLs (CORS). Paste a GitHub repo URL instead — that runs full checks.",
+    };
+  }
+
+  return { ok: false, error: "Enter a GitHub repo URL (https://github.com/owner/repo) or owner/repo." };
 };
 
 const renderLiveReport = (report) => {
@@ -786,20 +977,12 @@ const renderLiveReport = (report) => {
   currentMarkdown = mdLines.join("\n");
 };
 
-const detectInputType = (raw) => {
-  const v = raw.trim();
-  if (/^https?:\/\/(www\.)?github\.com\//i.test(v)) return "github";
-  if (/^[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+$/.test(v)) return "github";
-  if (/^https?:\/\//i.test(v)) return "url";
-  return "github";
-};
-
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const raw = targetInput.value.trim();
   if (!raw) {
-    setTargetError("Enter a GitHub repo URL, owner/repo, or http(s) demo URL.");
+    setTargetError("Enter a GitHub repo URL or owner/repo.");
     targetInput.focus();
     return;
   }
@@ -811,24 +994,16 @@ form.addEventListener("submit", async (event) => {
   reportPanel.classList.add("is-loading");
 
   try {
-    const inputType = detectInputType(raw);
-    const res = await fetch(DOCTOR_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: inputType, value: raw }),
-    });
-
-    if (!res.ok) {
-      const errBody = await res.json().catch(() => null);
-      throw new Error(errBody?.error || `Server error: ${res.status}`);
+    const result = await runDoctorInBrowser(raw);
+    if (!result.ok) {
+      setTargetError(result.error);
+      return;
     }
-
-    const report = await res.json();
-    renderLiveReport(report);
+    renderLiveReport(result.report);
     reportPanel.scrollIntoView({ behavior: "smooth", block: "center" });
     window.setTimeout(() => reportPanel.focus({ preventScroll: true }), 220);
   } catch (err) {
-    setTargetError(err && err.message ? err.message : "Network error — please try again.");
+    setTargetError(err && err.message ? err.message : "Unexpected error — please try again.");
   } finally {
     btnText.textContent = "Analyze launch risk";
     btnSpinner.hidden = true;
