@@ -4144,3 +4144,100 @@ h2 {
     touch-action: auto;
   }
 }
+
+/* ── Chat button hover: float + jump-flip ─────────────────────
+ * Whole button lifts on hover (floating feel) with a deeper
+ * shadow. The icon inside does a one-shot jump + 360° rotation
+ * with a bouncy easing (anticipation + overshoot). Respects
+ * prefers-reduced-motion.
+ * ────────────────────────────────────────────────────────── */
+
+.ai-header-btn,
+.ai-send-btn,
+.ai-chat-fab,
+.ai-explain-btn {
+  transition:
+    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 220ms ease,
+    color 140ms ease,
+    background 200ms ease,
+    border-color 140ms ease;
+}
+
+.ai-header-btn svg,
+.ai-send-btn svg,
+.ai-chat-fab svg {
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+/* float + overshoot lift */
+.ai-header-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 26px -10px rgba(15, 118, 110, 0.55);
+}
+
+.ai-send-btn:hover {
+  transform: translateY(-5px) scale(1.06);
+  box-shadow: 0 16px 28px -10px rgba(15, 118, 110, 0.65);
+}
+
+.ai-chat-fab:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 24px 48px -16px rgba(15, 118, 110, 0.65),
+    0 6px 12px -4px rgba(15, 118, 110, 0.35);
+}
+
+.ai-explain-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px -10px rgba(15, 118, 110, 0.6);
+}
+
+/* jump + flip on the icon */
+.ai-header-btn:hover svg,
+.ai-send-btn:hover svg,
+.ai-chat-fab:hover svg {
+  animation: btn-jump-flip 620ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes btn-jump-flip {
+  0%   { transform: translateY(0)   rotate(0deg)   scale(1); }
+  25%  { transform: translateY(-8px) rotate(160deg) scale(1.18); }
+  55%  { transform: translateY(3px)  rotate(280deg) scale(0.88); }
+  80%  { transform: translateY(-2px) rotate(340deg) scale(1.06); }
+  100% { transform: translateY(0)   rotate(360deg) scale(1); }
+}
+
+/* pressed feedback */
+.ai-header-btn:active,
+.ai-send-btn:active,
+.ai-chat-fab:active,
+.ai-explain-btn:active:not(:disabled) {
+  transform: translateY(-1px) scale(0.96);
+  transition-duration: 100ms;
+  box-shadow: 0 4px 10px -4px rgba(15, 118, 110, 0.4);
+}
+
+/* don't animate during chat drag — keeps cursor grabbing crisp */
+.ai-chat-header.is-dragging .ai-header-btn,
+.ai-chat-header.is-dragging .ai-header-btn:hover,
+.ai-chat-header.is-dragging .ai-header-btn:hover svg {
+  transform: none !important;
+  animation: none !important;
+  box-shadow: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-header-btn:hover,
+  .ai-send-btn:hover,
+  .ai-chat-fab:hover,
+  .ai-explain-btn:hover:not(:disabled) {
+    transform: none;
+  }
+  .ai-header-btn:hover svg,
+  .ai-send-btn:hover svg,
+  .ai-chat-fab:hover svg {
+    animation: none;
+  }
+}
