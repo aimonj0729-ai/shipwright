@@ -50,26 +50,25 @@ const scrambleText = (element, finalText, duration = 1200) => {
 
 const initHeroReveal = () => {
   const h1 = document.querySelector(".hero-copy h1");
-  if (!h1) return;
-
-  const text = h1.textContent;
-  const words = text.split(" ");
-
-  h1.innerHTML = words
-    .map((word) => `<span class="hero-word"><span class="hero-word-inner">${word}</span></span>`)
-    .join(" ");
-
-  const wordEls = h1.querySelectorAll(".hero-word-inner");
-  wordEls.forEach((el, i) => {
-    el.style.animationDelay = `${i * 80 + 200}ms`;
-  });
+  if (h1 && h1.dataset.split !== "true") {
+    const text = h1.textContent;
+    const words = text.split(" ");
+    h1.innerHTML = words
+      .map((word) => `<span class="hero-word"><span class="hero-word-inner">${word}</span></span>`)
+      .join(" ");
+    h1.querySelectorAll(".hero-word-inner").forEach((el, i) => {
+      el.style.animationDelay = `${i * 80 + 200}ms`;
+    });
+  }
 
   const eyebrow = document.querySelector(".hero-copy .eyebrow");
-  if (eyebrow) {
+  if (eyebrow && !eyebrow.querySelector(".cycle-word")) {
     const eyebrowText = eyebrow.textContent;
     eyebrow.textContent = "";
     eyebrow.style.opacity = "1";
     window.setTimeout(() => scrambleText(eyebrow, eyebrowText, 1000), 100);
+  } else if (eyebrow) {
+    eyebrow.style.opacity = "1";
   }
 };
 
@@ -2193,6 +2192,165 @@ const initFeatureNav = () => {
   sections.forEach((section) => observer.observe(section));
 };
 
+/* ═══════════════════════════════════════════════════════════════
+ *  v4.0 — Font variety + richer interactions
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* Split-letter hero h1 reveal. Wraps each word in .h1-word, each
+ * non-space character in .h1-letter, then toggles .is-letters-in
+ * to trigger the staggered transition (via transition-delay). */
+const initHeroSplitH1 = () => {
+  const h1 = document.querySelector(".hero h1");
+  if (!h1 || h1.dataset.split === "true") return;
+  const original = h1.textContent || "";
+  h1.textContent = "";
+
+  const accentWordIndex = Math.floor(Math.random() * 3); // randomize which "word" gets italic accent on each load
+  const words = original.split(/\s+/);
+  let letterIdx = 0;
+
+  words.forEach((word, wIdx) => {
+    const wordSpan = document.createElement("span");
+    wordSpan.className = "h1-word";
+    if (wIdx === Math.max(2, accentWordIndex + 2)) wordSpan.classList.add("h1-word--accent");
+    for (const ch of word) {
+      const letter = document.createElement("span");
+      letter.className = "h1-letter";
+      if (wordSpan.classList.contains("h1-word--accent")) letter.classList.add("accent");
+      letter.style.transitionDelay = `${30 + letterIdx * 22}ms`;
+      letter.textContent = ch;
+      wordSpan.appendChild(letter);
+      letterIdx++;
+    }
+    h1.appendChild(wordSpan);
+  });
+
+  h1.dataset.split = "true";
+
+  // kick the animation on the next frame so styles apply
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => h1.classList.add("is-letters-in"));
+  });
+};
+
+/* Word cycling — element with data-words="a|b|c" rotates through
+ * each option with a flip animation. */
+const initCycleWords = () => {
+  const nodes = document.querySelectorAll(".cycle-word[data-words]");
+  nodes.forEach((node) => {
+    const words = String(node.dataset.words || "").split("|").map((w) => w.trim()).filter(Boolean);
+    if (words.length < 2) return;
+    let i = 0;
+    node.textContent = words[i];
+    const tick = () => {
+      node.classList.add("is-swapping");
+      window.setTimeout(() => {
+        i = (i + 1) % words.length;
+        node.textContent = words[i];
+      }, 190);
+      window.setTimeout(() => node.classList.remove("is-swapping"), 380);
+    };
+    window.setInterval(tick, 2400);
+  });
+};
+
+/* Custom cursor follower (desktop only). Grows on interactive elements,
+ * morphs into a beam on text fields. */
+const initCursorFollower = () => {
+  if (window.matchMedia("(hover: none), (pointer: coarse)").matches) return;
+  const follower = document.createElement("div");
+  follower.className = "cursor-follower";
+  follower.setAttribute("aria-hidden", "true");
+  document.body.appendChild(follower);
+
+  let targetX = window.innerWidth / 2;
+  let targetY = window.innerHeight / 2;
+  let currentX = targetX;
+  let currentY = targetY;
+
+  const onMove = (event) => {
+    targetX = event.clientX;
+    targetY = event.clientY;
+    follower.classList.add("is-active");
+  };
+  const onLeave = () => follower.classList.remove("is-active");
+
+  window.addEventListener("pointermove", onMove);
+  document.addEventListener("pointerleave", onLeave);
+  window.addEventListener("blur", onLeave);
+
+  const tick = () => {
+    currentX += (targetX - currentX) * 0.22;
+    currentY += (targetY - currentY) * 0.22;
+    follower.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+
+  const INTERACTIVE = "a, button, .feature-nav-btn, .quick-sample, .sample-btn, .button, .ai-explain-btn, .skill-card, .skill-tile, .mission-card, summary, [role='button']";
+  const TEXT_INPUT = "input[type='text'], input[type='url'], input[type='email'], input[type='password'], textarea";
+
+  document.addEventListener("pointerover", (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (!target) return;
+    follower.classList.remove("is-pointer", "is-text");
+    if (target.closest(TEXT_INPUT)) {
+      follower.classList.add("is-text");
+    } else if (target.closest(INTERACTIVE)) {
+      follower.classList.add("is-pointer");
+    }
+  });
+};
+
+/* Section number badges — animate the bar/number on enter. */
+const initSectionNumbers = () => {
+  const nums = document.querySelectorAll(".section-num");
+  if (!nums.length || !("IntersectionObserver" in window)) {
+    nums.forEach((n) => n.classList.add("is-visible"));
+    return;
+  }
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.4 }
+  );
+  nums.forEach((n) => observer.observe(n));
+};
+
+/* Apply magnetic effect to every primary CTA, not just hero. The
+ * existing initMagneticButtons() targets .button.primary — broaden
+ * its reach. */
+const initMagneticEverywhere = () => {
+  if (window.matchMedia("(hover: none), (pointer: coarse)").matches) return;
+  const targets = document.querySelectorAll(".button.primary, .quick-sample, .feature-nav-btn, .ai-chat-fab, .ai-explain-btn");
+  targets.forEach((el) => {
+    if (el.dataset.magneticBound === "true") return;
+    el.dataset.magneticBound = "true";
+    let rafId = 0;
+    el.addEventListener("pointermove", (event) => {
+      const rect = el.getBoundingClientRect();
+      const x = event.clientX - rect.left - rect.width / 2;
+      const y = event.clientY - rect.top - rect.height / 2;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        el.style.setProperty("--magnetic-x", `${x * 0.25}px`);
+        el.style.setProperty("--magnetic-y", `${y * 0.25}px`);
+        el.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+      });
+    });
+    el.addEventListener("pointerleave", () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      el.style.transform = "";
+    });
+  });
+};
+
 /* ── Init everything ── */
 
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -2203,6 +2361,14 @@ initBackToTop();
 initFeatureNav();
 initAIChat();
 initAIChatDrag();
+initSectionNumbers();
+
+if (!prefersReduced) {
+  initHeroSplitH1();
+  initCycleWords();
+  initCursorFollower();
+  initMagneticEverywhere();
+}
 
 if (!prefersReduced) {
   initHeroReveal();
