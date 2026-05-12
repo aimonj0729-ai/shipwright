@@ -3,7 +3,7 @@ const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 const initialTheme = storedTheme || (prefersDark ? "dark" : "light");
 document.documentElement.setAttribute("data-theme", initialTheme);
 
-document.querySelector("#themeToggle").addEventListener("click", () => {
+document.querySelector("#themeToggle")?.addEventListener("click", () => {
   const current = document.documentElement.getAttribute("data-theme");
   const next = current === "dark" ? "light" : "dark";
   document.documentElement.setAttribute("data-theme", next);
@@ -792,9 +792,27 @@ document.querySelectorAll(".sample-btn").forEach((btn) => {
 
 const heroQuickForm = document.querySelector("#heroQuickForm");
 const quickInput = document.querySelector("#quickInput");
+const quickError = document.querySelector("#quickError");
+
+const setQuickError = (message = "") => {
+  if (!quickInput || !quickError) return;
+
+  quickError.textContent = message;
+  quickError.hidden = !message;
+  quickInput.setAttribute("aria-invalid", message ? "true" : "false");
+};
 
 if (heroQuickForm && quickInput) {
   const submitHeroForm = (url, type) => {
+    const parsed = parseTarget(url);
+
+    if (!parsed.valid) {
+      setQuickError(parsed.error);
+      quickInput.focus();
+      return;
+    }
+
+    setQuickError();
     targetInput.value = url;
     if (type && projectProfiles[type]) {
       projectType.value = type;
@@ -830,11 +848,14 @@ if (heroQuickForm && quickInput) {
     event.preventDefault();
     const url = quickInput.value.trim();
     if (!url) {
+      setQuickError("Paste a GitHub repository, owner/repo, or http(s) demo URL before analyzing.");
       quickInput.focus();
       return;
     }
     submitHeroForm(url);
   });
+
+  quickInput.addEventListener("input", () => setQuickError());
 
   document.querySelectorAll(".quick-sample").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -1118,7 +1139,18 @@ const initBackToTop = () => {
 
   const toggle = () => {
     const shouldShow = window.scrollY > window.innerHeight;
+    if (shouldShow && btn.hidden) {
+      btn.hidden = false;
+    }
     btn.classList.toggle("is-visible", shouldShow);
+
+    if (!shouldShow) {
+      window.setTimeout(() => {
+        if (!btn.classList.contains("is-visible")) {
+          btn.hidden = true;
+        }
+      }, 220);
+    }
   };
 
   window.addEventListener("scroll", toggle, { passive: true });
@@ -1134,8 +1166,8 @@ const initBackToTop = () => {
 const AI_STORAGE_KEY = "shipwright-api-key";
 const AI_STORAGE_BASE = "shipwright-api-base";
 const AI_STORAGE_MODEL = "shipwright-api-model";
-const AI_DEFAULT_BASE = "https://api.gptsapi.net";
-const AI_DEFAULT_MODEL = "claude-sonnet-4-20250514";
+const AI_DEFAULT_BASE = "https://api.openai.com";
+const AI_DEFAULT_MODEL = "gpt-4.1-mini";
 
 const AI_SYSTEM_PROMPT = `You are Shipwright AI Planner, an expert website planning assistant. When a user describes a website idea, your job is to ask smart follow-up questions to clarify:
 - Target users and their main pain point
@@ -1156,14 +1188,37 @@ Ask 1-2 questions at a time. Be concise and actionable. When you have enough inf
 
 Write the plan in Markdown format.`;
 
-const MOCK_CONVERSATION = [
-  { role: "user", content: "I want to build a landing page for my AI writing tool that helps bloggers write faster." },
-  { role: "assistant", content: "Great idea! Two quick questions to sharpen the scope:\n\n1. **Who exactly are your target bloggers?** (e.g., solo creators, content teams, niche like tech/travel?)\n2. **What's the primary action** you want visitors to take — sign up for a waitlist, start a free trial, or something else?" },
-  { role: "user", content: "Solo content creators who publish weekly. I want them to join a waitlist with email." },
-  { role: "assistant", content: "Clear target. A couple more things:\n\n1. **Do you have a brand style** already? (colors, logo, fonts — or starting from scratch?)\n2. **What proof do you have** that the tool works? (demo video, sample output, beta user quotes?)" },
-  { role: "user", content: "Starting from scratch on brand. I have 3 beta user testimonials and a 30-second demo GIF." },
-  { role: "assistant", content: "Perfect — that's enough to build a high-converting page. Here's your plan:\n\n## Website Creation Plan\n\n### 1. Project Overview\nSingle-page landing for an AI writing tool targeting solo bloggers. Goal: collect waitlist emails with a compelling demo.\n\n### 2. Target Audience\nSolo content creators publishing 1-4 posts/week. Pain: writing takes too long, editing is tedious.\n\n### 3. Core Features\n- Hero with clear value proposition + waitlist CTA\n- Demo GIF section with before/after comparison\n- 3 testimonial cards from beta users\n- Feature highlights (3-4 key capabilities)\n- FAQ section addressing \"will AI replace my voice?\" concerns\n- Footer with waitlist CTA repeat\n\n### 4. Tech Stack\n- **Static HTML/CSS/JS** (no framework needed for a landing page)\n- **Formspree or ConvertKit** for email collection\n- **GitHub Pages** for free hosting\n- **Cloudflare** for CDN + analytics\n\n### 5. Page Structure\n`Hero → Demo → Social Proof → Features → FAQ → Final CTA → Footer`\n\n### 6. Design Direction\n- Clean, minimal with generous whitespace\n- Accent color: warm purple or teal (signals creativity + tech)\n- Typography: Sans-serif body + display heading font\n- Dark mode support\n\n### 7. MVP Timeline\n- Design: 1 day\n- Build: 2 days\n- Content + polish: 1 day\n- **Total: ~4 days to launch**\n\n### 8. Next Steps\n1. Write the hero headline and subheadline\n2. Prepare the demo GIF and testimonials\n3. Set up email collection form\n4. Build and deploy" },
-];
+const buildDemoPlannerResponse = (idea) => {
+  const trimmedIdea = idea.trim();
+  const ideaLabel = trimmedIdea.length > 120 ? `${trimmedIdea.slice(0, 120)}...` : trimmedIdea;
+
+  return `## Website Creation Plan
+
+### 1. Project Overview
+Build a focused website around: **${ideaLabel || "your idea"}**. The first version should prove one clear promise instead of trying to become a full platform.
+
+### 2. Target Audience To Confirm
+- Who has this problem today?
+- What are they using instead?
+- What would make them trust the site in the first 30 seconds?
+
+### 3. MVP Scope
+- One sharp landing page with a clear hero promise
+- A guided intake form or demo flow
+- Proof section: example output, testimonial, screenshot, or before/after
+- Simple CTA: waitlist, GitHub, contact, or demo request
+
+### 4. Design Direction
+Use an editorial product style: strong headline, clear functional zones, restrained animation, and one memorable visual metaphor tied to the user's problem.
+
+### 5. Shipwright Review Path
+After building the first version, run Shipwright on the live URL and check mobile layout, broken CTAs, README/setup clarity, fake-complete features, and launch metadata.
+
+### 6. Next Questions
+1. Who is the exact first user?
+2. What action should they take after reading the first screen?
+3. What proof can you show immediately?`;
+};
 
 let aiChatHistory = [];
 let aiStreamController = null;
@@ -1180,7 +1235,7 @@ const hasAIKey = () => {
 };
 
 const simpleMarkdown = (text) =>
-  text
+  escapeHtml(text)
     .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
     .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -1231,21 +1286,13 @@ const removeTypingIndicator = () => {
   if (typing) typing.remove();
 };
 
-const runMockConversation = async () => {
+const showDemoNotice = () => {
   const messagesEl = document.querySelector("#aiChatMessages");
-  if (!messagesEl) return;
-  messagesEl.innerHTML = "";
-
-  for (const msg of MOCK_CONVERSATION) {
-    showTypingIndicator();
-    await new Promise((r) => setTimeout(r, 600 + Math.random() * 400));
-    removeTypingIndicator();
-    addMessage(msg.role, msg.content, true);
-  }
+  if (!messagesEl || document.querySelector("#openSettingsFromDemo")) return;
 
   const notice = document.createElement("div");
   notice.className = "ai-demo-notice";
-  notice.innerHTML = 'This was a demo conversation. <a id="openSettingsFromDemo">Configure your API key</a> to chat with real AI.';
+  notice.innerHTML = 'Demo mode used no API key. <a id="openSettingsFromDemo">Configure your API key</a> for live planning.';
   messagesEl.append(notice);
   messagesEl.scrollTop = messagesEl.scrollHeight;
 
@@ -1256,11 +1303,17 @@ const runMockConversation = async () => {
 
 const sendAIMessage = async (userMessage) => {
   if (!hasAIKey()) {
-    await runMockConversation();
+    addMessage("user", userMessage, true);
+    showTypingIndicator();
+    await new Promise((r) => setTimeout(r, 650));
+    removeTypingIndicator();
+    addMessage("assistant", buildDemoPlannerResponse(userMessage), true);
+    showDemoNotice();
     return;
   }
 
   const { key, base, model } = getAIConfig();
+  const normalizedBase = base.replace(/\/+$/, "");
 
   aiChatHistory.push({ role: "user", content: userMessage });
   addMessage("user", userMessage, false);
@@ -1272,7 +1325,7 @@ const sendAIMessage = async (userMessage) => {
   try {
     aiStreamController = new AbortController();
 
-    const response = await fetch(`${base}/v1/chat/completions`, {
+    const response = await fetch(`${normalizedBase}/v1/chat/completions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1376,13 +1429,15 @@ const initAIChat = () => {
   const openPanel = () => {
     panel.hidden = false;
     fab.style.display = "none";
+    fab.setAttribute("aria-expanded", "true");
+    sectionBtn?.setAttribute("aria-expanded", "true");
     chatInput?.focus();
 
     if (!document.querySelector("#aiChatMessages")?.children.length) {
       if (hasAIKey()) {
         addMessage("assistant", "Hi! I'm Shipwright AI Planner. Tell me about the website you want to build, and I'll ask the right questions to help you create a complete plan.\n\nWhat's your idea?", false);
       } else {
-        runMockConversation();
+        addMessage("assistant", "Describe the website you want to build. Demo mode will turn your idea into a starter plan without using an API key. Add your own key in Settings when you want live follow-up questions.", true);
       }
     }
   };
@@ -1390,11 +1445,27 @@ const initAIChat = () => {
   const closePanel = () => {
     panel.hidden = true;
     fab.style.display = "";
+    fab.setAttribute("aria-expanded", "false");
+    sectionBtn?.setAttribute("aria-expanded", "false");
+    toggleFabVisibility();
+  };
+
+  const toggleFabVisibility = () => {
+    const nearTopOnMobile = window.innerWidth <= 680 && window.scrollY < window.innerHeight * 0.55;
+    fab.classList.toggle("is-suppressed", nearTopOnMobile && panel.hidden);
   };
 
   fab.addEventListener("click", openPanel);
   closeBtn?.addEventListener("click", closePanel);
   sectionBtn?.addEventListener("click", openPanel);
+  fab.setAttribute("aria-controls", "aiChatPanel");
+  fab.setAttribute("aria-expanded", "false");
+  sectionBtn?.setAttribute("aria-controls", "aiChatPanel");
+  sectionBtn?.setAttribute("aria-expanded", "false");
+
+  window.addEventListener("scroll", toggleFabVisibility, { passive: true });
+  window.addEventListener("resize", toggleFabVisibility);
+  toggleFabVisibility();
 
   settingsBtn?.addEventListener("click", () => dialog?.showModal());
   cancelBtn?.addEventListener("click", () => dialog?.close());
