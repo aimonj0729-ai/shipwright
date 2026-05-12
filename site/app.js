@@ -694,11 +694,49 @@ const renderReport = () => {
 };
 
 /* ─────────────────────────────────────────────────────────────
- * Browser-native Doctor: runs entirely in the visitor's browser.
- * No backend. Uses GitHub public REST API (CORS-enabled).
+ * Hybrid Doctor: tries Vercel backend first (enhanced checks),
+ * falls back to in-browser checks if the backend is unreachable
+ * (e.g., from networks that block *.vercel.app).
  * ───────────────────────────────────────────────────────────── */
 
 const GITHUB_API = "https://api.github.com";
+const BACKEND_BASE = "https://shipwright-topaz.vercel.app";
+const BACKEND_PROBE_TIMEOUT_MS = 3000;
+let BACKEND_AVAILABLE = null; // null = unknown, true/false once probed
+
+const probeBackend = async () => {
+  if (BACKEND_AVAILABLE !== null) return BACKEND_AVAILABLE;
+  try {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), BACKEND_PROBE_TIMEOUT_MS);
+    const res = await fetch(`${BACKEND_BASE}/api/health`, {
+      method: "GET",
+      signal: controller.signal,
+      cache: "no-store",
+    });
+    window.clearTimeout(timer);
+    BACKEND_AVAILABLE = res.ok;
+  } catch {
+    BACKEND_AVAILABLE = false;
+  }
+  updateModeBadge();
+  return BACKEND_AVAILABLE;
+};
+
+const updateModeBadge = () => {
+  const el = document.getElementById("modeBadge");
+  if (!el) return;
+  if (BACKEND_AVAILABLE === null) {
+    el.textContent = "Detecting mode…";
+    el.dataset.mode = "detecting";
+  } else if (BACKEND_AVAILABLE) {
+    el.textContent = "Enhanced mode · backend reachable";
+    el.dataset.mode = "enhanced";
+  } else {
+    el.textContent = "Browser-only mode · backend unreachable";
+    el.dataset.mode = "browser";
+  }
+};
 
 const severityLabel = {
   P0: "P0 · Launch blocker",
@@ -907,22 +945,30 @@ const renderLiveReport = (report) => {
   targetBadge.textContent = report.checks?.github?.name || target;
   typeBadge.textContent = `${report.grade} grade · ${report.inputType}`;
 
+  const aiButton = (id) =>
+    BACKEND_AVAILABLE
+      ? `<button type="button" class="ai-explain-btn" data-finding-id="${escapeHtml(id)}">Explain with AI</button>`
+      : "";
   const findingsHtml = (report.findings || [])
     .filter((f) => f.severity === "P0" || f.severity === "P1")
     .slice(0, 6)
     .map(
       (f) => `
-        <li class="finding-item">
+        <li class="finding-item" data-finding-id="${escapeHtml(f.id)}">
           <div class="finding-head">
             <span class="finding-severity sev-${f.severity}">${severityLabel[f.severity] || f.severity}</span>
             <strong>${escapeHtml(f.title)}</strong>
+            ${aiButton(f.id)}
           </div>
           <p class="finding-body">${escapeHtml(f.description)}</p>
           <p class="finding-fix"><strong>Fix:</strong> ${escapeHtml(f.fix)}</p>
+          <div class="ai-explain-output" hidden></div>
         </li>`
     )
     .join("");
   findingsList.innerHTML = findingsHtml || "<li class=\"finding-item\"><strong>No P0/P1 findings — looking good.</strong></li>";
+
+  window.__lastFindings = report.findings || [];
 
   const quickWinsList = document.querySelector("#quickWinsList");
   const quickWinsSection = document.querySelector("#quickWinsSection");
@@ -977,12 +1023,44 @@ const renderLiveReport = (report) => {
   currentMarkdown = mdLines.join("\n");
 };
 
+const detectBackendInputType = (raw) => {
+  const v = raw.trim();
+  if (/^https?:\/\/(www\.)?github\.com\//i.test(v)) return "github";
+  if (/^[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+$/.test(v)) return "github";
+  if (/^https?:\/\//i.test(v)) return "url";
+  if (/^#\s+/.test(v) || v.split("\n").length > 3) return "readme";
+  return "github";
+};
+
+const runDoctorViaBackend = async (raw) => {
+  const type = detectBackendInputType(raw);
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), 30000);
+  try {
+    const res = await fetch(`${BACKEND_BASE}/api/doctor`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type, value: raw }),
+      signal: controller.signal,
+    });
+    window.clearTimeout(timer);
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => null);
+      return { ok: false, error: errBody?.error || `Backend error ${res.status}` };
+    }
+    return { ok: true, report: await res.json() };
+  } catch (err) {
+    window.clearTimeout(timer);
+    return { ok: false, error: err && err.message ? err.message : "Backend unreachable" };
+  }
+};
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const raw = targetInput.value.trim();
   if (!raw) {
-    setTargetError("Enter a GitHub repo URL or owner/repo.");
+    setTargetError("Enter a GitHub repo URL, owner/repo, live URL, or README text.");
     targetInput.focus();
     return;
   }
@@ -994,7 +1072,21 @@ form.addEventListener("submit", async (event) => {
   reportPanel.classList.add("is-loading");
 
   try {
-    const result = await runDoctorInBrowser(raw);
+    let result = null;
+    if (BACKEND_AVAILABLE === null) {
+      await probeBackend();
+    }
+    if (BACKEND_AVAILABLE) {
+      result = await runDoctorViaBackend(raw);
+      if (!result.ok) {
+        BACKEND_AVAILABLE = false;
+        updateModeBadge();
+        result = null;
+      }
+    }
+    if (!result) {
+      result = await runDoctorInBrowser(raw);
+    }
     if (!result.ok) {
       setTargetError(result.error);
       return;
@@ -1011,6 +1103,98 @@ form.addEventListener("submit", async (event) => {
     reportPanel.classList.remove("is-loading");
   }
 });
+
+const findingById = (id) =>
+  (window.__lastFindings || []).find((f) => f.id === id) || null;
+
+const explainFindingWithAI = async (button) => {
+  const id = button.dataset.findingId;
+  const finding = findingById(id);
+  if (!finding) {
+    return;
+  }
+
+  const item = button.closest(".finding-item");
+  const output = item ? item.querySelector(".ai-explain-output") : null;
+  if (!output) return;
+
+  if (typeof getAIConfig !== "function" || !hasAIKey()) {
+    output.hidden = false;
+    output.textContent = "Set your API key in the AI Planner settings (gear icon, bottom-right) first — Explain reuses that key locally.";
+    return;
+  }
+
+  const cfg = getAIConfig();
+  button.disabled = true;
+  const originalLabel = button.textContent;
+  button.textContent = "Explaining…";
+  output.hidden = false;
+  output.textContent = "";
+
+  try {
+    const res = await fetch(`${BACKEND_BASE}/api/ai-explain`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        finding,
+        apiKey: cfg.key,
+        apiBase: cfg.base,
+        model: cfg.model,
+      }),
+    });
+
+    if (!res.ok || !res.body) {
+      const err = await res.json().catch(() => null);
+      output.textContent = err && err.error ? `Error: ${err.error}` : `Error: ${res.status}`;
+      return;
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let full = "";
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() || "";
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || !trimmed.startsWith("data:")) continue;
+        const payload = trimmed.slice(5).trim();
+        if (payload === "[DONE]") continue;
+        try {
+          const parsed = JSON.parse(payload);
+          const delta = parsed.choices?.[0]?.delta?.content;
+          if (delta) {
+            full += delta;
+            output.textContent = full;
+          }
+        } catch {
+          /* skip malformed lines */
+        }
+      }
+    }
+  } catch (err) {
+    output.textContent = `Error: ${err && err.message ? err.message : err}`;
+  } finally {
+    button.disabled = false;
+    button.textContent = originalLabel;
+  }
+};
+
+if (findingsList) {
+  findingsList.addEventListener("click", (event) => {
+    const target = event.target instanceof HTMLElement ? event.target : null;
+    if (target && target.classList.contains("ai-explain-btn")) {
+      explainFindingWithAI(target);
+    }
+  });
+}
+
+probeBackend();
 
 const setButtonStatus = (button, message, resetMessage) => {
   button.textContent = message;

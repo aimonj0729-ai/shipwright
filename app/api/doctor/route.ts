@@ -7,6 +7,7 @@ import type {
 } from "@/lib/types"
 import { computeScore, computeGrade, buildSummary } from "@/lib/scoring"
 import { parseGitHubUrl, checkGitHub } from "@/lib/github"
+import { runExtraGitHubChecks } from "@/lib/github-extras"
 import { checkUrl } from "@/lib/browser"
 import { analyzeReadme } from "@/lib/readme-analyzer"
 
@@ -55,9 +56,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           )
         }
 
-        const ghResult = await checkGitHub(parsed.owner, parsed.repo, token)
+        const [ghResult, extraFindings] = await Promise.all([
+          checkGitHub(parsed.owner, parsed.repo, token),
+          runExtraGitHubChecks(parsed.owner, parsed.repo, token),
+        ])
         checks.github = ghResult
-        allFindings.push(...ghResult.findings)
+        allFindings.push(...ghResult.findings, ...extraFindings)
 
         if (ghResult.readmeContent) {
           const readmeResult = analyzeReadme(ghResult.readmeContent)

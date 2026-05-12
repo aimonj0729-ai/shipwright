@@ -4054,3 +4054,63 @@ h2 {
     transform: none;
   }
 }
+
+/* ── Hybrid Doctor mode badge + AI explain ── */
+.mode-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-right: 8px;
+  border: 1px solid currentColor;
+  background: rgba(255, 255, 255, 0.45);
+}
+.mode-badge[data-mode="detecting"] {
+  color: #78716c;
+}
+.mode-badge[data-mode="enhanced"] {
+  color: #0f766e;
+  background: rgba(16, 185, 129, 0.08);
+}
+.mode-badge[data-mode="browser"] {
+  color: #b45309;
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.ai-explain-btn {
+  margin-left: auto;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #0f766e;
+  background: transparent;
+  border: 1px solid #0f766e;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.ai-explain-btn:hover:not(:disabled) {
+  background: #0f766e;
+  color: #fff;
+}
+.ai-explain-btn:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+.ai-explain-output {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(15, 118, 110, 0.06);
+  border-left: 3px solid #0f766e;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  color: #1c1917;
+}

@@ -296,8 +296,10 @@
               <span class="btn-spinner" hidden aria-hidden="true"></span>
             </button>
             <p class="form-note">
-              Runs entirely in your browser via GitHub's public API (60 req/hr per IP).
-              Nothing is sent to any server, no API key required.
+              <span id="modeBadge" class="mode-badge" data-mode="detecting">Detecting mode…</span>
+              Enhanced mode runs richer GitHub checks via the Doctor backend (CI/CD,
+              SECURITY, package.json, URL probe). If the backend is unreachable from
+              your network it falls back to in-browser checks automatically.
             </p>
           </form>
 
