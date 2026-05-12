@@ -1,84 +1,71 @@
-# Shipwright
+<p align="center">
+  <img src="./site/og-image.svg" alt="Shipwright social preview" width="760" />
+</p>
 
-![Claude Code](https://img.shields.io/badge/Claude_Code-compatible-blue)
-![Codex](https://img.shields.io/badge/Codex-compatible-orange)
-![License: MIT](https://img.shields.io/github/license/aimonj0729-ai/shipwright)
+<h1 align="center">Shipwright</h1>
 
-Practical Claude Code and Codex skills for indie builders who want to turn fast-moving GitHub trends into product ideas, PRDs, issues, launch-ready repositories, and browser-tested projects.
+<p align="center">
+  <strong>Launch QA skills for AI-built projects.</strong>
+</p>
 
-This is not a prompt dump. Each skill is a reusable workflow for a real builder pain:
+<p align="center">
+  Turn GitHub trends, rough ideas, vibe-coded apps, and agent output into repositories
+  that strangers can install, trust, and actually use.
+</p>
 
-- Too many hot repos, not enough signal.
-- Ideas that never become scoped products.
-- PRDs that do not turn into buildable issues.
-- GitHub projects that look useful but are not packaged well enough to earn trust.
-- AI-generated apps that look done in code but break in the browser.
-- README files that sound polished but fail for first-time users.
-- Recurring agent workflows that should become installable skills.
+<p align="center">
+  <a href="https://shipwright.com.cn">Live demo</a>
+  ·
+  <a href="#quick-start">Quick start</a>
+  ·
+  <a href="#skills">Skills</a>
+  ·
+  <a href="#examples">Examples</a>
+  ·
+  <a href="#doctor-mode">Doctor mode</a>
+</p>
 
-## Who Is This For
+<p align="center">
+  <img alt="Claude Code compatible" src="https://img.shields.io/badge/Claude%20Code-compatible-191919?style=flat-square" />
+  <img alt="Codex compatible" src="https://img.shields.io/badge/Codex-compatible-0f766e?style=flat-square" />
+  <img alt="Skills" src="https://img.shields.io/badge/skills-10-c86b3c?style=flat-square" />
+  <img alt="License" src="https://img.shields.io/github/license/aimonj0729-ai/shipwright?style=flat-square" />
+</p>
 
-- **Indie builders** who ship side projects and want to move from "interesting repo" to "launched product" faster.
-- **AI product makers** who need repeatable workflows instead of blank chat boxes.
-- **Technical operators** who want useful leverage without building a heavy platform first.
+---
 
-Most prompt packs stop at ideation. This package connects the full path from trend discovery to public launch.
+## Why Shipwright
 
-## Pipeline
+AI coding agents are great at producing work that *looks finished*. Shipwright is for the
+last mile: the unglamorous checks that decide whether a project is ready for real users.
 
-These skills chain into a discovery-to-launch pipeline:
+It helps answer:
 
-```
-github-radar ──> trend-to-product ──> idea-to-prd ──> prd-to-issues ──> [build] ──> launch-readiness
-  (scan)            (shape)             (scope)          (plan)                        (audit)
+- **Can a stranger install this from the README without asking me?**
+- **Did the browser actually open, or did we only inspect the diff?**
+- **Did the agent really finish the feature, or leave fake buttons and TODOs?**
+- **Is this GitHub repo packaged clearly enough to earn trust?**
+- **Can a trend become a smaller, sharper product people will use?**
 
-                              workflow-to-skill
-                      (meta: package any step as a new skill)
-```
+Shipwright is not a prompt dump. It is a set of reusable Claude Code and Codex skills for
+turning messy builder work into launch-ready evidence.
 
-You can use each skill standalone, or chain them for end-to-end product development.
+## What You Get
 
-## Website / Product Demo
+| Job | Use this | Output |
+| --- | --- | --- |
+| Find useful GitHub trends | `github-radar` | A ranked radar of tools to use, ideas to copy ethically, and hype to ignore. |
+| Turn a hot repo into a product angle | `trend-to-product` | A differentiated product brief with audience, wedge, risks, and MVP. |
+| Shape a rough idea | `idea-to-prd` | A lean PRD with assumptions, scope, acceptance criteria, and non-goals. |
+| Plan implementation | `prd-to-issues` | GitHub-ready issues ordered by delivery sequence. |
+| Audit before launch | `launch-readiness` | A launch-readiness report with blockers, trust gaps, and next patch. |
+| Open the real app | `browser-launch-audit` | Browser QA for console errors, mobile layout, broken interactions, and trust gaps. |
+| Test the README path | `readme-install-audit` | First-time-user install verdict and README patch notes. |
+| Review AI-generated work | `agent-output-review` | Findings for hallucinated claims, fake-complete features, and missing verification. |
+| Package for GitHub | `github-release-checklist` | Repo description, topics, release notes, launch copy, and final blockers. |
+| Productize a workflow | `workflow-to-skill` | A clean installable `SKILL.md` from a repeated agent workflow. |
 
-**Live site: [shipwright.com.cn](https://shipwright.com.cn)**
-
-The `site/` directory contains the product demo for Shipwright: a launch QA landing page with an interactive analyzer, Markdown report generation, and copy/download actions. It is intentionally a prototype wrapper around the open-source skills, not the executable audit engine itself.
-
-Preview it locally:
-
-```bash
-python3 -m http.server 4173 --directory site
-```
-
-Then open `http://localhost:4173`.
-
-## Skills
-
-| Skill | Use it when you need to... |
-| --- | --- |
-| `github-radar` | Read GitHub Trending and separate useful tools, buildable opportunities, and hype traps. |
-| `trend-to-product` | Turn a hot repo, trend, or category into a differentiated product opportunity. |
-| `idea-to-prd` | Convert a rough product idea into a lean PRD with assumptions, scope, and acceptance criteria. |
-| `prd-to-issues` | Break a PRD into GitHub-ready implementation issues ordered by delivery sequence. |
-| `launch-readiness` | Audit a GitHub project before launch for README, install, demo, trust, and conversion gaps. |
-| `browser-launch-audit` | Verify a web app, localhost build, or demo URL in a real browser before shipping. |
-| `readme-install-audit` | Test whether a first-time user can install and use a repo from the README alone. |
-| `agent-output-review` | Catch hallucinated, incomplete, or fake-complete AI-generated work before accepting it. |
-| `github-release-checklist` | Package a repo for public GitHub release with metadata, release notes, and launch copy. |
-| `workflow-to-skill` | Turn a repeated agent workflow into a clean, installable skill. |
-
-## Launch QA Pack
-
-The v2 focus is the last mile of AI-built projects:
-
-1. `agent-output-review` checks whether the agent actually built what it claimed.
-2. `browser-launch-audit` opens the project and verifies the real user experience.
-3. `readme-install-audit` follows the public install path like a stranger would.
-4. `github-release-checklist` turns the verified repo into a launchable GitHub package.
-
-Use these together when you are about to publish a vibe-coded app, skill pack, template, MCP server, CLI, or open source developer tool.
-
-## Install
+## Quick Start
 
 Clone the repo:
 
@@ -87,147 +74,237 @@ git clone https://github.com/aimonj0729-ai/shipwright.git
 cd shipwright
 ```
 
-Install into Claude Code commands:
+Install into Claude Code:
 
 ```bash
 ./scripts/install.sh --claude
 ```
 
-Install into Codex skills:
+Install into Codex:
 
 ```bash
 ./scripts/install.sh --codex
 ```
 
-Install into the common agent skills directory (default):
+Install into a generic agent skills directory:
 
 ```bash
 ./scripts/install.sh
 ```
 
-Install into a custom directory:
+Restart your agent after installing so it reloads the skill metadata.
+
+### Expected Result
+
+After install, your agent should be able to invoke skills such as:
+
+```text
+Use browser-launch-audit on http://localhost:3000.
+Check console errors, broken interactions, mobile layout, and launch trust gaps.
+```
+
+or:
+
+```text
+Use readme-install-audit on this repository.
+Follow the README like a first-time user and tell me where adoption breaks.
+```
+
+## Product Demo
+
+The website is live at **[shipwright.com.cn](https://shipwright.com.cn)**.
+
+It includes:
+
+- A launch QA landing page.
+- A static analyzer demo that generates a Markdown report.
+- An AI Planner panel with BYOK settings and a no-key demo mode.
+- A catalog of the skills in this repository.
+
+Preview locally:
 
 ```bash
-./scripts/install.sh ~/my-skills
+python3 -m http.server 4173 --directory site
 ```
 
-Uninstall:
-
-```bash
-./scripts/install.sh --uninstall
-./scripts/install.sh --uninstall --claude
-```
-
-Restart your agent after installing so it reloads skill metadata.
-
-## Quick Prompts
-
-Use `github-radar`:
+Then open:
 
 ```text
-Scan today's GitHub Trending and tell me which projects are worth using, which are worth copying ethically, and which I should ignore.
+http://localhost:4173
 ```
 
-Use `trend-to-product`:
+### Honest Limitation
+
+The hosted website is currently a product demo. The real executable workflows live in
+`skills/` and run inside Claude Code, Codex, or another compatible agent environment.
+
+The web analyzer does **not** yet clone repositories, run Playwright in the cloud, or execute
+server-side Doctor checks. That is the next product layer.
+
+## Common Workflows
+
+### 1. From GitHub Trend To Product
 
 ```text
-Analyze this repo as a product opportunity: https://github.com/example/project
-What could I build for indie developers that is smaller, sharper, and easier to adopt?
+Scan today's GitHub Trending and tell me which projects are worth using,
+which are worth copying ethically, and which I should ignore.
 ```
 
-Use `idea-to-prd`:
+Then:
 
 ```text
-Turn this idea into a lean PRD: a daily GitHub radar that finds workflow and skill ideas for AI builders.
+Take the strongest opportunity from that radar report and turn it into
+a smaller product brief for indie developers.
 ```
 
-Use `prd-to-issues`:
+### 2. From Idea To Build Plan
 
 ```text
-Break this PRD into GitHub issues for a first release. Keep the first slice shippable in one weekend.
+Turn this idea into a lean PRD:
+a daily GitHub radar that finds workflow and skill ideas for AI builders.
 ```
 
-Use `launch-readiness`:
+Then:
+
+```text
+Break this PRD into GitHub issues for a first release.
+Keep the first slice shippable in one weekend.
+```
+
+### 3. Launch QA For A Vibe-Coded App
 
 ```text
 Audit this repository for launch readiness before I post it on GitHub, X, and Product Hunt.
+Check README install friction, browser proof, fake-complete AI output, and GitHub metadata.
 ```
 
-Use `browser-launch-audit`:
+### 4. Browser Proof Before Shipping
 
 ```text
-Open http://localhost:3000 and audit whether this app is ready to launch. Check console errors, broken interactions, mobile layout, and trust gaps.
+Open http://localhost:3000 and audit whether this app is ready to launch.
+Check console errors, broken interactions, mobile layout, empty states, and trust gaps.
 ```
 
-Use `readme-install-audit`:
+### 5. Turn A Repeated Workflow Into A Skill
 
 ```text
-Follow this repo's README like a first-time user and tell me exactly where installation or first-use breaks.
+Turn my launch QA workflow into a reusable Codex/Claude skill.
+Keep the trigger description specific and include an example output format.
 ```
 
-Use `agent-output-review`:
+## Skills
 
-```text
-Review the work this agent just produced. Is it actually usable, or did it leave fake buttons, missing setup, or unverified claims?
+| Skill | Category | Best used for |
+| --- | --- | --- |
+| [`github-radar`](skills/github-radar/SKILL.md) | Research | Filtering GitHub Trending and hot repos into useful builder signals. |
+| [`trend-to-product`](skills/trend-to-product/SKILL.md) | Product | Turning a repo, trend, or competitor into a differentiated product wedge. |
+| [`idea-to-prd`](skills/idea-to-prd/SKILL.md) | Product | Converting a rough idea into a scoped PRD. |
+| [`prd-to-issues`](skills/prd-to-issues/SKILL.md) | Planning | Turning a PRD into GitHub-ready implementation issues. |
+| [`launch-readiness`](skills/launch-readiness/SKILL.md) | Launch | Auditing README, install, trust, demo, and conversion gaps. |
+| [`browser-launch-audit`](skills/browser-launch-audit/SKILL.md) | QA | Verifying the actual browser experience before launch. |
+| [`readme-install-audit`](skills/readme-install-audit/SKILL.md) | QA | Testing whether a stranger can install and use the repo from README alone. |
+| [`agent-output-review`](skills/agent-output-review/SKILL.md) | QA | Catching hallucinated claims and fake-complete AI work. |
+| [`github-release-checklist`](skills/github-release-checklist/SKILL.md) | Launch | Preparing metadata, release notes, launch copy, and final blockers. |
+| [`workflow-to-skill`](skills/workflow-to-skill/SKILL.md) | Skill building | Packaging a repeated agent workflow into an installable skill. |
+
+## Example Report
+
+Shipwright reports are designed to be copied directly into Claude Code or Codex as the next
+fix plan.
+
+```markdown
+## Launch Verdict
+
+Almost ready — but do not publish yet.
+
+## P1 Findings
+
+- README omits required environment variables.
+- Mobile nav clips below 390px.
+- Primary CTA works, but no error state is visible.
+
+## Quick Wins
+
+- Add expected terminal output after the install command.
+- Add one verified browser screenshot.
+- Add GitHub topics and a clearer repository description.
+
+## Next Patch
+
+Run the browser audit, fix the mobile nav, and update the README quickstart before launch.
 ```
-
-Use `github-release-checklist`:
-
-```text
-Prepare this repository for a public GitHub release. Give me metadata, release notes, topics, launch copy, and the last blockers.
-```
-
-Use `workflow-to-skill`:
-
-```text
-Turn my daily research workflow into a reusable Codex/Claude skill with a concise SKILL.md.
-```
-
-### Chained Example
-
-Start from a trend and reach launch in five steps:
-
-1. *"Scan today's GitHub Trending for AI coding agent opportunities."*
-2. *"Take the top opportunity from the radar report and shape it into a product brief."*
-3. *"Turn that product brief into a lean PRD."*
-4. *"Break the PRD into GitHub issues for a weekend first release."*
-5. *"Audit the repo for launch readiness before I post it."*
 
 ## Examples
 
 The `examples/` directory contains sample outputs from real skill runs:
 
-- [GitHub Radar Report](examples/github-radar-report.md) — Trend scan identifying builder opportunities.
-- [Product Brief](examples/product-brief.md) — Trend-to-product output for this skill pack.
-- [Idea to PRD](examples/idea-to-prd.md) — Lean PRD for a daily GitHub radar digest tool.
-- [PRD to Issues](examples/prd-to-issues.md) — PRD broken into implementation issues.
-- [Launch Readiness Audit](examples/launch-readiness.md) — Pre-launch repository audit.
-- [Browser Launch Audit](examples/browser-launch-audit.md) — Browser QA catching ghost buttons and hydration errors.
-- [README Install Audit](examples/readme-install-audit.md) — First-time install path audit for a CLI tool.
-- [Agent Output Review](examples/agent-output-review.md) — Review of AI-generated dashboard with fake auth and empty exports.
-- [Launch QA Report](examples/launch-qa-report.md) — Combined browser, README, and release-readiness audit.
-- [Workflow to Skill](examples/workflow-to-skill.md) — Packaging a repeated audit workflow into an installable skill.
+- [GitHub Radar Report](examples/github-radar-report.md)
+- [Product Brief](examples/product-brief.md)
+- [Idea to PRD](examples/idea-to-prd.md)
+- [PRD to Issues](examples/prd-to-issues.md)
+- [Launch Readiness Audit](examples/launch-readiness.md)
+- [Browser Launch Audit](examples/browser-launch-audit.md)
+- [README Install Audit](examples/readme-install-audit.md)
+- [Agent Output Review](examples/agent-output-review.md)
+- [Launch QA Report](examples/launch-qa-report.md)
+- [Workflow to Skill](examples/workflow-to-skill.md)
 
-## Design Principles
+## Doctor Mode
 
-- Prefer actionable judgment over trend summaries.
-- Turn every insight into a next step.
-- Keep skill instructions short enough to be loaded often.
-- Avoid fragile platform hacks and unclear compliance risks.
-- Make outputs useful for GitHub, not just private notes.
+Shipwright Doctor is the next product direction.
 
-## Roadmap
+The goal: paste a GitHub repo, live demo URL, README, or rough website idea and receive a
+real launch diagnosis with evidence.
 
-- Add a `repo-positioning` skill for improving names, descriptions, topics, and README conversion.
-- Add a `demo-script` skill for turning a project into a short launch video script.
-- Add an `agent-memory-audit` skill for cleaning stale or risky long-term agent memory.
-- Add an `industry-workflow-template` skill for turning vertical examples into installable agent workflows.
-- Add a `skill-evaluator` skill for testing whether a skill triggers correctly and produces useful output.
-- Add example reports from real GitHub Trending days.
+Planned checks:
+
+- GitHub metadata, README, package files, topics, and repo freshness.
+- Browser checks for title, meta tags, console errors, failed network requests, CTA behavior,
+  and 390px / 768px mobile layout.
+- README install friction and missing expected output.
+- AI-generated output review for fake buttons, placeholders, and unverified claims.
+- Markdown export with P0/P1/P2/P3 findings and a Codex/Claude-ready fix prompt.
+
+Safety rule: Shipwright Doctor should read and inspect untrusted projects, but should not
+execute arbitrary repository code.
+
+## Repository Structure
+
+```text
+shipwright/
+├── skills/        # Installable Claude Code / Codex skills
+├── examples/      # Sample reports and workflow outputs
+├── scripts/       # Install and validation scripts
+├── site/          # Product demo website
+├── catalog.json   # Machine-readable skill catalog
+└── README.md
+```
+
+## Validate
+
+Run the catalog check:
+
+```bash
+./scripts/validate-catalog.sh
+```
+
+Preview the website:
+
+```bash
+python3 -m http.server 4173 --directory site
+```
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding or improving skills.
+Shipwright works best when every skill has:
+
+- A specific trigger description.
+- A concrete input and output format.
+- A real example report.
+- Honest limitations.
+- A first-use path that does not require guessing.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## License
 
