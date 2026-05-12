@@ -461,15 +461,27 @@
         </div>
 
         <div class="brand-wizard" id="brandWizard">
-          <ol class="brand-wizard-progress" id="brandWizardProgress" aria-label="Wizard progress">
-            <li data-step="1" class="is-active"><span>1</span> Project</li>
-            <li data-step="2"><span>2</span> Audience</li>
-            <li data-step="3"><span>3</span> Goal</li>
-            <li data-step="4"><span>4</span> Vibe</li>
-            <li data-step="5"><span>5</span> Feels</li>
-          </ol>
+          <svg class="notebook-doodle notebook-doodle--ne" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 26 C 26 14, 50 8, 74 18 S 96 56, 84 76 S 38 96, 18 78 S 2 38, 14 26 Z" opacity="0.5"/>
+            <path d="M28 50 L 44 64 L 72 32" stroke-width="2.2"/>
+            <path d="M70 18 L 86 12 L 80 28" />
+          </svg>
+          <svg class="notebook-doodle notebook-doodle--sw" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 80 C 12 50, 30 18, 60 16" />
+            <path d="M52 8 L 60 16 L 52 24" />
+            <circle cx="78" cy="68" r="14" stroke-dasharray="3 4"/>
+          </svg>
 
-          <div class="brand-wizard-steps" id="brandWizardSteps">
+          <div class="brand-wizard-inner">
+            <ol class="brand-wizard-progress" id="brandWizardProgress" aria-label="Wizard progress">
+              <li data-step="1" class="is-active"><span>1</span> Project</li>
+              <li data-step="2"><span>2</span> Audience</li>
+              <li data-step="3"><span>3</span> Goal</li>
+              <li data-step="4"><span>4</span> Vibe</li>
+              <li data-step="5"><span>5</span> Feels</li>
+            </ol>
+
+            <div class="brand-wizard-steps" id="brandWizardSteps">
             <!-- step 1: project + url -->
             <fieldset class="brand-step is-active" data-step="1">
               <legend>What are you building?</legend>
@@ -587,13 +599,14 @@
                 <textarea id="bwFrustration" rows="3" placeholder="e.g., feels too PPT-like; nobody understands what we do in 10s; CTAs feel generic; we have no real social proof"></textarea>
               </label>
             </fieldset>
-          </div>
+            </div>
 
-          <div class="brand-wizard-actions">
-            <button type="button" class="button ghost" id="bwBack" hidden>← Back</button>
-            <button type="button" class="button primary" id="bwNext">Next →</button>
-            <button type="button" class="button primary" id="bwSubmit" hidden>Generate report</button>
-            <p class="brand-wizard-note" id="bwNote">5 questions · ~60 seconds</p>
+            <div class="brand-wizard-actions">
+              <button type="button" class="button ghost" id="bwBack" hidden>← Back</button>
+              <button type="button" class="button primary" id="bwNext">Next →</button>
+              <button type="button" class="button primary" id="bwSubmit" hidden>Generate report</button>
+              <p class="brand-wizard-note" id="bwNote">5 questions · ~60 seconds</p>
+            </div>
           </div>
 
           <article class="brand-report" id="brandReport" aria-live="polite" hidden>
