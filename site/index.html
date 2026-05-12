@@ -443,6 +443,176 @@
 
       <div class="wave-divider" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,15 1440,30 L1440,60 L0,60Z" fill="currentColor"/></svg></div>
 
+      <section id="brand-check" class="brand-check section-shell" aria-labelledby="brand-check-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-num" aria-hidden="true">01b <small>Brand fit</small></p>
+            <p class="eyebrow eyebrow--script">Beyond the code check</p>
+            <h2 id="brand-check-title">Does your site match what you actually want?</h2>
+            <span class="sticker" style="display:inline-block; margin-top: 10px;" aria-hidden="true">
+              <span class="arrow">↳</span> answer 5 things, get a brand-fit report
+            </span>
+          </div>
+          <p>
+            The Audit on the left tells you whether the code ships. This wizard tells you
+            whether the <em>vibe, content, and audience</em> match what you're really
+            building. Uses your AI Planner key — runs in your browser.
+          </p>
+        </div>
+
+        <div class="brand-wizard" id="brandWizard">
+          <ol class="brand-wizard-progress" id="brandWizardProgress" aria-label="Wizard progress">
+            <li data-step="1" class="is-active"><span>1</span> Project</li>
+            <li data-step="2"><span>2</span> Audience</li>
+            <li data-step="3"><span>3</span> Goal</li>
+            <li data-step="4"><span>4</span> Vibe</li>
+            <li data-step="5"><span>5</span> Feels</li>
+          </ol>
+
+          <div class="brand-wizard-steps" id="brandWizardSteps">
+            <!-- step 1: project + url -->
+            <fieldset class="brand-step is-active" data-step="1">
+              <legend>What are you building?</legend>
+              <label class="brand-field">
+                <span>Your live URL or repo (optional, but recommended)</span>
+                <input type="text" id="bwUrl" placeholder="https://yoursite.com or https://github.com/user/repo" autocomplete="off" />
+              </label>
+              <div class="brand-field">
+                <span>Project type</span>
+                <div class="chip-group" data-name="projectType" data-mode="single">
+                  <button type="button" class="chip" data-value="landing">Landing page</button>
+                  <button type="button" class="chip" data-value="webapp">Web app / SaaS</button>
+                  <button type="button" class="chip" data-value="tool">Developer tool</button>
+                  <button type="button" class="chip" data-value="docs">Docs / Content</button>
+                  <button type="button" class="chip" data-value="portfolio">Portfolio</button>
+                  <button type="button" class="chip" data-value="community">Community / Forum</button>
+                  <button type="button" class="chip" data-value="ecommerce">E-commerce</button>
+                  <button type="button" class="chip" data-value="other">Other</button>
+                </div>
+              </div>
+              <div class="brand-field">
+                <span>Stage</span>
+                <div class="chip-group" data-name="stage" data-mode="single">
+                  <button type="button" class="chip" data-value="idea">Just an idea</button>
+                  <button type="button" class="chip" data-value="building">Building MVP</button>
+                  <button type="button" class="chip" data-value="prelaunch">Pre-launch</button>
+                  <button type="button" class="chip" data-value="live">Live, few users</button>
+                  <button type="button" class="chip" data-value="iterating">Live, iterating</button>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- step 2: audience -->
+            <fieldset class="brand-step" data-step="2">
+              <legend>Who is this for?</legend>
+              <div class="brand-field">
+                <span>Primary audience (pick all that apply)</span>
+                <div class="chip-group" data-name="audience" data-mode="multi">
+                  <button type="button" class="chip" data-value="developers">Developers</button>
+                  <button type="button" class="chip" data-value="designers">Designers</button>
+                  <button type="button" class="chip" data-value="indie">Indie hackers</button>
+                  <button type="button" class="chip" data-value="founders">Startup founders</button>
+                  <button type="button" class="chip" data-value="b2b">B2B buyers / PMs</button>
+                  <button type="button" class="chip" data-value="creators">Content creators</button>
+                  <button type="button" class="chip" data-value="students">Students / Learners</button>
+                  <button type="button" class="chip" data-value="general">General consumers</button>
+                </div>
+              </div>
+              <div class="brand-field">
+                <span>How technical are they?</span>
+                <div class="chip-group" data-name="techLevel" data-mode="single">
+                  <button type="button" class="chip" data-value="technical">Very technical</button>
+                  <button type="button" class="chip" data-value="mixed">Mixed</button>
+                  <button type="button" class="chip" data-value="non-technical">Non-technical</button>
+                </div>
+              </div>
+              <label class="brand-field">
+                <span>Anything else about them? (free text, optional)</span>
+                <textarea id="bwAudienceNotes" rows="2" placeholder="e.g., burned out from PPT-style landing pages; spend most time on X/Twitter; care about privacy"></textarea>
+              </label>
+            </fieldset>
+
+            <!-- step 3: goal -->
+            <fieldset class="brand-step" data-step="3">
+              <legend>What's the primary goal of this site?</legend>
+              <div class="brand-field">
+                <span>Pick the single most important outcome</span>
+                <div class="chip-group" data-name="goal" data-mode="single">
+                  <button type="button" class="chip" data-value="signup">Email / waitlist signup</button>
+                  <button type="button" class="chip" data-value="trial">Free trial → paid</button>
+                  <button type="button" class="chip" data-value="purchase">One-time purchase</button>
+                  <button type="button" class="chip" data-value="github">GitHub stars / installs</button>
+                  <button type="button" class="chip" data-value="demo">Book a demo</button>
+                  <button type="button" class="chip" data-value="community">Join the community</button>
+                  <button type="button" class="chip" data-value="awareness">Awareness / Education</button>
+                </div>
+              </div>
+              <label class="brand-field">
+                <span>What does success look like in 90 days? (free text)</span>
+                <textarea id="bwSuccess" rows="2" placeholder="e.g., 500 weekly active users; 50 paying customers; 1k GitHub stars"></textarea>
+              </label>
+            </fieldset>
+
+            <!-- step 4: vibe -->
+            <fieldset class="brand-step" data-step="4">
+              <legend>What should it feel like?</legend>
+              <div class="brand-field">
+                <span>Brand vibes (pick 1–3)</span>
+                <div class="chip-group" data-name="vibes" data-mode="multi" data-max="3">
+                  <button type="button" class="chip" data-value="trust">Trustworthy / Enterprise</button>
+                  <button type="button" class="chip" data-value="edgy">Edgy / Bold</button>
+                  <button type="button" class="chip" data-value="playful">Playful / Indie</button>
+                  <button type="button" class="chip" data-value="zen">Calm / Zen</button>
+                  <button type="button" class="chip" data-value="tech">Futuristic / Tech</button>
+                  <button type="button" class="chip" data-value="craft">Crafted / Artisan</button>
+                  <button type="button" class="chip" data-value="editorial">Editorial / Magazine</button>
+                  <button type="button" class="chip" data-value="raw">Raw / Brutalist</button>
+                </div>
+              </div>
+              <label class="brand-field">
+                <span>Sites you admire (URLs or names, comma-separated, optional)</span>
+                <input type="text" id="bwReferences" placeholder="e.g., linear.app, vercel.com, are.na" autocomplete="off" />
+              </label>
+            </fieldset>
+
+            <!-- step 5: feels -->
+            <fieldset class="brand-step" data-step="5">
+              <legend>How does it feel right now?</legend>
+              <label class="brand-field">
+                <span>What's working that you'd never throw away?</span>
+                <textarea id="bwWorking" rows="3" placeholder="e.g., the dark hero is on-brand; the analyzer demo gets shares; the workflow diagram explains it fast"></textarea>
+              </label>
+              <label class="brand-field">
+                <span>What frustrates you about the current site?</span>
+                <textarea id="bwFrustration" rows="3" placeholder="e.g., feels too PPT-like; nobody understands what we do in 10s; CTAs feel generic; we have no real social proof"></textarea>
+              </label>
+            </fieldset>
+          </div>
+
+          <div class="brand-wizard-actions">
+            <button type="button" class="button ghost" id="bwBack" hidden>← Back</button>
+            <button type="button" class="button primary" id="bwNext">Next →</button>
+            <button type="button" class="button primary" id="bwSubmit" hidden>Generate report</button>
+            <p class="brand-wizard-note" id="bwNote">5 questions · ~60 seconds</p>
+          </div>
+
+          <article class="brand-report" id="brandReport" aria-live="polite" hidden>
+            <div class="brand-report-head">
+              <p class="eyebrow eyebrow--script">Brand &amp; audience report</p>
+              <h3>Your custom diagnosis</h3>
+              <button type="button" class="button ghost compact" id="bwRestart">Restart wizard</button>
+            </div>
+            <div class="brand-report-body" id="brandReportBody"></div>
+            <div class="brand-report-actions">
+              <button type="button" class="button ghost compact" id="bwCopy">Copy report</button>
+              <button type="button" class="button ghost compact" id="bwDownload">Download .md</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div class="wave-divider" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,15 1440,30 L1440,60 L0,60Z" fill="currentColor"/></svg></div>
+
       <section id="guide" class="usage-guide section-shell" aria-labelledby="guide-title">
         <div class="section-heading">
           <div>

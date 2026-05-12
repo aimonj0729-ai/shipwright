@@ -2351,6 +2351,388 @@ const initMagneticEverywhere = () => {
   });
 };
 
+/* ═══════════════════════════════════════════════════════════════
+ *  Brand & audience wizard — questionnaire that combines user
+ *  goals + current state + 2026 trends and asks the AI to produce
+ *  a structured diagnostic report. Uses the existing AI Planner
+ *  BYOK config from localStorage. Streams the response.
+ * ═══════════════════════════════════════════════════════════════ */
+
+const BRAND_VIBE_LABELS = {
+  trust: "Trustworthy / Enterprise",
+  edgy: "Edgy / Bold",
+  playful: "Playful / Indie",
+  zen: "Calm / Zen",
+  tech: "Futuristic / Tech",
+  craft: "Crafted / Artisan",
+  editorial: "Editorial / Magazine",
+  raw: "Raw / Brutalist",
+};
+const BRAND_GOAL_LABELS = {
+  signup: "Email / waitlist signup",
+  trial: "Free trial → paid conversion",
+  purchase: "One-time purchase",
+  github: "GitHub stars / installs",
+  demo: "Book a demo",
+  community: "Join the community",
+  awareness: "Awareness / Education",
+};
+const BRAND_PROJECT_LABELS = {
+  landing: "Landing page",
+  webapp: "Web app / SaaS",
+  tool: "Developer tool",
+  docs: "Docs / Content site",
+  portfolio: "Portfolio",
+  community: "Community / Forum",
+  ecommerce: "E-commerce",
+  other: "Other",
+};
+const BRAND_STAGE_LABELS = {
+  idea: "Just an idea",
+  building: "Building MVP",
+  prelaunch: "Pre-launch",
+  live: "Live with a few users",
+  iterating: "Live, actively iterating",
+};
+const BRAND_AUDIENCE_LABELS = {
+  developers: "Developers",
+  designers: "Designers",
+  indie: "Indie hackers",
+  founders: "Startup founders",
+  b2b: "B2B buyers / PMs",
+  creators: "Content creators",
+  students: "Students / Learners",
+  general: "General consumers",
+};
+const BRAND_TECH_LABELS = {
+  technical: "Very technical",
+  mixed: "Mixed",
+  "non-technical": "Non-technical",
+};
+
+const BRAND_WIZARD_TOTAL_STEPS = 5;
+
+const initBrandWizard = () => {
+  const wizard = document.querySelector("#brandWizard");
+  if (!wizard) return;
+
+  const progress = wizard.querySelector("#brandWizardProgress");
+  const stepsContainer = wizard.querySelector("#brandWizardSteps");
+  const allSteps = wizard.querySelectorAll(".brand-step");
+  const backBtn = wizard.querySelector("#bwBack");
+  const nextBtn = wizard.querySelector("#bwNext");
+  const submitBtn = wizard.querySelector("#bwSubmit");
+  const note = wizard.querySelector("#bwNote");
+  const report = wizard.querySelector("#brandReport");
+  const reportBody = wizard.querySelector("#brandReportBody");
+  const restartBtn = wizard.querySelector("#bwRestart");
+  const copyBtn = wizard.querySelector("#bwCopy");
+  const downloadBtn = wizard.querySelector("#bwDownload");
+
+  let currentStep = 1;
+  const state = {
+    url: "",
+    projectType: "",
+    stage: "",
+    audience: [],
+    techLevel: "",
+    audienceNotes: "",
+    goal: "",
+    success: "",
+    vibes: [],
+    references: "",
+    working: "",
+    frustration: "",
+  };
+
+  /* ─── chip group selection logic ─── */
+  wizard.querySelectorAll(".chip-group").forEach((group) => {
+    const name = group.dataset.name;
+    const mode = group.dataset.mode || "single";
+    const max = group.dataset.max ? parseInt(group.dataset.max, 10) : Infinity;
+    group.addEventListener("click", (event) => {
+      const target = event.target instanceof HTMLElement ? event.target.closest(".chip") : null;
+      if (!target) return;
+      const value = target.dataset.value;
+      if (mode === "single") {
+        group.querySelectorAll(".chip").forEach((chip) => chip.classList.remove("is-selected"));
+        target.classList.add("is-selected");
+        state[name] = value;
+      } else {
+        const list = Array.isArray(state[name]) ? state[name] : [];
+        if (target.classList.contains("is-selected")) {
+          target.classList.remove("is-selected");
+          state[name] = list.filter((v) => v !== value);
+        } else if (list.length >= max) {
+          // bump first selection to make room
+          const first = group.querySelector(".chip.is-selected");
+          if (first) first.classList.remove("is-selected");
+          state[name] = list.slice(1).concat(value);
+          target.classList.add("is-selected");
+        } else {
+          target.classList.add("is-selected");
+          state[name] = list.concat(value);
+        }
+      }
+    });
+  });
+
+  /* ─── free-text inputs sync ─── */
+  const bindText = (id, key) => {
+    const el = wizard.querySelector(id);
+    if (!el) return;
+    el.addEventListener("input", () => { state[key] = el.value; });
+  };
+  bindText("#bwUrl", "url");
+  bindText("#bwAudienceNotes", "audienceNotes");
+  bindText("#bwSuccess", "success");
+  bindText("#bwReferences", "references");
+  bindText("#bwWorking", "working");
+  bindText("#bwFrustration", "frustration");
+
+  /* ─── validation per step ─── */
+  const validateStep = (step) => {
+    switch (step) {
+      case 1: return state.projectType && state.stage;
+      case 2: return state.audience.length > 0 && state.techLevel;
+      case 3: return !!state.goal;
+      case 4: return state.vibes.length > 0;
+      case 5: return true; // free text optional
+      default: return true;
+    }
+  };
+
+  const showStepError = (msg) => {
+    note.textContent = msg;
+    note.style.color = "var(--copper, #c86b3c)";
+    window.setTimeout(() => {
+      note.style.color = "";
+      updateNote();
+    }, 2400);
+  };
+
+  /* ─── step navigation ─── */
+  const goToStep = (step) => {
+    currentStep = Math.max(1, Math.min(BRAND_WIZARD_TOTAL_STEPS, step));
+    allSteps.forEach((s) => {
+      s.classList.toggle("is-active", parseInt(s.dataset.step, 10) === currentStep);
+    });
+    progress.querySelectorAll("li").forEach((li) => {
+      const n = parseInt(li.dataset.step, 10);
+      li.classList.remove("is-active", "is-done");
+      if (n < currentStep) li.classList.add("is-done");
+      else if (n === currentStep) li.classList.add("is-active");
+    });
+    backBtn.hidden = currentStep === 1;
+    nextBtn.hidden = currentStep === BRAND_WIZARD_TOTAL_STEPS;
+    submitBtn.hidden = currentStep !== BRAND_WIZARD_TOTAL_STEPS;
+    updateNote();
+  };
+
+  const updateNote = () => {
+    if (currentStep === BRAND_WIZARD_TOTAL_STEPS) {
+      note.textContent = hasAIKey()
+        ? "ready to generate — uses your AI Planner key"
+        : "you'll need an AI key (gear icon, bottom-right)";
+    } else {
+      note.textContent = `step ${currentStep} of ${BRAND_WIZARD_TOTAL_STEPS}`;
+    }
+  };
+
+  nextBtn.addEventListener("click", () => {
+    if (!validateStep(currentStep)) {
+      showStepError("pick at least one option before moving on");
+      return;
+    }
+    goToStep(currentStep + 1);
+  });
+  backBtn.addEventListener("click", () => goToStep(currentStep - 1));
+
+  /* ─── prompt builder ─── */
+  const buildPrompt = () => {
+    const lookup = (map, val) => map[val] || val || "(not specified)";
+    const audList = state.audience.map((a) => lookup(BRAND_AUDIENCE_LABELS, a)).join(", ") || "(not specified)";
+    const vibesList = state.vibes.map((v) => lookup(BRAND_VIBE_LABELS, v)).join(", ") || "(not specified)";
+
+    return [
+      `# User intake`,
+      ``,
+      `**Project URL / repo:** ${state.url || "(not provided)"}`,
+      `**Project type:** ${lookup(BRAND_PROJECT_LABELS, state.projectType)}`,
+      `**Stage:** ${lookup(BRAND_STAGE_LABELS, state.stage)}`,
+      ``,
+      `**Audience:** ${audList}`,
+      `**Tech level:** ${lookup(BRAND_TECH_LABELS, state.techLevel)}`,
+      state.audienceNotes ? `**Audience notes:** ${state.audienceNotes}` : "",
+      ``,
+      `**Primary goal:** ${lookup(BRAND_GOAL_LABELS, state.goal)}`,
+      state.success ? `**Success in 90 days:** ${state.success}` : "",
+      ``,
+      `**Desired vibes:** ${vibesList}`,
+      state.references ? `**Reference sites:** ${state.references}` : "",
+      ``,
+      state.working ? `**What's working (preserve):** ${state.working}` : "",
+      state.frustration ? `**Current frustrations:** ${state.frustration}` : "",
+    ].filter(Boolean).join("\n");
+  };
+
+  const SYSTEM_PROMPT = `You are Shipwright's senior product strategist. You combine the eye of a brand designer, the discipline of a conversion-focused product manager, and current 2026 web design literacy (Awwwards, Mobbin, indie hackers, Linear-style minimalism, editorial brutalism, AI-first product surfaces).
+
+The user has just answered a 5-step intake. Produce a customized diagnostic report in **Chinese (Simplified)** using GitHub-flavored Markdown. Be SPECIFIC, not generic — quote actual headlines, CTAs, section names, and copy you would write for this user. Use the user's stated goal and audience to anchor every recommendation.
+
+Output MUST use this structure (with these exact section headings, but you may add subheadings within each):
+
+## 1. 受众契合度 (Audience Fit) — Score X/10
+- One short sentence diagnosing the gap between stated audience and likely current site
+- 3 SPECIFIC mismatches — for each give a copy-paste fix (concrete headline, button copy, or section)
+
+## 2. 风格匹配 (Vibe Alignment) — Score X/10
+- Compare desired vibes vs likely current state
+- 3 concrete visual/copy moves to shift the vibe (e.g., "swap Bodoni for Söhne", "replace abstract hero illustration with a single product screenshot")
+- Call out which elements should be kept
+
+## 3. 2026 趋势对齐 (Current Trends)
+Pick 3 trends from 2026 web design relevant to this project type & audience. For each:
+- What the trend is in 1 sentence
+- Whether the user is likely doing it
+- One specific implementation step
+
+## 4. 内容建议 (Content Additions)
+List 5–7 specific content sections/pages/features to add or rework. For each:
+- **Section title** (the actual name to use)
+- Why this matters for their audience & goal
+- Sample copy (1–2 lines, ready to paste)
+
+## 5. 创新方向 (Innovation Bets)
+3 differentiation moves that match this project's audience & vibe. For each:
+- The bet in one sentence
+- First implementation step (24 hours of work)
+- Risk / reward
+
+## 6. 技术与维护优先级 (Tech & Maintenance)
+3 technical priorities that COMPLEMENT the content changes above. Brief, actionable.
+
+Rules:
+- No filler ("In conclusion...", "Hope this helps").
+- No generic advice ("be authentic", "know your user"). Always be specific.
+- Address the user as 你.
+- Use the user's audience vocabulary. If they said "indie hackers", say "indie hackers", not "users".
+- Keep total output under 1200 Chinese characters worth of substance.`;
+
+  /* ─── AI streaming call ─── */
+  submitBtn.addEventListener("click", async () => {
+    if (!validateStep(5)) return;
+    if (!hasAIKey()) {
+      showStepError("配置你的 API key（右下角齿轮）后再试");
+      return;
+    }
+
+    const cfg = getAIConfig();
+    const userMessage = buildPrompt();
+
+    wizard.classList.add("is-generating");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Generating…";
+    report.hidden = false;
+    reportBody.innerHTML = "<p class=\"brand-report-loading\">Generating</p>";
+    report.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    let accumulated = "";
+    try {
+      const res = await fetch(`${cfg.base.replace(/\/+$/, "")}/v1/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cfg.key}`,
+        },
+        body: JSON.stringify({
+          model: cfg.model,
+          stream: true,
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: userMessage },
+          ],
+        }),
+      });
+
+      if (!res.ok || !res.body) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`HTTP ${res.status}: ${text.slice(0, 400)}`);
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || !trimmed.startsWith("data:")) continue;
+          const payload = trimmed.slice(5).trim();
+          if (payload === "[DONE]") continue;
+          try {
+            const parsed = JSON.parse(payload);
+            const delta = parsed.choices?.[0]?.delta?.content;
+            if (delta) {
+              accumulated += delta;
+              reportBody.innerHTML = simpleMarkdown(accumulated) + "<span class=\"brand-report-loading\"></span>";
+            }
+          } catch { /* skip malformed lines */ }
+        }
+      }
+
+      reportBody.innerHTML = simpleMarkdown(accumulated);
+      wizard.dataset.lastReport = accumulated;
+    } catch (err) {
+      reportBody.innerHTML = `<p class="brand-report-empty">报错了：${escapeHtml(err && err.message ? err.message : String(err))}<br><br>检查右下角齿轮里的 API key / Base URL / Model 是否正确，然后再试一次。</p>`;
+    } finally {
+      wizard.classList.remove("is-generating");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Generate report";
+    }
+  });
+
+  /* ─── restart / copy / download ─── */
+  restartBtn?.addEventListener("click", () => {
+    report.hidden = true;
+    reportBody.innerHTML = "";
+    goToStep(1);
+  });
+
+  copyBtn?.addEventListener("click", async () => {
+    const text = wizard.dataset.lastReport || reportBody.textContent || "";
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      copyBtn.textContent = "Copied!";
+      window.setTimeout(() => (copyBtn.textContent = "Copy report"), 1600);
+    } catch {
+      copyBtn.textContent = "Copy failed";
+      window.setTimeout(() => (copyBtn.textContent = "Copy report"), 1600);
+    }
+  });
+
+  downloadBtn?.addEventListener("click", () => {
+    const text = wizard.dataset.lastReport || "";
+    if (!text) return;
+    const blob = new Blob([text], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "shipwright-brand-report.md";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  /* initial state */
+  goToStep(1);
+};
+
 /* ── Init everything ── */
 
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -2361,6 +2743,7 @@ initBackToTop();
 initFeatureNav();
 initAIChat();
 initAIChatDrag();
+initBrandWizard();
 initSectionNumbers();
 
 if (!prefersReduced) {
