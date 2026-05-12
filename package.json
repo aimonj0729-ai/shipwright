@@ -1,0 +1,35 @@
+{
+  "name": "shipwright",
+  "version": "1.0.0",
+  "description": "![Claude Code](https://img.shields.io/badge/Claude_Code-compatible-blue) ![Codex](https://img.shields.io/badge/Codex-compatible-orange) ![License: MIT](https://img.shields.io/github/license/aimonj0729-ai/shipwright)",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "tsc --noEmit",
+    "test": "echo \"no automated tests yet\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aimonj0729-ai/shipwright.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aimonj0729-ai/shipwright/issues"
+  },
+  "homepage": "https://github.com/aimonj0729-ai/shipwright#readme",
+  "dependencies": {
+    "@types/node": "^25.7.0",
+    "@types/react": "^19.2.14",
+    "next": "^16.2.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "typescript": "^6.0.3"
+  }
+}

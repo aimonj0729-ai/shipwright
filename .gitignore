@@ -1,9 +1,13 @@
 .DS_Store
 .env
 .env.*
+.env.local
 node_modules/
 .tmp/
 tmp/
 dist/
 coverage/
 .vercel/
+.next/
+out/
+next-env.d.ts
