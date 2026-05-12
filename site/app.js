@@ -1885,6 +1885,149 @@ const sendAIMessage = async (userMessage) => {
   }
 };
 
+const initAIChatDrag = () => {
+  const panel = document.querySelector("#aiChatPanel");
+  const header = panel ? panel.querySelector(".ai-chat-header") : null;
+  if (!panel || !header) return;
+
+  const STORAGE_KEY = "shipwright-ai-chat-pos";
+  const MOBILE_BREAKPOINT = 768;
+  const isMobile = () => window.innerWidth < MOBILE_BREAKPOINT;
+
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let startLeft = 0;
+  let startTop = 0;
+  let activePointerId = null;
+
+  const clampPosition = (left, top) => {
+    const maxLeft = Math.max(0, window.innerWidth - panel.offsetWidth);
+    const maxTop = Math.max(0, window.innerHeight - panel.offsetHeight);
+    return {
+      left: Math.max(0, Math.min(left, maxLeft)),
+      top: Math.max(0, Math.min(top, maxTop)),
+    };
+  };
+
+  const applyPosition = (left, top) => {
+    panel.style.left = `${left}px`;
+    panel.style.top = `${top}px`;
+    panel.style.right = "auto";
+    panel.style.bottom = "auto";
+  };
+
+  const resetToDefault = () => {
+    panel.style.left = "";
+    panel.style.top = "";
+    panel.style.right = "";
+    panel.style.bottom = "";
+  };
+
+  const restorePosition = () => {
+    if (isMobile()) {
+      resetToDefault();
+      return;
+    }
+    let saved = null;
+    try {
+      saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+    } catch {
+      saved = null;
+    }
+    if (!saved || typeof saved.left !== "number" || typeof saved.top !== "number") return;
+    const { left, top } = clampPosition(saved.left, saved.top);
+    applyPosition(left, top);
+  };
+
+  const persistPosition = () => {
+    const rect = panel.getBoundingClientRect();
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ left: rect.left, top: rect.top }));
+    } catch {
+      /* localStorage may be blocked */
+    }
+  };
+
+  const onPointerDown = (event) => {
+    if (isMobile()) return;
+    const target = event.target;
+    if (target instanceof Element && target.closest("button, a, input, textarea, select")) return;
+    isDragging = true;
+    activePointerId = event.pointerId;
+    const rect = panel.getBoundingClientRect();
+    applyPosition(rect.left, rect.top);
+    startX = event.clientX;
+    startY = event.clientY;
+    startLeft = rect.left;
+    startTop = rect.top;
+    header.classList.add("is-dragging");
+    panel.classList.add("is-dragging");
+    try {
+      header.setPointerCapture(event.pointerId);
+    } catch {
+      /* not all browsers support pointer capture cleanly */
+    }
+    event.preventDefault();
+  };
+
+  const onPointerMove = (event) => {
+    if (!isDragging || event.pointerId !== activePointerId) return;
+    const dx = event.clientX - startX;
+    const dy = event.clientY - startY;
+    const { left, top } = clampPosition(startLeft + dx, startTop + dy);
+    applyPosition(left, top);
+  };
+
+  const finishDrag = (event) => {
+    if (!isDragging) return;
+    if (event && event.pointerId !== activePointerId) return;
+    isDragging = false;
+    activePointerId = null;
+    header.classList.remove("is-dragging");
+    panel.classList.remove("is-dragging");
+    try {
+      if (event && event.pointerId !== undefined) header.releasePointerCapture(event.pointerId);
+    } catch {
+      /* ignore */
+    }
+    persistPosition();
+  };
+
+  header.addEventListener("pointerdown", onPointerDown);
+  header.addEventListener("pointermove", onPointerMove);
+  header.addEventListener("pointerup", finishDrag);
+  header.addEventListener("pointercancel", finishDrag);
+
+  header.addEventListener("dblclick", (event) => {
+    if (event.target instanceof Element && event.target.closest("button")) return;
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+    resetToDefault();
+  });
+
+  const observer = new MutationObserver(() => {
+    if (!panel.hasAttribute("hidden")) restorePosition();
+  });
+  observer.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
+
+  window.addEventListener("resize", () => {
+    if (panel.hasAttribute("hidden")) return;
+    if (isMobile()) {
+      resetToDefault();
+      return;
+    }
+    const rect = panel.getBoundingClientRect();
+    const { left, top } = clampPosition(rect.left, rect.top);
+    applyPosition(left, top);
+  });
+
+  if (!panel.hasAttribute("hidden")) restorePosition();
+};
+
 const initAIChat = () => {
   const fab = document.querySelector("#aiChatFab");
   const panel = document.querySelector("#aiChatPanel");
@@ -2059,6 +2202,7 @@ initInspectionRadar();
 initBackToTop();
 initFeatureNav();
 initAIChat();
+initAIChatDrag();
 
 if (!prefersReduced) {
   initHeroReveal();

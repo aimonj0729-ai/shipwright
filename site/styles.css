@@ -4114,3 +4114,33 @@ h2 {
   white-space: pre-wrap;
   color: #1c1917;
 }
+
+/* ── Draggable AI chat panel ── */
+.ai-chat-header {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+.ai-chat-header h3,
+.ai-chat-header .ai-chat-header-actions {
+  pointer-events: auto;
+}
+.ai-chat-header h3 {
+  cursor: inherit;
+}
+.ai-chat-header.is-dragging,
+.ai-chat-header.is-dragging * {
+  cursor: grabbing !important;
+}
+.ai-chat-panel.is-dragging {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: 0 32px 96px rgba(0, 0, 0, 0.28);
+}
+@media (max-width: 768px) {
+  .ai-chat-header {
+    cursor: default;
+    touch-action: auto;
+  }
+}
