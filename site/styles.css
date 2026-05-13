@@ -7098,3 +7098,24 @@ h2 {
  *  - .lc-tab-num (data already)
  *  - input/textarea values (user-typed content)
  */
+
+/* ── Hero floating sticker — keep clear of the bigger Caveat eyebrow ── */
+.hero .hero-sticker {
+  top: -54px;
+  right: 4%;
+  max-width: 240px;
+  text-align: right;
+  line-height: 1.1;
+}
+@media (max-width: 1080px) {
+  .hero .hero-sticker {
+    top: -42px;
+    right: 0;
+    font-size: 1.05rem;
+  }
+}
+@media (max-width: 760px) {
+  /* On narrow viewports the hero collapses; the floating sticker just
+   * becomes noise that overlaps the eyebrow or h1 — hide it. */
+  .hero .hero-sticker { display: none; }
+}
