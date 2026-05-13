@@ -41,9 +41,9 @@
       href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@500;600;700;800&family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700;6..96,800;6..96,900&family=Caveat:wght@500;600;700&family=Epilogue:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght,SOFT,WONK@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter+Tight:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260512-ux-audit" />
+    <link rel="stylesheet" href="./styles.css?v=20260513-i18n" />
     <script>
-      (function(){var t=localStorage.getItem("shipwright-theme")||((window.matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light");document.documentElement.setAttribute("data-theme",t)})();
+      (function(){var t=localStorage.getItem("shipwright-theme")||((window.matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light");var l=localStorage.getItem("shipwright-lang")||"en";document.documentElement.setAttribute("data-theme",t);document.documentElement.setAttribute("data-lang",l);document.documentElement.setAttribute("lang",l==="zh"?"zh-CN":"en")})();
     </script>
   </head>
   <body>
@@ -62,6 +62,11 @@
         <a href="#audience">Who</a>
         <a href="#workflow">Workflow</a>
         <a href="https://github.com/aimonj0729-ai/shipwright">GitHub</a>
+        <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch to Chinese">
+          <span class="lang-option lang-option-en">EN</span>
+          <span class="lang-divider">/</span>
+          <span class="lang-option lang-option-zh">中文</span>
+        </button>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -626,6 +631,196 @@
 
       <div class="wave-divider" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,15 1440,30 L1440,60 L0,60Z" fill="currentColor"/></svg></div>
 
+      <section id="launch-console" class="launch-console dark-section" aria-labelledby="launch-console-title">
+        <div class="lc-shell">
+          <div class="lc-section-heading">
+            <p class="section-num lc-section-num" aria-hidden="true">01c <small>Launch</small></p>
+            <p class="eyebrow lc-eyebrow">// Mission control · T-minus to launch</p>
+            <h2 id="launch-console-title">Take the report off the page. Ship it.</h2>
+            <span class="sticker sticker--right lc-sticker" aria-hidden="true">
+              <span class="arrow">↳</span> audit · brand fit · launch
+            </span>
+          </div>
+
+          <div class="lc-grid">
+            <!-- LEFT: pre-flight checklist + manifest -->
+            <div class="lc-panel lc-panel--cockpit">
+              <header class="lc-panel-head">
+                <span class="mc-led mc-led--cyan"></span>
+                <span class="lc-panel-label">// pre-flight</span>
+              </header>
+              <ul class="lc-checklist" id="lcChecklist" aria-label="Pre-flight checklist">
+                <li data-key="repo" class="lc-check is-empty">
+                  <span class="lc-check-led"></span>
+                  <span class="lc-check-label">Project URL / repo</span>
+                  <span class="lc-check-value" data-empty-text="awaiting input">—</span>
+                </li>
+                <li data-key="ai" class="lc-check is-empty">
+                  <span class="lc-check-led"></span>
+                  <span class="lc-check-label">AI planner key</span>
+                  <span class="lc-check-value" data-empty-text="not configured">—</span>
+                </li>
+                <li data-key="audit" class="lc-check is-empty">
+                  <span class="lc-check-led"></span>
+                  <span class="lc-check-label">Last audit score</span>
+                  <span class="lc-check-value" data-empty-text="run analyzer first">—</span>
+                </li>
+                <li data-key="brand" class="lc-check is-empty">
+                  <span class="lc-check-led"></span>
+                  <span class="lc-check-label">Brand fit answers</span>
+                  <span class="lc-check-value" data-empty-text="skip ok">—</span>
+                </li>
+              </ul>
+
+              <header class="lc-panel-head lc-panel-head--alt">
+                <span class="mc-led mc-led--amber"></span>
+                <span class="lc-panel-label">// launch manifest</span>
+              </header>
+              <div class="lc-manifest">
+                <label class="lc-field">
+                  <span class="lc-field-label">Project URL / repo</span>
+                  <input type="text" id="lcUrl" placeholder="https://github.com/user/repo" autocomplete="off" />
+                </label>
+                <label class="lc-field lc-field--half">
+                  <span class="lc-field-label">Version tag</span>
+                  <input type="text" id="lcVersion" placeholder="v1.0.0" autocomplete="off" />
+                </label>
+                <label class="lc-field lc-field--half">
+                  <span class="lc-field-label">Release title</span>
+                  <input type="text" id="lcTitle" placeholder="Shipwright v1.0" autocomplete="off" />
+                </label>
+                <div class="lc-field">
+                  <span class="lc-field-label">Tone</span>
+                  <div class="lc-tone-group" data-name="tone" role="radiogroup" aria-label="Launch tone">
+                    <button type="button" class="lc-tone-chip is-selected" data-value="professional">professional</button>
+                    <button type="button" class="lc-tone-chip" data-value="playful">playful</button>
+                    <button type="button" class="lc-tone-chip" data-value="hype">hype</button>
+                    <button type="button" class="lc-tone-chip" data-value="understated">understated</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lc-launch-bay">
+                <button type="button" class="lc-launch-btn" id="lcLaunchBtn">
+                  <span class="lc-launch-ring" aria-hidden="true"></span>
+                  <span class="lc-launch-label" id="lcLaunchLabel">▲ INITIATE LAUNCH SEQUENCE</span>
+                  <span class="lc-launch-sub" id="lcLaunchSub">awaiting authorization</span>
+                </button>
+                <p class="lc-launch-note" id="lcLaunchNote">Generates release notes · Twitter thread · Reddit post in one AI call.</p>
+              </div>
+            </div>
+
+            <!-- RIGHT: generated artifacts -->
+            <div class="lc-panel lc-panel--mainframe">
+              <header class="lc-panel-head">
+                <span class="mc-led mc-led--green" id="lcMainLed"></span>
+                <span class="lc-panel-label" id="lcMainLabel">// awaiting launch sequence</span>
+                <span class="lc-panel-meta" id="lcMainMeta"></span>
+              </header>
+
+              <div class="lc-tabs" role="tablist" aria-label="Generated artifacts">
+                <button type="button" class="lc-tab is-active" role="tab" aria-selected="true" data-tab="release">
+                  <span class="lc-tab-num">01</span> Release Notes
+                </button>
+                <button type="button" class="lc-tab" role="tab" aria-selected="false" data-tab="twitter">
+                  <span class="lc-tab-num">02</span> Twitter / X
+                </button>
+                <button type="button" class="lc-tab" role="tab" aria-selected="false" data-tab="reddit">
+                  <span class="lc-tab-num">03</span> Reddit
+                </button>
+              </div>
+
+              <div class="lc-tab-pane is-active" data-pane="release" role="tabpanel">
+                <div class="lc-pane-empty" id="lcReleaseEmpty">
+                  // standing by · release notes will materialize here
+                </div>
+                <div class="lc-pane-body" id="lcReleaseBody" hidden></div>
+                <div class="lc-pane-actions" id="lcReleaseActions" hidden>
+                  <button type="button" class="lc-action" data-action="copy" data-target="release">⧉ Copy</button>
+                  <button type="button" class="lc-action" data-action="download" data-target="release">⤓ Download .md</button>
+                  <button type="button" class="lc-action lc-action--primary" id="lcGithubPushBtn">⚡ Push to GitHub</button>
+                </div>
+              </div>
+
+              <div class="lc-tab-pane" data-pane="twitter" role="tabpanel">
+                <div class="lc-pane-empty" id="lcTwitterEmpty">
+                  // standing by · 3-5 tweet thread will appear here
+                </div>
+                <ol class="lc-tweet-list" id="lcTweetList" hidden></ol>
+                <div class="lc-pane-actions" id="lcTwitterActions" hidden>
+                  <button type="button" class="lc-action" data-action="copy" data-target="twitter">⧉ Copy thread</button>
+                  <button type="button" class="lc-action lc-action--primary" id="lcTwitterIntent">↗ Open first tweet on X</button>
+                </div>
+              </div>
+
+              <div class="lc-tab-pane" data-pane="reddit" role="tabpanel">
+                <div class="lc-pane-empty" id="lcRedditEmpty">
+                  // standing by · Reddit post draft will appear here
+                </div>
+                <div class="lc-pane-body lc-reddit-body" id="lcRedditBody" hidden>
+                  <div class="lc-field">
+                    <span class="lc-field-label">Subreddit</span>
+                    <div class="lc-tone-group lc-sub-group" data-name="subreddit">
+                      <button type="button" class="lc-tone-chip is-selected" data-value="SideProject">r/SideProject</button>
+                      <button type="button" class="lc-tone-chip" data-value="indiehackers">r/indiehackers</button>
+                      <button type="button" class="lc-tone-chip" data-value="webdev">r/webdev</button>
+                      <button type="button" class="lc-tone-chip" data-value="startups">r/startups</button>
+                      <button type="button" class="lc-tone-chip" data-value="custom">custom…</button>
+                    </div>
+                  </div>
+                  <label class="lc-field lc-field--custom-sub" id="lcSubCustomWrap" hidden>
+                    <span class="lc-field-label">Custom subreddit (without r/)</span>
+                    <input type="text" id="lcSubCustom" placeholder="programming" autocomplete="off" />
+                  </label>
+                  <label class="lc-field">
+                    <span class="lc-field-label">Title</span>
+                    <input type="text" id="lcRedditTitle" autocomplete="off" />
+                  </label>
+                  <label class="lc-field">
+                    <span class="lc-field-label">Body</span>
+                    <textarea id="lcRedditBodyText" rows="10"></textarea>
+                  </label>
+                </div>
+                <div class="lc-pane-actions" id="lcRedditActions" hidden>
+                  <button type="button" class="lc-action" data-action="copy" data-target="reddit">⧉ Copy body</button>
+                  <button type="button" class="lc-action lc-action--primary" id="lcRedditIntent">↗ Open submit on Reddit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <dialog class="lc-dialog" id="lcGithubDialog" aria-labelledby="lcGithubDialogTitle">
+          <form method="dialog" class="lc-dialog-form">
+            <header class="lc-dialog-head">
+              <h3 id="lcGithubDialogTitle">// Push release to GitHub</h3>
+              <button type="button" class="lc-dialog-close" id="lcGithubDialogClose" aria-label="Close">✕</button>
+            </header>
+            <label class="lc-field">
+              <span class="lc-field-label">Personal access token</span>
+              <input type="password" id="lcGithubPat" placeholder="github_pat_… or ghp_…" autocomplete="off" />
+            </label>
+            <label class="lc-field">
+              <span class="lc-field-label">Repo (owner/repo)</span>
+              <input type="text" id="lcGithubRepo" placeholder="user/project" autocomplete="off" />
+            </label>
+            <p class="lc-dialog-note">
+              Token is stored in your browser only and sent only to <code>api.github.com</code>.
+              Use a <strong>fine-grained PAT</strong> with <code>Contents: Read &amp; write</code> on the target repo
+              (or a classic token with <code>repo</code> scope).
+              <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Create one →</a>
+            </p>
+            <div class="lc-dialog-status" id="lcGithubStatus" hidden></div>
+            <div class="lc-dialog-actions">
+              <button type="button" class="lc-action" id="lcGithubCancel">Cancel</button>
+              <button type="button" class="lc-action lc-action--primary" id="lcGithubConfirm">Create draft release</button>
+            </div>
+          </form>
+        </dialog>
+      </section>
+
+      <div class="wave-divider" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,15 1440,30 L1440,60 L0,60Z" fill="currentColor"/></svg></div>
+
       <section id="guide" class="usage-guide section-shell" aria-labelledby="guide-title">
         <div class="section-heading">
           <div>
@@ -1142,6 +1337,6 @@
       </svg>
     </button>
 
-    <script src="./app.js?v=20260512-ux-audit" type="module"></script>
+    <script src="./app.js?v=20260513-i18n" type="module"></script>
   </body>
 </html>

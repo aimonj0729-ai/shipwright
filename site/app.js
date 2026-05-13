@@ -10,6 +10,493 @@ document.querySelector("#themeToggle")?.addEventListener("click", () => {
   localStorage.setItem("shipwright-theme", next);
 });
 
+/* ── Language toggle (English / Simplified Chinese) ── */
+
+const LANGUAGE_STORAGE_KEY = "shipwright-lang";
+
+const normalizeCopy = (value = "") => String(value).replace(/\s+/g, " ").trim();
+
+const ZH_TEXT = {
+  "Skip to analyzer": "跳到分析器",
+  "Audit": "审查",
+  "Planner": "规划器",
+  "Guide": "指南",
+  "Who": "适合谁",
+  "Workflow": "工作流",
+  "Launch QA for": "上线质检：",
+  "projects": "项目",
+  "ship-ready, not slide-ready": "能上线，不只是好看",
+  "Paste a GitHub repo or demo URL. Shipwright generates a launch-readiness report in seconds — browser health, README friction, fake-complete features, and the next fixes that matter.": "粘贴 GitHub 仓库或演示网址。Shipwright 会在几秒内生成上线准备度报告：浏览器健康度、README 安装阻力、虚假完成的功能，以及真正该优先修的下一步。",
+  "Analyze": "开始分析",
+  "Try a sample:": "试试示例：",
+  "Web app": "网页应用",
+  "Skill pack": "技能包",
+  "MCP server": "MCP 服务",
+  "CLI tool": "CLI 工具",
+  "Read the guide": "阅读指南",
+  "View on GitHub": "查看 GitHub",
+  "reusable skills": "可复用技能",
+  "first report target": "首份报告目标",
+  "fake green checks": "虚假通过检查",
+  "Inspection 042": "检查 042",
+  "Almost ready": "基本就绪",
+  "CTA works, but no error state.": "CTA 可用，但缺少错误状态。",
+  "README omits required env keys.": "README 遗漏必要环境变量。",
+  "Mobile nav clips below 390px.": "390px 以下移动导航会被裁切。",
+  "SHIP READY": "可以发布",
+  "no fake green checks": "不要虚假绿灯",
+  "written for indie builders": "为独立开发者而写",
+  "10 SKILLS · 4 INPUT MODES": "10 个技能 · 4 种输入",
+  "browser, README, repo, idea": "浏览器、README、仓库、想法",
+  "paste & analyze": "粘贴并分析",
+  "Plan": "规划",
+  "Skills": "技能",
+  "Choose the job": "选择任务",
+  "Four doors. One clean launch path.": "四个入口，一条清晰上线路径。",
+  "Shipwright is no longer just a pretty audit page. Pick the work you need now: shape an idea, inspect a project, install reusable skills, or run the full agent workflow.": "Shipwright 不只是一个漂亮的审查页面。你可以按当前任务选择入口：梳理想法、检查项目、安装可复用技能，或跑完整 Agent 工作流。",
+  "Plan from a rough idea": "从粗略想法开始规划",
+  "Let the AI Planner ask follow-up questions and turn a vague website concept into a buildable plan.": "让 AI Planner 继续追问，把模糊的网站想法变成可执行的建设方案。",
+  "Start with an idea": "从想法开始",
+  "Audit a repo or demo": "审查仓库或演示站",
+  "Paste a GitHub URL or live demo and get a launch-readiness report with the next patch.": "粘贴 GitHub 地址或线上演示，获得带下一步修复建议的上线准备度报告。",
+  "Run launch QA": "运行上线质检",
+  "Install the workflow": "安装工作流",
+  "Use the open-source skills inside Codex or Claude Code for evidence-backed local checks.": "在 Codex 或 Claude Code 中使用开源技能，进行有证据支持的本地检查。",
+  "Browse skills": "浏览技能",
+  "Ship with a sequence": "按步骤发布",
+  "Move from agent claims to browser proof, install proof, release copy, and public launch.": "从 Agent 声称完成，推进到浏览器证据、安装证据、发布文案和公开上线。",
+  "See workflow": "查看流程",
+  "The pain": "核心痛点",
+  "AI agents are great at producing finished-looking work.": "AI Agent 很擅长产出“看起来完成了”的东西。",
+  "The README lies by omission.": "README 往往用遗漏制造误导。",
+  "It says \"npm install\" but forgets env vars, version constraints, and what success looks like.": "它写着 “npm install”，却忘了环境变量、版本限制，以及成功运行应该长什么样。",
+  "The browser was never opened.": "浏览器可能从来没有被真正打开过。",
+  "Console errors, broken routes, missing assets, and mobile overflow hide behind a clean diff.": "控制台错误、坏路由、资源缺失和移动端溢出，经常藏在干净的 diff 后面。",
+  "The launch page has no sharp promise.": "上线页面没有足够锋利的承诺。",
+  "Strangers need a quickstart, proof, limitations, and GitHub metadata before they trust it.": "陌生用户需要快速开始、证明、限制说明和 GitHub 元数据，才会愿意信任它。",
+  "Try it now": "现在试用",
+  "Generate a launch QA report.": "生成上线质检报告。",
+  "live data, not a demo": "真实数据，不只是演示",
+  "Paste any GitHub repo URL or owner/repo. Doctor calls the GitHub public API directly from your browser, analyzes the README, and produces a fix plan you can paste into Claude Code or Codex. Nothing is sent to any server.": "粘贴任意 GitHub 仓库 URL 或 owner/repo。Doctor 会直接从你的浏览器调用 GitHub 公共 API，分析 README，并生成可粘贴给 Claude Code 或 Codex 的修复计划。不会把内容发送到任何服务器。",
+  "Repository or demo URL": "仓库或演示网址",
+  "Enter a GitHub repo URL, owner/repo, or http(s) demo URL.": "请输入 GitHub 仓库 URL、owner/repo 或 http(s) 演示网址。",
+  "Project type": "项目类型",
+  "Web app / landing page": "网页应用 / 落地页",
+  "CLI / developer tool": "CLI / 开发者工具",
+  "Template repo": "模板仓库",
+  "Launch channel": "发布渠道",
+  "Analyze launch risk": "分析上线风险",
+  "Detecting mode…": "正在检测模式…",
+  "Enhanced mode · backend reachable": "增强模式 · 后端可访问",
+  "Browser-only mode · backend unreachable": "浏览器模式 · 后端不可访问",
+  "Enhanced mode runs richer GitHub checks via the Doctor backend (CI/CD, SECURITY, package.json, URL probe). If the backend is unreachable from your network it falls back to in-browser checks automatically.": "增强模式会通过 Doctor 后端运行更完整的 GitHub 检查（CI/CD、SECURITY、package.json、URL 探测）。如果你的网络无法访问后端，会自动回退到浏览器内检查。",
+  "Paste a repo URL and click": "粘贴仓库 URL 并点击",
+  "to generate your launch QA report.": "生成你的上线质检报告。",
+  "Launch verdict": "上线结论",
+  "Critical findings": "关键问题",
+  "Quick wins": "快速修复",
+  "Audit coverage": "审查覆盖",
+  "Launch metadata": "发布元数据",
+  "Next patch": "下一步修复",
+  "Copy report": "复制报告",
+  "Download .md": "下载 .md",
+  "What does Shipwright actually check?": "Shipwright 实际检查什么？",
+  "Agent output review": "Agent 输出审查",
+  "Hallucinated feature claims": "幻觉式功能声明",
+  "Fake buttons and dead links": "假按钮和死链接",
+  "TODO / FIXME / placeholder strings": "TODO / FIXME / 占位文本",
+  "Unverified integration references": "未验证的集成引用",
+  "Browser launch audit": "浏览器上线审查",
+  "Console errors and warnings": "控制台错误和警告",
+  "Network 4xx/5xx failures": "网络 4xx/5xx 失败",
+  "Interactive element functionality": "交互元素可用性",
+  "Mobile layout at 390px and 768px": "390px 和 768px 移动布局",
+  "README install audit": "README 安装审查",
+  "Missing env vars or API keys": "缺少环境变量或 API Key",
+  "Version constraint gaps": "版本约束缺口",
+  "Expected output not shown": "未展示预期输出",
+  "First-run path ambiguity": "首次运行路径不清晰",
+  "GitHub release checklist": "GitHub 发布清单",
+  "Repo topics and description": "仓库 topics 和描述",
+  "Release notes completeness": "发布说明完整度",
+  "Launch post copy quality": "上线帖子文案质量",
+  "Contributor-facing next issues": "面向贡献者的后续 issue",
+  "Beyond the code check": "不止检查代码",
+  "Does your site match what you actually want?": "你的网站真的符合你想要的方向吗？",
+  "answer 5 things, get a brand-fit report": "回答 5 个问题，获得品牌契合报告",
+  "The Audit on the left tells you whether the code ships. This wizard tells you whether the vibe, content, and audience match what you're really building. Uses your AI Planner key — runs in your browser.": "左侧 Audit 告诉你代码能不能上线。这个向导会判断视觉气质、内容和受众是否真的匹配你要做的东西。它使用你的 AI Planner Key，并在浏览器中运行。",
+  "Wizard progress": "向导进度",
+  "Project": "项目",
+  "Audience": "受众",
+  "Goal": "目标",
+  "Vibe": "气质",
+  "Feels": "感受",
+  "What are you building?": "你在做什么？",
+  "Your live URL or repo (optional, but recommended)": "线上 URL 或仓库（可选，但推荐）",
+  "Landing page": "落地页",
+  "Web app / SaaS": "网页应用 / SaaS",
+  "Developer tool": "开发者工具",
+  "Docs / Content": "文档 / 内容",
+  "Portfolio": "作品集",
+  "Community / Forum": "社区 / 论坛",
+  "E-commerce": "电商",
+  "Other": "其他",
+  "Stage": "阶段",
+  "Just an idea": "只是一个想法",
+  "Building MVP": "正在做 MVP",
+  "Pre-launch": "上线前",
+  "Live, few users": "已上线，少量用户",
+  "Live, iterating": "已上线，正在迭代",
+  "Who is this for?": "这是给谁用的？",
+  "Primary audience (pick all that apply)": "主要受众（可多选）",
+  "Developers": "开发者",
+  "Designers": "设计师",
+  "Indie hackers": "独立开发者",
+  "Startup founders": "创业者",
+  "B2B buyers / PMs": "B2B 买家 / 产品经理",
+  "Content creators": "内容创作者",
+  "Students / Learners": "学生 / 学习者",
+  "General consumers": "普通消费者",
+  "How technical are they?": "他们的技术背景如何？",
+  "Very technical": "技术很强",
+  "Mixed": "混合人群",
+  "Non-technical": "非技术用户",
+  "Anything else about them? (free text, optional)": "还有什么受众信息？（可选）",
+  "What's the primary goal of this site?": "这个网站最重要的目标是什么？",
+  "Pick the single most important outcome": "选择最重要的单一结果",
+  "Email / waitlist signup": "邮箱 / 候补名单注册",
+  "Free trial → paid": "免费试用 → 付费",
+  "One-time purchase": "一次性购买",
+  "GitHub stars / installs": "GitHub Star / 安装量",
+  "Book a demo": "预约演示",
+  "Join the community": "加入社区",
+  "Awareness / Education": "认知 / 教育",
+  "What does success look like in 90 days? (free text)": "90 天后的成功是什么样？（自由填写）",
+  "What should it feel like?": "它应该给人什么感觉？",
+  "Brand vibes (pick 1–3)": "品牌气质（选 1–3 个）",
+  "Trustworthy / Enterprise": "可信赖 / 企业级",
+  "Edgy / Bold": "锋利 / 大胆",
+  "Playful / Indie": "有趣 / 独立",
+  "Calm / Zen": "平静 / 禅意",
+  "Futuristic / Tech": "未来感 / 技术感",
+  "Crafted / Artisan": "精心打磨 / 手作感",
+  "Editorial / Magazine": "编辑部 / 杂志感",
+  "Raw / Brutalist": "粗粝 / 野兽派",
+  "Sites you admire (URLs or names, comma-separated, optional)": "你喜欢的网站（URL 或名称，逗号分隔，可选）",
+  "How does it feel right now?": "它现在给人的感觉如何？",
+  "What's working that you'd never throw away?": "哪些部分你绝对不想丢掉？",
+  "What frustrates you about the current site?": "当前网站最让你不满意的是什么？",
+  "← Back": "← 上一步",
+  "Next →": "下一步 →",
+  "Generate report": "生成报告",
+  "5 questions · ~60 seconds": "5 个问题 · 约 60 秒",
+  "Brand & audience report": "品牌与受众报告",
+  "Your custom diagnosis": "你的定制诊断",
+  "Restart wizard": "重新开始",
+  "Usage guide": "使用指南",
+  "Use Shipwright in two modes.": "Shipwright 有两种使用模式。",
+  "The website is the product demo and report builder. The installed skills are the real agent workflow for evidence-backed browser, README, and release audits.": "网站是产品演示和报告生成器；安装后的 skills 才是真正用于浏览器、README 和发布审查的证据型 Agent 工作流。",
+  "Website usage steps": "网站使用步骤",
+  "Paste the thing you want to ship.": "粘贴你准备发布的东西。",
+  "Generate the launch risk report.": "生成上线风险报告。",
+  "Turn findings into the next patch.": "把问题转成下一步修复。",
+  "Real audit mode": "真实审查模式",
+  "For a real audit, install the skills and ask your agent to run the checks against your local repo or URL.": "要做真实审查，请安装 skills，并让你的 Agent 针对本地仓库或 URL 执行检查。",
+  "Example prompt": "示例提示词",
+  "The hosted demo does not clone repos or run browser automation yet. That honesty is part of the product: no fake green checks.": "托管演示目前不会克隆仓库，也不会运行真实浏览器自动化。这种诚实是产品的一部分：不要虚假的绿色通过。",
+  "Who is this for": "适合谁",
+  "Built for builders who ship fast and want it to actually work.": "为快速发布、但希望它真的能用的人打造。",
+  "Vibe coders": "氛围编程者",
+  "Indie hackers": "独立开发者",
+  "Open source maintainers": "开源维护者",
+  "AI skill / MCP authors": "AI Skill / MCP 作者",
+  "Inspection radar": "检查雷达",
+  "Plot the launch route before the public countdown.": "在公开倒计时前，先画好上线航线。",
+  "A quiet control-room view of the checks Shipwright runs: each waypoint maps to a launch risk, the evidence it needs, and the fix signal a builder should trust.": "这是 Shipwright 检查项的控制室视图：每个航点都对应一种上线风险、需要的证据，以及开发者应该信任的修复信号。",
+  "Launch Map 04": "上线地图 04",
+  "Signal: evidence required": "信号：需要证据",
+  "Launch route with inspection waypoints": "带检查航点的上线路线",
+  "Repo intake": "仓库录入",
+  "Confirm the target is real, parse the project type, and refuse vague launch claims before the audit begins.": "确认目标真实存在，解析项目类型，并在审查开始前拒绝模糊的上线声明。",
+  "Click a waypoint to preload the analyzer with a matching audit scenario.": "点击航点，即可把匹配的审查场景预加载到分析器。",
+  "Evidence": "证据",
+  "Every green light needs an observed browser state, command output, or file reference.": "每个绿灯都必须有观察到的浏览器状态、命令输出或文件引用。",
+  "Risk": "风险",
+  "Markers call out launch blockers before they become public support requests.": "标记会在阻塞问题变成公开支持请求前把它指出来。",
+  "Patch": "修复",
+  "The route ends with the smallest next fix, not a vague quality score.": "路线终点是最小下一步修复，而不是模糊的质量分数。",
+  "How it becomes real": "它如何落地",
+  "From static demo to agent-powered launch gate.": "从静态演示到 Agent 驱动的上线闸门。",
+  "Catch hallucinated claims, fake buttons, TODOs, and unverified integrations.": "捕捉幻觉声明、假按钮、TODO 和未验证集成。",
+  "Open the app, check console/network health, interactions, mobile layout, and trust gaps.": "打开应用，检查控制台/网络健康、交互、移动布局和信任缺口。",
+  "Follow the public install path like a stranger and record exactly where adoption breaks.": "像陌生用户一样走公开安装路径，并记录采用流程在哪里断掉。",
+  "Generate topics, description, release notes, launch post, and next contributor issues.": "生成 topics、描述、发布说明、上线帖子和下一批贡献者 issue。",
+  "Honest status": "真实状态",
+  "What this demo does and does not do.": "这个演示能做什么，不能做什么。",
+  "This demo does": "这个演示会",
+  "This demo does not": "这个演示不会",
+  "Generate a structured launch QA report based on project type": "根据项目类型生成结构化上线质检报告",
+  "Show the exact audit categories the real skills check": "展示真实 skills 会检查的审查类别",
+  "Produce a copyable/downloadable Markdown report for your agent": "生成可复制/下载的 Markdown 报告给你的 Agent",
+  "Offer AI-powered website planning (BYOK — bring your own API key)": "提供 AI 网站规划（BYOK，自带 API Key）",
+  "Clone your GitHub repository or read its files": "克隆你的 GitHub 仓库或读取其中的文件",
+  "Open a real browser to check console errors or mobile layout": "打开真实浏览器检查控制台错误或移动端布局",
+  "Store your API key on any server (key stays in your browser only)": "把你的 API Key 存到服务器上（Key 只留在浏览器）",
+  "Make requests without your explicit API key configuration": "在你未明确配置 API Key 的情况下发起请求",
+  "For real, evidence-backed audits, install the": "要做真实、有证据的审查，请安装",
+  "open-source skills": "开源 skills",
+  "and run them locally with Claude Code or Codex.": "并在 Claude Code 或 Codex 中本地运行。",
+  "All 10 skills": "全部 10 个技能",
+  "From trend discovery to launch.": "从趋势发现到正式发布。",
+  "Discovery": "发现",
+  "Planning": "规划",
+  "Launch": "发布",
+  "Meta": "元工作流",
+  "Scan GitHub Trending and separate tools, opportunities, and hype traps.": "扫描 GitHub Trending，区分工具、机会和炒作陷阱。",
+  "Turn a hot repo or trend into a differentiated product opportunity.": "把热门仓库或趋势转成有差异化的产品机会。",
+  "Convert a rough idea into a lean PRD with scope and acceptance criteria.": "把粗略想法转成带范围和验收标准的精简 PRD。",
+  "Break a PRD into GitHub-ready issues ordered by delivery sequence.": "把 PRD 拆成可直接放进 GitHub、按交付顺序排列的 issues。",
+  "Audit a project for README, install, demo, trust, and conversion gaps.": "审查项目在 README、安装、演示、信任和转化上的缺口。",
+  "Verify a web app in a real browser before shipping.": "上线前在真实浏览器中验证网页应用。",
+  "Test if a first-time user can install from the README alone.": "测试新用户是否只靠 README 就能完成安装。",
+  "Catch hallucinated or fake-complete AI-generated work.": "捕捉幻觉式或假完成的 AI 生成工作。",
+  "Package a repo for public release with metadata and launch copy.": "为公开发布打包仓库元数据和上线文案。",
+  "Turn a repeated workflow into a clean, installable skill.": "把重复工作流转成干净、可安装的 skill。",
+  "AI-powered planning": "AI 驱动规划",
+  "Start messy. Leave with a build brief.": "带着混乱想法来，带着建设简报走。",
+  "Tell the AI Planner your website idea. It asks targeted questions about users, features, proof, stack, and visual direction, then turns the answers into a complete website creation plan.": "告诉 AI Planner 你的网站想法。它会围绕用户、功能、证据、技术栈和视觉方向追问，然后把答案整理成完整的网站制作方案。",
+  "Start AI Planner": "启动 AI Planner",
+  "BYOK — key stays in localStorage and only calls your chosen API endpoint.": "BYOK — Key 只保存在 localStorage，并只调用你选择的 API 端点。",
+  "AI planner workflow": "AI 规划工作流",
+  "Ask": "追问",
+  "Clarify the real user": "明确真实用户",
+  "Audience, pain, proof, constraints, and what the first visit must accomplish.": "受众、痛点、证据、限制，以及首次访问必须完成的事。",
+  "Shape": "成型",
+  "Turn answers into scope": "把答案变成范围",
+  "MVP features, page map, content blocks, design direction, and launch risks.": "MVP 功能、页面地图、内容模块、设计方向和上线风险。",
+  "Review": "复查",
+  "Send it through Shipwright": "交给 Shipwright 二次审查",
+  "Use the generated brief as the input, then audit the finished site before sharing.": "把生成的简报作为输入，完成网站后再审查一遍再分享。",
+  "Open source first": "开源优先",
+  "Ship fewer beautiful half-products.": "少发布漂亮但半成品的项目。",
+  "Start with the skills today. Turn this website into the hosted version when the workflow proves people keep coming back before every launch.": "今天先从 skills 开始。等这个工作流证明用户会在每次上线前反复回来，再把网站升级成完整托管产品。",
+  "Try the demo": "试用演示",
+  "Built for Claude Code, Codex, and builders who actually open the browser.": "为 Claude Code、Codex，以及真的会打开浏览器检查的开发者打造。",
+  "© 2026 Shipwright. MIT License.": "© 2026 Shipwright. MIT 许可证。",
+  "Open AI Planner": "打开 AI Planner",
+  "AI Website Planner": "AI 网站规划器",
+  "AI Settings": "AI 设置",
+  "Settings": "设置",
+  "Close chat": "关闭聊天",
+  "API Key": "API Key",
+  "API Base URL": "API Base URL",
+  "Model": "模型",
+  "Your API key is stored in your browser only (localStorage). It is never sent to any server other than the API endpoint you specify above.": "你的 API Key 只存储在浏览器 localStorage 中。除你上面指定的 API 端点外，不会发送到任何服务器。",
+  "Cancel": "取消",
+  "Save": "保存",
+  "Back to top": "回到顶部",
+  "Copied!": "已复制！",
+  "Copy failed": "复制失败",
+  "Checking…": "检查中…",
+  "Analyzing…": "分析中…",
+  "Generating…": "生成中…",
+  "Explaining…": "解释中…",
+  "Explain with AI": "用 AI 解释",
+  "Review with Shipwright": "用 Shipwright 审查",
+  "No critical patches needed. Ship it.": "没有关键修复项。可以发布。",
+  "Idea-mode guidance only": "仅想法模式建议",
+  "No P0/P1 findings — looking good.": "没有 P0/P1 问题，看起来不错。",
+  "Launch ready": "可以上线",
+  "Needs work": "需要改进",
+  "Not ready": "尚未就绪",
+  "Major gaps": "存在明显缺口"
+};
+
+const ZH_ATTRIBUTES = {
+  "Primary navigation": "主导航",
+  "Switch to Chinese": "切换到中文",
+  "Switch to English": "Switch to English",
+  "Toggle dark mode": "切换深色模式",
+  "Repository or demo URL": "仓库或演示网址",
+  "owner/repo or https://github.com/user/project": "owner/repo 或 https://github.com/user/project",
+  "https://github.com/user/project or user/project": "https://github.com/user/project 或 user/project",
+  "https://yoursite.com or https://github.com/user/repo": "https://yoursite.com 或 https://github.com/user/repo",
+  "e.g., burned out from PPT-style landing pages; spend most time on X/Twitter; care about privacy": "例如：厌倦 PPT 风格落地页；常用 X/Twitter；重视隐私",
+  "e.g., 500 weekly active users; 50 paying customers; 1k GitHub stars": "例如：500 周活用户；50 个付费客户；1k GitHub Stars",
+  "e.g., linear.app, vercel.com, are.na": "例如：linear.app、vercel.com、are.na",
+  "e.g., the dark hero is on-brand; the analyzer demo gets shares; the workflow diagram explains it fast": "例如：深色 Hero 很符合品牌；分析器演示容易传播；工作流图解释很快",
+  "e.g., feels too PPT-like; nobody understands what we do in 10s; CTAs feel generic; we have no real social proof": "例如：太像 PPT；10 秒内没人理解我们做什么；CTA 太泛；缺少真实社会证明",
+  "Describe your website idea": "描述你的网站想法",
+  "Describe your website idea...": "描述你的网站想法...",
+  "Send message": "发送消息",
+  "sk-...": "sk-...",
+  "https://api.openai.com": "https://api.openai.com",
+  "gpt-4.1-mini or your model name": "gpt-4.1-mini 或你的模型名",
+  "Back to top": "回到顶部"
+};
+
+const LANGUAGE_META = {
+  en: {
+    title: "Shipwright - Launch QA for AI-built projects",
+    description:
+      "Shipwright checks AI-built projects before launch: browser QA, README install friction, fake-complete agent output, and GitHub release packaging.",
+    twitterDescription:
+      "10 reusable skills that audit AI-built projects before launch. Browser QA, README install paths, agent output review, and GitHub release packaging.",
+  },
+  zh: {
+    title: "Shipwright - AI 项目上线前质检",
+    description:
+      "Shipwright 帮你在 AI 生成项目上线前检查浏览器质量、README 安装阻力、虚假完成的功能和 GitHub 发布包装。",
+    twitterDescription:
+      "10 个可复用 skills，用于在 AI 生成项目上线前审查浏览器、README 安装路径、Agent 输出和 GitHub 发布包装。",
+  },
+};
+
+const HERO_HEADLINE = {
+  en: "Before you ship the AI-built app, make it survive first contact.",
+  zh: "在发布 AI 做出来的应用前，先让它经得起真实用户第一次点击。",
+};
+
+const HERO_CYCLE_WORDS = {
+  en: "vibe-coded|AI-built|weekend|indie|side-project",
+  zh: "氛围编程|AI 生成|周末冲刺|独立产品|副业实验",
+};
+
+const textNodeSources = new WeakMap();
+const attributeSources = new WeakMap();
+let activeLanguage = (document.documentElement.getAttribute("data-lang") || "en") === "zh" ? "zh" : "en";
+
+const translateLiteral = (value) => {
+  if (activeLanguage !== "zh") return value;
+  return ZH_TEXT[normalizeCopy(value)] || ZH_ATTRIBUTES[normalizeCopy(value)] || value;
+};
+
+const shouldSkipTranslationNode = (node) => {
+  const parent = node.parentElement;
+  if (!parent) return true;
+  return Boolean(parent.closest("script, style, noscript, svg, code, pre, .hero h1, .cycle-word, .h1-letter, .cursor-follower"));
+};
+
+const withOriginalWhitespace = (source, replacement) => {
+  const leading = source.match(/^\s*/)?.[0] || "";
+  const trailing = source.match(/\s*$/)?.[0] || "";
+  return `${leading}${replacement}${trailing}`;
+};
+
+const translateTextNodes = (root = document.body) => {
+  if (!root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+
+  while (walker.nextNode()) {
+    nodes.push(walker.currentNode);
+  }
+
+  nodes.forEach((node) => {
+    if (shouldSkipTranslationNode(node)) return;
+    if (!textNodeSources.has(node)) {
+      textNodeSources.set(node, node.nodeValue || "");
+    }
+
+    const source = textNodeSources.get(node) || "";
+    const key = normalizeCopy(source);
+    if (!key) return;
+
+    if (activeLanguage === "zh" && ZH_TEXT[key]) {
+      node.nodeValue = withOriginalWhitespace(source, ZH_TEXT[key]);
+    } else {
+      node.nodeValue = source;
+    }
+  });
+};
+
+const translateAttributes = (root = document.body) => {
+  const attrs = ["placeholder", "aria-label", "title"];
+  root.querySelectorAll("*").forEach((element) => {
+    attrs.forEach((attr) => {
+      if (!element.hasAttribute(attr)) return;
+      let sourceByAttr = attributeSources.get(element);
+      if (!sourceByAttr) {
+        sourceByAttr = {};
+        attributeSources.set(element, sourceByAttr);
+      }
+      if (!sourceByAttr[attr]) {
+        sourceByAttr[attr] = element.getAttribute(attr) || "";
+      }
+      const source = sourceByAttr[attr];
+      const key = normalizeCopy(source);
+      element.setAttribute(attr, activeLanguage === "zh" && ZH_ATTRIBUTES[key] ? ZH_ATTRIBUTES[key] : source);
+    });
+  });
+};
+
+const updateDocumentMeta = () => {
+  const meta = LANGUAGE_META[activeLanguage] || LANGUAGE_META.en;
+  document.title = meta.title;
+  document.querySelector("meta[name='description']")?.setAttribute("content", meta.description);
+  document.querySelector("meta[property='og:title']")?.setAttribute("content", meta.title);
+  document.querySelector("meta[property='og:description']")?.setAttribute("content", meta.description);
+  document.querySelector("meta[name='twitter:title']")?.setAttribute("content", meta.title);
+  document.querySelector("meta[name='twitter:description']")?.setAttribute("content", meta.twitterDescription);
+};
+
+const updateLanguageToggle = () => {
+  const button = document.querySelector("#langToggle");
+  if (!button) return;
+  button.setAttribute("aria-label", activeLanguage === "zh" ? "Switch to English" : "Switch to Chinese");
+  button.setAttribute("aria-pressed", activeLanguage === "zh" ? "true" : "false");
+};
+
+const syncHeroLanguage = ({ animateHero = false } = {}) => {
+  const h1 = document.querySelector(".hero h1");
+  if (h1) {
+    h1.classList.remove("is-letters-in");
+    h1.removeAttribute("data-split");
+    h1.textContent = HERO_HEADLINE[activeLanguage] || HERO_HEADLINE.en;
+    if (animateHero && typeof initHeroSplitH1 === "function" && !prefersReduced) {
+      initHeroSplitH1();
+    }
+  }
+
+  const cycleWord = document.querySelector(".cycle-word");
+  if (cycleWord) {
+    cycleWord.dataset.words = HERO_CYCLE_WORDS[activeLanguage] || HERO_CYCLE_WORDS.en;
+    cycleWord.textContent = (cycleWord.dataset.words || "").split("|")[0] || "";
+    if (animateHero && typeof initCycleWords === "function" && !prefersReduced) {
+      initCycleWords();
+    }
+  }
+};
+
+const applyLanguage = (language, options = {}) => {
+  const { persist = true, animateHero = false, syncHero = true } = options;
+  activeLanguage = language === "zh" ? "zh" : "en";
+  document.documentElement.setAttribute("lang", activeLanguage === "zh" ? "zh-CN" : "en");
+  document.documentElement.setAttribute("data-lang", activeLanguage);
+  if (persist) localStorage.setItem(LANGUAGE_STORAGE_KEY, activeLanguage);
+  if (syncHero) syncHeroLanguage({ animateHero });
+  updateDocumentMeta();
+  translateTextNodes();
+  translateAttributes();
+  updateLanguageToggle();
+  if (typeof updateModeBadge === "function") updateModeBadge();
+};
+
+const refreshLocalizedContent = () => {
+  translateTextNodes();
+  translateAttributes();
+};
+
+const initLanguageToggle = () => {
+  const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+  applyLanguage(stored === "zh" ? "zh" : "en", { persist: false, animateHero: false });
+
+  document.querySelector("#langToggle")?.addEventListener("click", () => {
+    const next = activeLanguage === "zh" ? "en" : "zh";
+    applyLanguage(next, { animateHero: true });
+  });
+};
+
 /* ── Text scramble effect ── */
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*";
@@ -689,6 +1176,7 @@ const renderReport = () => {
   showReport();
 
   currentMarkdown = buildMarkdown({ target, profile, score, channels });
+  refreshLocalizedContent();
   return true;
 };
 
@@ -726,13 +1214,13 @@ const updateModeBadge = () => {
   const el = document.getElementById("modeBadge");
   if (!el) return;
   if (BACKEND_AVAILABLE === null) {
-    el.textContent = "Detecting mode…";
+    el.textContent = translateLiteral("Detecting mode…");
     el.dataset.mode = "detecting";
   } else if (BACKEND_AVAILABLE) {
-    el.textContent = "Enhanced mode · backend reachable";
+    el.textContent = translateLiteral("Enhanced mode · backend reachable");
     el.dataset.mode = "enhanced";
   } else {
-    el.textContent = "Browser-only mode · backend unreachable";
+    el.textContent = translateLiteral("Browser-only mode · backend unreachable");
     el.dataset.mode = "browser";
   }
 };
@@ -1020,6 +1508,7 @@ const renderLiveReport = (report) => {
     ...(report.findings || []).map((f) => `### [${f.severity}] ${f.title}\n\n- **Description:** ${f.description}\n- **Evidence:** ${f.evidence}\n- **Impact:** ${f.impact}\n- **Fix:** ${f.fix}${f.claudePrompt ? `\n- **Claude prompt:** \`${f.claudePrompt}\`` : ""}`),
   ];
   currentMarkdown = mdLines.join("\n");
+  refreshLocalizedContent();
 };
 
 const detectBackendInputType = (raw) => {
@@ -1065,7 +1554,7 @@ form.addEventListener("submit", async (event) => {
   }
   setTargetError();
 
-  btnText.textContent = "Checking…";
+  btnText.textContent = translateLiteral("Checking…");
   btnSpinner.hidden = false;
   analyzeBtn.disabled = true;
   reportPanel.classList.add("is-loading");
@@ -1096,7 +1585,7 @@ form.addEventListener("submit", async (event) => {
   } catch (err) {
     setTargetError(err && err.message ? err.message : "Unexpected error — please try again.");
   } finally {
-    btnText.textContent = "Analyze launch risk";
+    btnText.textContent = translateLiteral("Analyze launch risk");
     btnSpinner.hidden = true;
     analyzeBtn.disabled = false;
     reportPanel.classList.remove("is-loading");
@@ -1196,10 +1685,10 @@ if (findingsList) {
 probeBackend();
 
 const setButtonStatus = (button, message, resetMessage) => {
-  button.textContent = message;
+  button.textContent = translateLiteral(message);
   button.disabled = true;
   window.setTimeout(() => {
-    button.textContent = resetMessage;
+    button.textContent = translateLiteral(resetMessage);
     button.disabled = false;
   }, 1600);
 };
@@ -2238,6 +2727,9 @@ const initHeroSplitH1 = () => {
 const initCycleWords = () => {
   const nodes = document.querySelectorAll(".cycle-word[data-words]");
   nodes.forEach((node) => {
+    if (node.dataset.cycleTimer) {
+      window.clearInterval(Number(node.dataset.cycleTimer));
+    }
     const words = String(node.dataset.words || "").split("|").map((w) => w.trim()).filter(Boolean);
     if (words.length < 2) return;
     let i = 0;
@@ -2250,7 +2742,7 @@ const initCycleWords = () => {
       }, 190);
       window.setTimeout(() => node.classList.remove("is-swapping"), 380);
     };
-    window.setInterval(tick, 2400);
+    node.dataset.cycleTimer = String(window.setInterval(tick, 2400));
   });
 };
 
@@ -2632,7 +3124,7 @@ Rules:
 
     wizard.classList.add("is-generating");
     submitBtn.disabled = true;
-    submitBtn.textContent = "Generating…";
+    submitBtn.textContent = translateLiteral("Generating…");
     report.hidden = false;
     reportBody.innerHTML = "<p class=\"brand-report-loading\">Generating</p>";
     report.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -2693,7 +3185,7 @@ Rules:
     } finally {
       wizard.classList.remove("is-generating");
       submitBtn.disabled = false;
-      submitBtn.textContent = "Generate report";
+      submitBtn.textContent = translateLiteral("Generate report");
     }
   });
 
@@ -2709,11 +3201,11 @@ Rules:
     if (!text) return;
     try {
       await navigator.clipboard.writeText(text);
-      copyBtn.textContent = "Copied!";
-      window.setTimeout(() => (copyBtn.textContent = "Copy report"), 1600);
+      copyBtn.textContent = translateLiteral("Copied!");
+      window.setTimeout(() => (copyBtn.textContent = translateLiteral("Copy report")), 1600);
     } catch {
-      copyBtn.textContent = "Copy failed";
-      window.setTimeout(() => (copyBtn.textContent = "Copy report"), 1600);
+      copyBtn.textContent = translateLiteral("Copy failed");
+      window.setTimeout(() => (copyBtn.textContent = translateLiteral("Copy report")), 1600);
     }
   });
 
@@ -2733,10 +3225,676 @@ Rules:
   goToStep(1);
 };
 
+/* ═══════════════════════════════════════════════════════════════
+ *  Launch Console — turn the Doctor + Brand wizard reports into
+ *  ready-to-ship release notes, Twitter thread, and Reddit draft;
+ *  optional one-click GitHub draft release via user-supplied PAT.
+ *  Reuses simpleMarkdown / escapeHtml / getAIConfig / hasAIKey.
+ * ═══════════════════════════════════════════════════════════════ */
+
+const LC_STORAGE_GITHUB_PAT = "shipwright-github-pat";
+const LC_SUB_REDDIT_DEFAULT = "SideProject";
+
+const LC_SYSTEM_PROMPT = `You are Shipwright's Launch Communications Officer. You write ship-ready launch copy for indie / AI-built projects.
+
+The user will give you launch context (project URL, audience, vibe, goal, doctor findings count, version, tone). Produce a SINGLE response with FOUR sections separated by these exact markers (and nothing else between them — no preamble, no closing remarks):
+
+===RELEASE_NOTES===
+A GitHub Markdown release notes document. Structure:
+## What's new
+- 3-6 bullets, action-first, concrete
+## Fixes & polish
+- 0-4 bullets if relevant, derived from the doctor findings count
+## Try it
+A short paragraph with the project URL.
+## What's next
+- 2-3 bullets, briefly
+
+===TWITTER_THREAD===
+A JSON array of 3-5 strings. Each string is ONE tweet, max 270 characters (count carefully). First tweet is a hook (no link). Last tweet ends with a clear CTA and the project URL on its own line. Don't number the tweets in the text — the order is implicit. Output the JSON array directly, e.g. ["first tweet", "second tweet", "..."].
+
+===REDDIT_TITLE===
+Single line, max 200 characters. Match Reddit r/SideProject and r/indiehackers culture (honest, specific, not hypey unless the user picked the "hype" tone).
+
+===REDDIT_BODY===
+Markdown body, 300-500 words. Sections:
+**What it is** (2-3 sentences)
+**Why I built it** (motivation, audience-specific)
+**How it works / tech stack** (concrete, brief)
+**What I'd love feedback on** (specific questions)
+End with the project URL on its own line.
+
+Rules:
+- Match the user's stated tone exactly.
+- Use the user's audience vocabulary.
+- No filler phrases.
+- Do NOT wrap the four sections in code fences.
+- The four markers MUST appear exactly as shown, on their own line, in this order.`;
+
+const initLaunchConsole = () => {
+  const root = document.querySelector("#launch-console");
+  if (!root) return;
+
+  /* ─── DOM lookups ─── */
+  const launchBtn   = root.querySelector("#lcLaunchBtn");
+  const launchLabel = root.querySelector("#lcLaunchLabel");
+  const launchSub   = root.querySelector("#lcLaunchSub");
+  const launchNote  = root.querySelector("#lcLaunchNote");
+  const mainLed     = root.querySelector("#lcMainLed");
+  const mainLabel   = root.querySelector("#lcMainLabel");
+  const mainMeta    = root.querySelector("#lcMainMeta");
+  const checklist   = root.querySelector("#lcChecklist");
+
+  const urlInput     = root.querySelector("#lcUrl");
+  const versionInput = root.querySelector("#lcVersion");
+  const titleInput   = root.querySelector("#lcTitle");
+
+  const tabs  = root.querySelectorAll(".lc-tab");
+  const panes = root.querySelectorAll(".lc-tab-pane");
+
+  const releaseEmpty   = root.querySelector("#lcReleaseEmpty");
+  const releaseBody    = root.querySelector("#lcReleaseBody");
+  const releaseActions = root.querySelector("#lcReleaseActions");
+  const githubPushBtn  = root.querySelector("#lcGithubPushBtn");
+
+  const twitterEmpty   = root.querySelector("#lcTwitterEmpty");
+  const tweetList      = root.querySelector("#lcTweetList");
+  const twitterActions = root.querySelector("#lcTwitterActions");
+  const twitterIntent  = root.querySelector("#lcTwitterIntent");
+
+  const redditEmpty   = root.querySelector("#lcRedditEmpty");
+  const redditBody    = root.querySelector("#lcRedditBody");
+  const redditActions = root.querySelector("#lcRedditActions");
+  const subGroup      = root.querySelector(".lc-sub-group");
+  const subCustomWrap = root.querySelector("#lcSubCustomWrap");
+  const subCustom     = root.querySelector("#lcSubCustom");
+  const redditTitleEl = root.querySelector("#lcRedditTitle");
+  const redditBodyEl  = root.querySelector("#lcRedditBodyText");
+  const redditIntent  = root.querySelector("#lcRedditIntent");
+
+  /* GitHub dialog */
+  const dialog          = root.querySelector("#lcGithubDialog");
+  const dialogClose     = root.querySelector("#lcGithubDialogClose");
+  const dialogCancel    = root.querySelector("#lcGithubCancel");
+  const dialogConfirm   = root.querySelector("#lcGithubConfirm");
+  const patInput        = root.querySelector("#lcGithubPat");
+  const repoInput       = root.querySelector("#lcGithubRepo");
+  const dialogStatus    = root.querySelector("#lcGithubStatus");
+
+  /* ─── state ─── */
+  const state = {
+    tone: "professional",
+    subreddit: LC_SUB_REDDIT_DEFAULT,
+    parsed: null,
+    lastRaw: "",
+  };
+
+  /* ─── tone / subreddit chip groups ─── */
+  root.querySelectorAll(".lc-tone-group").forEach((group) => {
+    const name = group.dataset.name;
+    group.addEventListener("click", (event) => {
+      const chip = event.target instanceof Element ? event.target.closest(".lc-tone-chip") : null;
+      if (!chip) return;
+      group.querySelectorAll(".lc-tone-chip").forEach((c) => c.classList.remove("is-selected"));
+      chip.classList.add("is-selected");
+      state[name] = chip.dataset.value;
+      if (name === "subreddit") {
+        if (subCustomWrap) subCustomWrap.hidden = chip.dataset.value !== "custom";
+      }
+    });
+  });
+
+  /* ─── tab switching ─── */
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const id = tab.dataset.tab;
+      tabs.forEach((t) => {
+        const active = t === tab;
+        t.classList.toggle("is-active", active);
+        t.setAttribute("aria-selected", active ? "true" : "false");
+      });
+      panes.forEach((p) => p.classList.toggle("is-active", p.dataset.pane === id));
+    });
+  });
+
+  /* ─── pre-flight checklist ─── */
+  const setCheck = (key, ok, text) => {
+    const li = checklist.querySelector(`[data-key="${key}"]`);
+    if (!li) return;
+    li.classList.toggle("is-ok", ok);
+    li.classList.toggle("is-empty", !ok);
+    const valueEl = li.querySelector(".lc-check-value");
+    if (valueEl) {
+      valueEl.textContent = ok && text ? text : (valueEl.dataset.emptyText || "—");
+    }
+  };
+
+  const refreshChecklist = () => {
+    const url = (urlInput && urlInput.value) ||
+      (document.querySelector("#bwUrl") && document.querySelector("#bwUrl").value) ||
+      (document.querySelector("#targetInput") && document.querySelector("#targetInput").value) ||
+      "";
+    setCheck("repo", Boolean(url.trim()), url.trim().slice(0, 36));
+
+    setCheck("ai", typeof hasAIKey === "function" && hasAIKey(), "configured");
+
+    const findings = Array.isArray(window.__lastFindings) ? window.__lastFindings : null;
+    if (findings) {
+      const deduct = { P0: 25, P1: 15, P2: 8, P3: 3 };
+      let s = 100;
+      for (const f of findings) s -= deduct[f.severity] || 0;
+      s = Math.max(0, Math.min(100, s));
+      const grade = s >= 90 ? "A" : s >= 75 ? "B" : s >= 60 ? "C" : s >= 40 ? "D" : "F";
+      setCheck("audit", true, `${s}/100 · ${grade}`);
+    } else {
+      setCheck("audit", false);
+    }
+
+    const brandWizard = document.querySelector("#brandWizard");
+    const brandDone = brandWizard && brandWizard.dataset.lastReport;
+    setCheck("brand", Boolean(brandDone), brandDone ? "completed" : "");
+  };
+
+  /* keep checklist in sync when inputs / external events change */
+  refreshChecklist();
+  ["#bwUrl", "#targetInput", "#lcUrl"].forEach((sel) => {
+    const el = document.querySelector(sel);
+    if (el) el.addEventListener("input", refreshChecklist);
+  });
+  window.addEventListener("storage", refreshChecklist);
+  document.addEventListener("shipwright:ai-config-updated", refreshChecklist);
+  document.addEventListener("shipwright:doctor-finished", refreshChecklist);
+  document.addEventListener("shipwright:brand-finished", refreshChecklist);
+
+  /* auto-fill the manifest URL from earlier inputs if user hasn't typed */
+  const seedUrl = () => {
+    if (urlInput && !urlInput.value) {
+      const bw = document.querySelector("#bwUrl");
+      const ti = document.querySelector("#targetInput");
+      const seed = (bw && bw.value) || (ti && ti.value) || "";
+      if (seed) urlInput.value = seed;
+    }
+  };
+  seedUrl();
+  if (urlInput) urlInput.addEventListener("focus", seedUrl);
+
+  /* ─── helpers: GitHub URL parse, copy, download ─── */
+  const parseRepoFromAnything = (raw) => {
+    if (!raw) return null;
+    const cleaned = String(raw).trim().replace(/\.git$/i, "").replace(/[?#].*$/, "").replace(/\/+$/, "");
+    let m = cleaned.match(/github\.com\/([A-Za-z0-9._-]+)\/([A-Za-z0-9._-]+)/);
+    if (m) return { owner: m[1], repo: m[2] };
+    m = cleaned.match(/^([A-Za-z0-9._-]+)\/([A-Za-z0-9._-]+)$/);
+    if (m) return { owner: m[1], repo: m[2] };
+    return null;
+  };
+
+  const copyText = async (text) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    ta.remove();
+    return ok;
+  };
+
+  const flashAction = (btn, msg) => {
+    if (!btn) return;
+    const orig = btn.textContent;
+    btn.textContent = msg;
+    window.setTimeout(() => (btn.textContent = orig), 1500);
+  };
+
+  const downloadMd = (filename, contents) => {
+    const blob = new Blob([contents], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  /* ─── parser: split AI raw output by ===KEY=== markers ─── */
+  const parseLaunchOutput = (raw) => {
+    const out = { releaseNotes: "", tweets: [], redditTitle: "", redditBody: "", rawLeftover: "" };
+    const grab = (key) => {
+      const re = new RegExp(`===${key}===([\\s\\S]*?)(?====[A-Z_]+===|$)`);
+      const m = raw.match(re);
+      return m ? m[1].trim() : "";
+    };
+    out.releaseNotes = grab("RELEASE_NOTES");
+    const tweetsBlock = grab("TWITTER_THREAD");
+    if (tweetsBlock) {
+      const stripped = tweetsBlock.replace(/^```(?:json)?\s*/i, "").replace(/```$/i, "").trim();
+      try {
+        const arr = JSON.parse(stripped);
+        if (Array.isArray(arr)) out.tweets = arr.map((s) => String(s));
+      } catch {
+        out.tweets = stripped.split(/\n{2,}/).map((s) => s.replace(/^\d+[\.)]\s*/, "").trim()).filter(Boolean);
+      }
+    }
+    out.redditTitle = grab("REDDIT_TITLE");
+    out.redditBody  = grab("REDDIT_BODY");
+    if (!out.releaseNotes && !out.tweets.length && !out.redditTitle && !out.redditBody) {
+      out.rawLeftover = raw;
+    }
+    return out;
+  };
+
+  /* ─── pre-flight summary for the AI prompt ─── */
+  const buildLaunchPrompt = () => {
+    const url = (urlInput && urlInput.value.trim()) || "";
+    const version = (versionInput && versionInput.value.trim()) || "v1.0.0";
+    const title = (titleInput && titleInput.value.trim()) || "Launch";
+
+    const findings = Array.isArray(window.__lastFindings) ? window.__lastFindings : [];
+    const counts = findings.reduce((acc, f) => {
+      acc[f.severity] = (acc[f.severity] || 0) + 1;
+      return acc;
+    }, {});
+
+    const brandWizard = document.querySelector("#brandWizard");
+    const brandReport = brandWizard && brandWizard.dataset.lastReport;
+    const brandSummary = brandReport ? brandReport.slice(0, 1200) : "(brand wizard not completed; infer reasonable defaults)";
+
+    return [
+      "## Launch context",
+      `- Project URL / repo: ${url || "(not provided)"}`,
+      `- Version tag: ${version}`,
+      `- Release title: ${title}`,
+      `- Tone: ${state.tone}`,
+      "",
+      "## Doctor findings count",
+      `- P0 (launch blockers): ${counts.P0 || 0}`,
+      `- P1 (critical): ${counts.P1 || 0}`,
+      `- P2 (improvements): ${counts.P2 || 0}`,
+      `- P3 (suggestions): ${counts.P3 || 0}`,
+      "",
+      "## Brand fit report (summary, may be empty)",
+      brandSummary,
+    ].join("\n");
+  };
+
+  /* ─── countdown animation + abort guard ─── */
+  let isLaunching = false;
+
+  const animateCountdown = async () => {
+    launchBtn.disabled = true;
+    launchBtn.classList.add("is-counting");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const steps = reducedMotion ? ["IGNITION"] : ["T-3", "T-2", "T-1", "IGNITION"];
+    for (const s of steps) {
+      launchLabel.textContent = s;
+      launchSub.textContent = s === "IGNITION" ? "stream incoming" : "stand by";
+      await new Promise((r) => window.setTimeout(r, reducedMotion ? 80 : 360));
+    }
+  };
+
+  const resetLaunchBtn = () => {
+    launchBtn.classList.remove("is-counting");
+    launchBtn.disabled = false;
+    launchLabel.textContent = "▲ INITIATE LAUNCH SEQUENCE";
+    launchSub.textContent = "ready to re-run";
+  };
+
+  const setNote = (msg, kind) => {
+    launchNote.textContent = msg;
+    launchNote.classList.toggle("is-error", kind === "error");
+  };
+
+  /* ─── render results into the right panel ─── */
+  const renderTweet = (text, idx) => {
+    const li = document.createElement("li");
+    li.className = "lc-tweet";
+    const safeText = escapeHtml(text);
+    const count = text.length;
+    const over = count > 280;
+    li.innerHTML = `
+      <span class="lc-tweet-num">${String(idx + 1).padStart(2, "0")} / ${"  "}</span>
+      <span class="lc-tweet-text">${safeText}</span>
+      <span class="lc-tweet-meta">
+        <span class="lc-tweet-count${over ? " is-over" : ""}">${count} / 280</span>
+        <button type="button" class="lc-tweet-copy" data-idx="${idx}">⧉ copy</button>
+      </span>`;
+    return li;
+  };
+
+  const renderResults = (parsed) => {
+    /* release notes */
+    if (parsed.releaseNotes) {
+      releaseEmpty.hidden = true;
+      releaseBody.hidden = false;
+      releaseActions.hidden = false;
+      releaseBody.innerHTML = (typeof simpleMarkdown === "function") ? simpleMarkdown(parsed.releaseNotes) : escapeHtml(parsed.releaseNotes);
+    }
+    /* tweets */
+    if (parsed.tweets && parsed.tweets.length) {
+      twitterEmpty.hidden = true;
+      tweetList.hidden = false;
+      twitterActions.hidden = false;
+      tweetList.innerHTML = "";
+      parsed.tweets.forEach((t, i) => tweetList.appendChild(renderTweet(t, i)));
+    }
+    /* reddit */
+    if (parsed.redditTitle || parsed.redditBody) {
+      redditEmpty.hidden = true;
+      redditBody.hidden = false;
+      redditActions.hidden = false;
+      if (redditTitleEl) redditTitleEl.value = parsed.redditTitle || "";
+      if (redditBodyEl)  redditBodyEl.value  = parsed.redditBody  || "";
+    }
+    /* fallback: dump raw into release pane */
+    if (parsed.rawLeftover) {
+      releaseEmpty.hidden = true;
+      releaseBody.hidden = false;
+      releaseActions.hidden = false;
+      releaseBody.innerHTML = `<p><em>Parsing failed — raw AI output below.</em></p><pre>${escapeHtml(parsed.rawLeftover)}</pre>`;
+    }
+  };
+
+  /* ─── streaming AI call (mirrors initBrandWizard pattern) ─── */
+  const runLaunchSequence = async () => {
+    if (isLaunching) return;
+    if (typeof hasAIKey !== "function" || !hasAIKey()) {
+      setNote("Configure your AI key first (gear icon, bottom-right).", "error");
+      mainLed.className = "mc-led mc-led--red";
+      mainLabel.textContent = "// abort · no AI key";
+      return;
+    }
+    isLaunching = true;
+
+    /* reset panes to "in-flight" state */
+    [releaseBody, releaseActions, tweetList, twitterActions, redditBody, redditActions].forEach((n) => { if (n) n.hidden = true; });
+    [releaseEmpty, twitterEmpty, redditEmpty].forEach((n) => { if (n) n.hidden = false; });
+    panes.forEach((p) => p.classList.add("is-loading"));
+    mainLed.className = "mc-led mc-led--amber";
+    mainLabel.textContent = "// transmitting · generating artifacts";
+    mainMeta.textContent = "";
+    setNote("Generating release notes · Twitter thread · Reddit body…", "");
+
+    await animateCountdown();
+
+    const cfg = getAIConfig();
+    const base = String(cfg.base || "https://api.openai.com").replace(/\/+$/, "");
+    let accumulated = "";
+
+    try {
+      const res = await fetch(`${base}/v1/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cfg.key}`,
+        },
+        body: JSON.stringify({
+          model: cfg.model,
+          stream: true,
+          messages: [
+            { role: "system", content: LC_SYSTEM_PROMPT },
+            { role: "user", content: buildLaunchPrompt() },
+          ],
+        }),
+      });
+
+      if (!res.ok || !res.body) {
+        const errText = await res.text().catch(() => "");
+        throw new Error(`HTTP ${res.status}: ${errText.slice(0, 300)}`);
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || !trimmed.startsWith("data:")) continue;
+          const payload = trimmed.slice(5).trim();
+          if (payload === "[DONE]") continue;
+          try {
+            const parsed = JSON.parse(payload);
+            const delta = parsed.choices && parsed.choices[0] && parsed.choices[0].delta && parsed.choices[0].delta.content;
+            if (delta) {
+              accumulated += delta;
+              mainMeta.textContent = `${accumulated.length} chars`;
+            }
+          } catch { /* skip malformed */ }
+        }
+      }
+
+      state.lastRaw = accumulated;
+      state.parsed = parseLaunchOutput(accumulated);
+      renderResults(state.parsed);
+
+      mainLed.className = "mc-led mc-led--green";
+      mainLabel.textContent = "// launch artifacts ready";
+      setNote("All artifacts generated. Review tabs above and push when ready.", "");
+    } catch (err) {
+      mainLed.className = "mc-led mc-led--red";
+      mainLabel.textContent = "// transmission failed";
+      const msg = (err && err.message) || String(err);
+      setNote(`Error: ${msg}`, "error");
+      console.error("LaunchConsole stream error:", err);
+    } finally {
+      panes.forEach((p) => p.classList.remove("is-loading"));
+      resetLaunchBtn();
+      isLaunching = false;
+    }
+  };
+
+  launchBtn.addEventListener("click", runLaunchSequence);
+
+  /* ─── per-pane action handlers (copy / download / intent) ─── */
+  const getReleaseMd = () => state.parsed ? state.parsed.releaseNotes : "";
+  const getTweetThreadText = () => {
+    if (!state.parsed || !state.parsed.tweets) return "";
+    return state.parsed.tweets.map((t, i) => `${i + 1}/ ${t}`).join("\n\n");
+  };
+  const getRedditTitle = () => (redditTitleEl && redditTitleEl.value) || "";
+  const getRedditBodyText = () => (redditBodyEl && redditBodyEl.value) || "";
+
+  root.querySelectorAll(".lc-action[data-action]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const action = btn.dataset.action;
+      const target = btn.dataset.target;
+      if (action === "copy") {
+        let text = "";
+        if (target === "release") text = getReleaseMd();
+        if (target === "twitter") text = getTweetThreadText();
+        if (target === "reddit")  text = `# ${getRedditTitle()}\n\n${getRedditBodyText()}`;
+        if (!text) return;
+        const ok = await copyText(text);
+        flashAction(btn, ok ? "Copied ✓" : "Failed");
+      } else if (action === "download") {
+        if (target === "release" && state.parsed && state.parsed.releaseNotes) {
+          downloadMd("shipwright-release-notes.md", state.parsed.releaseNotes);
+          flashAction(btn, "Downloaded");
+        }
+      }
+    });
+  });
+
+  /* tweet-level copy */
+  tweetList.addEventListener("click", async (event) => {
+    const btn = event.target instanceof Element ? event.target.closest(".lc-tweet-copy") : null;
+    if (!btn) return;
+    const idx = parseInt(btn.dataset.idx, 10);
+    if (state.parsed && state.parsed.tweets[idx]) {
+      const ok = await copyText(state.parsed.tweets[idx]);
+      flashAction(btn, ok ? "copied ✓" : "fail");
+    }
+  });
+
+  /* ─── share intent URLs ─── */
+  const openTwitterIntent = () => {
+    if (!state.parsed || !state.parsed.tweets || !state.parsed.tweets.length) return;
+    const first = state.parsed.tweets[0];
+    const url = urlInput.value.trim();
+    let intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(first)}`;
+    if (url) intent += `&url=${encodeURIComponent(url)}`;
+    window.open(intent, "_blank", "noopener,noreferrer");
+  };
+  twitterIntent.addEventListener("click", openTwitterIntent);
+
+  const openRedditIntent = () => {
+    let sub = state.subreddit || LC_SUB_REDDIT_DEFAULT;
+    if (sub === "custom") {
+      sub = (subCustom && subCustom.value.trim()) || LC_SUB_REDDIT_DEFAULT;
+      sub = sub.replace(/^r\//i, "").replace(/\s+/g, "");
+    }
+    const title = getRedditTitle();
+    const body = getRedditBodyText();
+    const url = `https://www.reddit.com/r/${encodeURIComponent(sub)}/submit?title=${encodeURIComponent(title)}&text=${encodeURIComponent(body)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+  redditIntent.addEventListener("click", openRedditIntent);
+
+  /* ─── GitHub PAT dialog + Release API ─── */
+  const setDialogStatus = (msg, kind) => {
+    if (!dialogStatus) return;
+    dialogStatus.hidden = false;
+    dialogStatus.className = "lc-dialog-status is-" + (kind || "info");
+    dialogStatus.innerHTML = msg;
+  };
+
+  const openGithubDialog = () => {
+    if (!dialog) return;
+    if (!state.parsed || !state.parsed.releaseNotes) {
+      setNote("Generate release notes first (INITIATE LAUNCH SEQUENCE).", "error");
+      return;
+    }
+    /* pre-fill */
+    try {
+      const savedPat = localStorage.getItem(LC_STORAGE_GITHUB_PAT);
+      if (savedPat && patInput) patInput.value = savedPat;
+    } catch { /* localStorage blocked */ }
+
+    const url = urlInput.value.trim();
+    const parsedRepo = parseRepoFromAnything(url);
+    if (parsedRepo && repoInput) repoInput.value = `${parsedRepo.owner}/${parsedRepo.repo}`;
+    if (dialogStatus) dialogStatus.hidden = true;
+    if (typeof dialog.showModal === "function") {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute("open", "");
+    }
+  };
+
+  const closeGithubDialog = () => {
+    if (!dialog) return;
+    if (typeof dialog.close === "function") dialog.close();
+    else dialog.removeAttribute("open");
+  };
+
+  githubPushBtn.addEventListener("click", openGithubDialog);
+  dialogClose.addEventListener("click", closeGithubDialog);
+  dialogCancel.addEventListener("click", closeGithubDialog);
+  dialog.addEventListener("click", (event) => {
+    /* clicks on the backdrop close the dialog */
+    if (event.target === dialog) closeGithubDialog();
+  });
+
+  const pushGithubRelease = async () => {
+    const pat = (patInput && patInput.value.trim()) || "";
+    const repoRaw = (repoInput && repoInput.value.trim()) || "";
+    const parsedRepo = parseRepoFromAnything(repoRaw);
+    if (!pat) { setDialogStatus("Personal access token is required.", "error"); return; }
+    if (!parsedRepo) { setDialogStatus("Repo must be in <code>owner/repo</code> format.", "error"); return; }
+    const version = (versionInput && versionInput.value.trim()) || "v1.0.0";
+    const title = (titleInput && titleInput.value.trim()) || version;
+    const body = (state.parsed && state.parsed.releaseNotes) || "";
+    if (!body) { setDialogStatus("No release notes generated yet.", "error"); return; }
+
+    dialogConfirm.disabled = true;
+    dialogConfirm.classList.add("is-busy");
+
+    const headers = {
+      Accept: "application/vnd.github+json",
+      Authorization: `Bearer ${pat}`,
+      "Content-Type": "application/json",
+      "X-GitHub-Api-Version": "2022-11-28",
+    };
+
+    try {
+      setDialogStatus("Verifying repo & permissions…", "running");
+      const repoRes = await fetch(`https://api.github.com/repos/${parsedRepo.owner}/${parsedRepo.repo}`, { headers });
+      if (!repoRes.ok) {
+        const err = await repoRes.json().catch(() => ({}));
+        throw new Error(err.message || `Repo lookup failed (HTTP ${repoRes.status}).`);
+      }
+      const repoData = await repoRes.json();
+      const branch = repoData.default_branch || "main";
+
+      setDialogStatus(`Reading HEAD of <code>${branch}</code>…`, "running");
+      const refRes = await fetch(`https://api.github.com/repos/${parsedRepo.owner}/${parsedRepo.repo}/git/ref/heads/${branch}`, { headers });
+      if (!refRes.ok) {
+        const err = await refRes.json().catch(() => ({}));
+        throw new Error(err.message || `Could not read HEAD of ${branch}.`);
+      }
+      const refData = await refRes.json();
+      const targetSha = refData.object && refData.object.sha;
+      if (!targetSha) throw new Error("HEAD commit sha was missing in the GitHub response.");
+
+      setDialogStatus("Creating draft release…", "running");
+      const releaseRes = await fetch(`https://api.github.com/repos/${parsedRepo.owner}/${parsedRepo.repo}/releases`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          tag_name: version,
+          name: title,
+          body,
+          target_commitish: targetSha,
+          draft: true,
+          prerelease: false,
+        }),
+      });
+      if (!releaseRes.ok) {
+        const err = await releaseRes.json().catch(() => ({}));
+        const detail = (err.errors && err.errors[0] && err.errors[0].message) || err.message || "";
+        throw new Error(`${detail || `HTTP ${releaseRes.status}`}`);
+      }
+      const releaseData = await releaseRes.json();
+
+      /* persist PAT only after first successful use */
+      try { localStorage.setItem(LC_STORAGE_GITHUB_PAT, pat); } catch { /* ignore */ }
+
+      const link = releaseData.html_url || `https://github.com/${parsedRepo.owner}/${parsedRepo.repo}/releases`;
+      setDialogStatus(
+        `Draft release created. <a href="${link}" target="_blank" rel="noopener">Open on GitHub →</a><br>Tag <code>${version}</code> · branch <code>${branch}</code>`,
+        "success"
+      );
+      mainLed.className = "mc-led mc-led--green";
+      mainLabel.textContent = "// release on GitHub · draft";
+      setNote("Draft release created on GitHub. Open it to publish when ready.", "");
+    } catch (err) {
+      const msg = (err && err.message) || String(err);
+      setDialogStatus(`Error: ${escapeHtml(msg)}`, "error");
+    } finally {
+      dialogConfirm.disabled = false;
+      dialogConfirm.classList.remove("is-busy");
+    }
+  };
+
+  dialogConfirm.addEventListener("click", pushGithubRelease);
+};
+
 /* ── Init everything ── */
 
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+initLanguageToggle();
 initScrollProgress();
 initInspectionRadar();
 initBackToTop();
@@ -2744,6 +3902,7 @@ initFeatureNav();
 initAIChat();
 initAIChatDrag();
 initBrandWizard();
+initLaunchConsole();
 initSectionNumbers();
 
 if (!prefersReduced) {
