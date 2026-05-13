@@ -23,11 +23,11 @@ const ZH_TEXT = {
   "Guide": "指南",
   "Who": "适合谁",
   "Workflow": "工作流",
-  "Launch QA for": "上线前质检",
+  "Launch QA for": "上线前检查",
   "projects": "项目",
-  "ship-ready, not slide-ready": "能上线，不止好看",
-  "Paste a GitHub repo or demo URL. Shipwright generates a launch-readiness report in seconds — browser health, README friction, fake-complete features, and the next fixes that matter.": "粘贴仓库或演示地址，几秒生成上线体检：浏览器、README、假完成，以及最该修的下一步。",
-  "Analyze": "开始分析",
+  "ship-ready, not slide-ready": "先检查，再上线",
+  "Paste a GitHub repo or demo URL. Shipwright generates a launch-readiness report in seconds — browser health, README friction, fake-complete features, and the next fixes that matter.": "粘贴仓库或演示地址，马上看到上线前该修什么。",
+  "Analyze": "开始检查",
   "Try a sample:": "试试示例：",
   "Web app": "网页应用",
   "Skill pack": "技能包",
@@ -37,14 +37,14 @@ const ZH_TEXT = {
   "View on GitHub": "查看 GitHub",
   "reusable skills": "可复用技能",
   "first report target": "首份报告",
-  "fake green checks": "拒绝假绿灯",
+  "fake green checks": "不做假通过",
   "Inspection 042": "检查 042",
   "Almost ready": "基本就绪",
   "CTA works, but no error state.": "CTA 能点，但无错误态。",
   "README omits required env keys.": "README 漏了环境变量。",
   "Mobile nav clips below 390px.": "小屏导航会裁切。",
-  "SHIP READY": "可以发布",
-  "no fake green checks": "不要虚假绿灯",
+  "SHIP READY": "准备上线",
+  "no fake green checks": "不做假通过",
   "written for indie builders": "为独立开发者而写",
   "10 SKILLS · 4 INPUT MODES": "10 技能 · 4 入口",
   "browser, README, repo, idea": "浏览器 · README · 仓库 · 想法",
@@ -52,47 +52,47 @@ const ZH_TEXT = {
   "Plan": "规划",
   "Skills": "技能",
   "Choose the job": "选择任务",
-  "Four doors. One clean launch path.": "四个入口，一条发布线。",
-  "Shipwright is no longer just a pretty audit page. Pick the work you need now: shape an idea, inspect a project, install reusable skills, or run the full agent workflow.": "按任务进入：梳理想法、审查项目、安装技能，或跑完整 Agent 流程。",
-  "Plan from a rough idea": "把想法打磨成方案",
-  "Let the AI Planner ask follow-up questions and turn a vague website concept into a buildable plan.": "AI Planner 负责追问，把模糊概念压成可执行方案。",
+  "Four doors. One clean launch path.": "四个入口，完成上线检查。",
+  "Shipwright is no longer just a pretty audit page. Pick the work you need now: shape an idea, inspect a project, install reusable skills, or run the full agent workflow.": "按任务进入：整理想法、检查项目、安装技能，或跑完整 Agent 流程。",
+  "Plan from a rough idea": "把想法整理成方案",
+  "Let the AI Planner ask follow-up questions and turn a vague website concept into a buildable plan.": "AI Planner 会继续追问，把模糊想法整理成可执行方案。",
   "Start with an idea": "从想法开始",
   "Audit a repo or demo": "审查仓库或演示站",
   "Paste a GitHub URL or live demo and get a launch-readiness report with the next patch.": "粘贴仓库或演示站，拿到上线体检和下一步修复。",
-  "Run launch QA": "运行上线质检",
+  "Run launch QA": "开始检查",
   "Install the workflow": "安装工作流",
   "Use the open-source skills inside Codex or Claude Code for evidence-backed local checks.": "在 Codex / Claude Code 里跑本地证据检查。",
   "Browse skills": "浏览技能",
   "Ship with a sequence": "按步骤发布",
-  "Move from agent claims to browser proof, install proof, release copy, and public launch.": "从 Agent 声称，走到浏览器证据、安装证据和公开发布。",
+  "Move from agent claims to browser proof, install proof, release copy, and public launch.": "把 Agent 的“已完成”，变成浏览器、安装和发布证据。",
   "See workflow": "查看流程",
-  "The pain": "核心痛点",
+  "The pain": "常见问题",
   "AI agents are great at producing finished-looking work.": "AI 很会做“像完成了”的东西。",
   "The README lies by omission.": "README 常常漏掉关键一步。",
   "It says \"npm install\" but forgets env vars, version constraints, and what success looks like.": "写了 npm install，却没说环境变量、版本和成功样子。",
   "The browser was never opened.": "浏览器也许根本没被打开。",
   "Console errors, broken routes, missing assets, and mobile overflow hide behind a clean diff.": "控制台、坏路由、缺资源和小屏溢出，都能躲在干净 diff 后面。",
-  "The launch page has no sharp promise.": "发布页没有一句锋利承诺。",
+  "The launch page has no sharp promise.": "发布页说不清价值。",
   "Strangers need a quickstart, proof, limitations, and GitHub metadata before they trust it.": "陌生人只看快速开始、证据、限制和 GitHub 信息。",
   "Try it now": "现在试用",
-  "Generate a launch QA report.": "生成上线质检报告。",
+  "Generate a launch QA report.": "生成上线检查报告。",
   "live data, not a demo": "真实数据，不只是演示",
-  "Paste any GitHub repo URL or owner/repo. Doctor calls the GitHub public API directly from your browser, analyzes the README, and produces a fix plan you can paste into Claude Code or Codex. Nothing is sent to any server.": "粘贴 GitHub 仓库。Doctor 在浏览器里读公开 API 和 README，生成可交给 Codex / Claude 的修复计划。",
+  "Paste any GitHub repo URL or owner/repo. Doctor calls the GitHub public API directly from your browser, analyzes the README, and produces a fix plan you can paste into Claude Code or Codex. Nothing is sent to any server.": "粘贴 GitHub 仓库。Doctor 会读取公开信息和 README，生成修复计划。",
   "Repository or demo URL": "仓库 / 演示地址",
-  "Enter a GitHub repo URL, owner/repo, or http(s) demo URL.": "请输入 GitHub 仓库 URL、owner/repo 或 http(s) 演示网址。",
+  "Enter a GitHub repo URL, owner/repo, or http(s) demo URL.": "请输入仓库、owner/repo 或演示网址。",
   "Project type": "项目类型",
   "Web app / landing page": "网页应用 / 落地页",
   "CLI / developer tool": "CLI / 开发者工具",
   "Template repo": "模板仓库",
   "Launch channel": "发布渠道",
-  "Analyze launch risk": "分析上线风险",
+  "Analyze launch risk": "检查上线风险",
   "Detecting mode…": "正在检测模式…",
   "Enhanced mode · backend reachable": "增强模式 · 后端可访问",
   "Browser-only mode · backend unreachable": "浏览器模式 · 后端不可访问",
   "Enhanced mode runs richer GitHub checks via the Doctor backend (CI/CD, SECURITY, package.json, URL probe). If the backend is unreachable from your network it falls back to in-browser checks automatically.": "增强模式检查 CI、安全、package 和 URL；网络不通时自动回退。",
   "Paste a repo URL and click": "粘贴仓库 URL 并点击",
-  "to generate your launch QA report.": "生成你的上线质检报告。",
-  "Launch verdict": "上线结论",
+  "to generate your launch QA report.": "生成你的上线检查报告。",
+  "Launch verdict": "检查结果",
   "Critical findings": "关键问题",
   "Quick wins": "快速修复",
   "Audit coverage": "审查覆盖",
@@ -122,16 +122,16 @@ const ZH_TEXT = {
   "Launch post copy quality": "上线帖子文案质量",
   "Contributor-facing next issues": "面向贡献者的后续 issue",
   "Beyond the code check": "不止检查代码",
-  "Does your site match what you actually want?": "网站气质，对味吗？",
-  "answer 5 things, get a brand-fit report": "答 5 题，得一份品牌诊断",
-  "The Audit on the left tells you whether the code ships. This wizard tells you whether the vibe, content, and audience match what you're really building. Uses your AI Planner key — runs in your browser.": "Audit 看能否上线；这里看气质、内容和受众是否对味。用你的 AI Key，在浏览器运行。",
+  "Does your site match what you actually want?": "网站是否符合你的目标？",
+  "answer 5 things, get a brand-fit report": "答 5 个问题，生成品牌诊断",
+  "The Audit on the left tells you whether the code ships. This wizard tells you whether the vibe, content, and audience match what you're really building. Uses your AI Planner key — runs in your browser.": "Audit 看项目能否上线；这里看风格、内容和受众是否匹配。",
   "Wizard progress": "向导进度",
   "Project": "项目",
   "Audience": "受众",
   "Goal": "目标",
-  "Vibe": "气质",
+  "Vibe": "风格",
   "Feels": "感受",
-  "What are you building?": "你在做什么？",
+  "What are you building?": "你要做什么？",
   "Your live URL or repo (optional, but recommended)": "线上 URL / 仓库（推荐）",
   "Landing page": "落地页",
   "Web app / SaaS": "网页应用 / SaaS",
@@ -162,7 +162,7 @@ const ZH_TEXT = {
   "Mixed": "混合人群",
   "Non-technical": "非技术用户",
   "Anything else about them? (free text, optional)": "补充受众信息（可选）",
-  "What's the primary goal of this site?": "这个网站最重要的目标是什么？",
+  "What's the primary goal of this site?": "网站最重要的目标是什么？",
   "Pick the single most important outcome": "只选一个核心结果",
   "Email / waitlist signup": "邮箱 / 候补名单注册",
   "Free trial → paid": "免费试用 → 付费",
@@ -172,10 +172,10 @@ const ZH_TEXT = {
   "Join the community": "加入社区",
   "Awareness / Education": "认知 / 教育",
   "What does success look like in 90 days? (free text)": "90 天后怎样算成功？",
-  "What should it feel like?": "它应该给人什么感觉？",
-  "Brand vibes (pick 1–3)": "品牌气质（选 1–3 个）",
+  "What should it feel like?": "希望它是什么风格？",
+  "Brand vibes (pick 1–3)": "品牌风格（选 1–3 个）",
   "Trustworthy / Enterprise": "可信赖 / 企业级",
-  "Edgy / Bold": "锋利 / 大胆",
+  "Edgy / Bold": "大胆 / 有冲击力",
   "Playful / Indie": "有趣 / 独立",
   "Calm / Zen": "平静 / 禅意",
   "Futuristic / Tech": "未来感 / 技术感",
@@ -183,56 +183,56 @@ const ZH_TEXT = {
   "Editorial / Magazine": "编辑部 / 杂志感",
   "Raw / Brutalist": "粗粝 / 野兽派",
   "Sites you admire (URLs or names, comma-separated, optional)": "喜欢的网站（可选）",
-  "How does it feel right now?": "它现在给人的感觉如何？",
+  "How does it feel right now?": "现在的问题是什么？",
   "What's working that you'd never throw away?": "哪些必须保留？",
   "What frustrates you about the current site?": "现在最卡的点？",
   "← Back": "← 上一步",
   "Next →": "下一步 →",
   "Generate report": "生成报告",
   "5 questions · ~60 seconds": "5 个问题 · 约 60 秒",
-  "Brand & audience report": "品牌与受众报告",
-  "Your custom diagnosis": "你的定制诊断",
+  "Brand & audience report": "品牌和受众报告",
+  "Your custom diagnosis": "诊断结果",
   "Restart wizard": "重新开始",
-  "Usage guide": "使用指南",
-  "Use Shipwright in two modes.": "两种模式使用 Shipwright。",
-  "The website is the product demo and report builder. The installed skills are the real agent workflow for evidence-backed browser, README, and release audits.": "网站负责演示和生成报告；skills 负责真实的本地证据审查。",
+  "Usage guide": "怎么使用",
+  "Use Shipwright in two modes.": "Shipwright 有两种用法。",
+  "The website is the product demo and report builder. The installed skills are the real agent workflow for evidence-backed browser, README, and release audits.": "网站生成报告；安装 skills 后，在本地做完整检查。",
   "Website usage steps": "网站使用步骤",
   "Paste the thing you want to ship.": "粘贴要发布的项目。",
-  "Generate the launch risk report.": "生成风险报告。",
-  "Turn findings into the next patch.": "把问题变成补丁。",
+  "Generate the launch risk report.": "生成上线风险报告。",
+  "Turn findings into the next patch.": "把问题变成修复任务。",
   "Real audit mode": "真实审查模式",
   "For a real audit, install the skills and ask your agent to run the checks against your local repo or URL.": "真实审查请安装 skills，让 Agent 检查本地仓库或 URL。",
   "Example prompt": "示例提示词",
-  "The hosted demo does not clone repos or run browser automation yet. That honesty is part of the product: no fake green checks.": "托管演示暂不克隆仓库、不跑真浏览器。诚实，也是功能。",
+  "The hosted demo does not clone repos or run browser automation yet. That honesty is part of the product: no fake green checks.": "托管演示暂不克隆仓库、不跑真浏览器，所以不会给你假通过。",
   "Who is this for": "适合谁",
-  "Built for builders who ship fast and want it to actually work.": "给发布很快、但想真正可用的人。",
+  "Built for builders who ship fast and want it to actually work.": "给快速上线、但希望真的能用的人。",
   "Vibe coders": "氛围编程者",
   "Indie hackers": "独立开发者",
   "Open source maintainers": "开源维护者",
   "AI skill / MCP authors": "AI Skill / MCP 作者",
   "Inspection radar": "检查雷达",
-  "Plot the launch route before the public countdown.": "公开发布前，先画航线。",
-  "A quiet control-room view of the checks Shipwright runs: each waypoint maps to a launch risk, the evidence it needs, and the fix signal a builder should trust.": "每个航点对应一类风险、一份证据、一个可信修复信号。",
+  "Plot the launch route before the public countdown.": "公开发布前，先把风险查清楚。",
+  "A quiet control-room view of the checks Shipwright runs: each waypoint maps to a launch risk, the evidence it needs, and the fix signal a builder should trust.": "每个节点对应一类上线风险、需要的证据和建议修复。",
   "Launch Map 04": "上线地图 04",
   "Signal: evidence required": "信号：需要证据",
-  "Launch route with inspection waypoints": "带检查航点的上线路线",
+  "Launch route with inspection waypoints": "上线检查路线",
   "Repo intake": "仓库录入",
   "Confirm the target is real, parse the project type, and refuse vague launch claims before the audit begins.": "先确认目标真实，再拒绝模糊上线声明。",
-  "Click a waypoint to preload the analyzer with a matching audit scenario.": "点航点，预加载对应审查场景。",
+  "Click a waypoint to preload the analyzer with a matching audit scenario.": "点击节点，加载对应检查场景。",
   "Evidence": "证据",
-  "Every green light needs an observed browser state, command output, or file reference.": "每个绿灯都要有证据。",
+  "Every green light needs an observed browser state, command output, or file reference.": "每个通过结果都要有证据。",
   "Risk": "风险",
-  "Markers call out launch blockers before they become public support requests.": "阻塞问题，先于用户暴露。",
+  "Markers call out launch blockers before they become public support requests.": "提前发现会卡住用户的问题。",
   "Patch": "修复",
-  "The route ends with the smallest next fix, not a vague quality score.": "终点不是分数，而是最小补丁。",
+  "The route ends with the smallest next fix, not a vague quality score.": "最后给出下一步该修什么。",
   "How it becomes real": "它如何落地",
-  "From static demo to agent-powered launch gate.": "从静态演示，到 Agent 上线闸门。",
-  "Catch hallucinated claims, fake buttons, TODOs, and unverified integrations.": "捕捉幻觉声明、假按钮、TODO 和未验证集成。",
-  "Open the app, check console/network health, interactions, mobile layout, and trust gaps.": "打开应用，检查控制台/网络健康、交互、移动布局和信任缺口。",
-  "Follow the public install path like a stranger and record exactly where adoption breaks.": "像陌生用户一样走公开安装路径，并记录采用流程在哪里断掉。",
-  "Generate topics, description, release notes, launch post, and next contributor issues.": "生成 topics、描述、发布说明、上线帖子和下一批贡献者 issue。",
+  "From static demo to agent-powered launch gate.": "从页面演示，到 Agent 上线检查。",
+  "Catch hallucinated claims, fake buttons, TODOs, and unverified integrations.": "找出假功能、假按钮、TODO 和没验证的集成。",
+  "Open the app, check console/network health, interactions, mobile layout, and trust gaps.": "打开页面，检查报错、网络、交互、移动端和信任问题。",
+  "Follow the public install path like a stranger and record exactly where adoption breaks.": "按新用户视角走安装流程，记录哪里卡住。",
+  "Generate topics, description, release notes, launch post, and next contributor issues.": "生成 topics、描述、发布说明、上线文案和后续 issue。",
   "Honest status": "真实状态",
-  "What this demo does and does not do.": "这个演示的边界。",
+  "What this demo does and does not do.": "这个演示能做什么。",
   "This demo does": "这个演示会",
   "This demo does not": "这个演示不会",
   "Generate a structured launch QA report based on project type": "按项目类型生成上线报告",
@@ -263,25 +263,25 @@ const ZH_TEXT = {
   "Package a repo for public release with metadata and launch copy.": "为公开发布打包仓库元数据和上线文案。",
   "Turn a repeated workflow into a clean, installable skill.": "把重复工作流转成干净、可安装的 skill。",
   "AI-powered planning": "AI 驱动规划",
-  "Start messy. Leave with a build brief.": "带着想法来，带着简报走。",
-  "Tell the AI Planner your website idea. It asks targeted questions about users, features, proof, stack, and visual direction, then turns the answers into a complete website creation plan.": "说出网站想法，它会追问用户、功能、证据、技术栈和视觉方向，最后生成建设方案。",
+  "Start messy. Leave with a build brief.": "输入想法，生成建站方案。",
+  "Tell the AI Planner your website idea. It asks targeted questions about users, features, proof, stack, and visual direction, then turns the answers into a complete website creation plan.": "告诉 AI Planner 你的想法，它会追问并整理成建站方案。",
   "Start AI Planner": "启动 AI Planner",
-  "BYOK — key stays in localStorage and only calls your chosen API endpoint.": "BYOK：Key 只留在本机浏览器。",
+  "BYOK — key stays in localStorage and only calls your chosen API endpoint.": "自带 API Key，只保存在浏览器。",
   "AI planner workflow": "AI 规划工作流",
   "Ask": "追问",
-  "Clarify the real user": "明确真实用户",
+  "Clarify the real user": "明确用户是谁",
   "Audience, pain, proof, constraints, and what the first visit must accomplish.": "受众、痛点、证据、限制和首屏任务。",
   "Shape": "成型",
-  "Turn answers into scope": "把答案变成范围",
+  "Turn answers into scope": "整理功能范围",
   "MVP features, page map, content blocks, design direction, and launch risks.": "MVP、页面、内容、视觉和风险。",
   "Review": "复查",
-  "Send it through Shipwright": "交给 Shipwright 二次审查",
+  "Send it through Shipwright": "用 Shipwright 再检查",
   "Use the generated brief as the input, then audit the finished site before sharing.": "用简报开工，上线前再审一次。",
   "Open source first": "开源优先",
-  "Ship fewer beautiful half-products.": "少发漂亮半成品。",
-  "Start with the skills today. Turn this website into the hosted version when the workflow proves people keep coming back before every launch.": "先用 skills 验证工作流；当用户每次上线前都会回来，再做完整托管版。",
+  "Ship fewer beautiful half-products.": "别把半成品发出去。",
+  "Start with the skills today. Turn this website into the hosted version when the workflow proves people keep coming back before every launch.": "先用 skills 跑起来；等这个流程被反复使用，再做完整托管版。",
   "Try the demo": "试用演示",
-  "Built for Claude Code, Codex, and builders who actually open the browser.": "给 Claude Code、Codex 和会真开浏览器的人。",
+  "Built for Claude Code, Codex, and builders who actually open the browser.": "给 Claude Code、Codex 和认真检查上线的人。",
   "© 2026 Shipwright. MIT License.": "© 2026 Shipwright. MIT 许可证。",
   "Open AI Planner": "打开 AI Planner",
   "AI Website Planner": "AI 网站规划器",
@@ -344,17 +344,17 @@ const LANGUAGE_META = {
       "10 reusable skills that audit AI-built projects before launch. Browser QA, README install paths, agent output review, and GitHub release packaging.",
   },
   zh: {
-    title: "Shipwright - AI 项目上线前质检",
+    title: "Shipwright - AI 项目上线前检查",
     description:
-      "Shipwright 在 AI 项目上线前检查浏览器、README、假完成和发布包装。",
+      "Shipwright 帮你在 AI 项目上线前检查浏览器、README、假功能和发布信息。",
     twitterDescription:
-      "10 个可复用 skills，审查 AI 项目的浏览器、README、Agent 输出和发布包装。",
+      "10 个可复用 skills，检查 AI 项目的浏览器、README、Agent 输出和发布信息。",
   },
 };
 
 const HERO_HEADLINE = {
   en: "Before you ship the AI-built app, make it survive first contact.",
-  zh: "AI 应用上线前，先扛住真实点击。",
+  zh: "AI 做的项目，上线前先检查。",
 };
 
 const HERO_CYCLE_WORDS = {
@@ -3465,15 +3465,28 @@ const initLaunchConsole = () => {
   /* ─── parser: split AI raw output by ===KEY=== markers ─── */
   const parseLaunchOutput = (raw) => {
     const out = { releaseNotes: "", tweets: [], redditTitle: "", redditBody: "", rawLeftover: "" };
-    const grab = (key) => {
-      const re = new RegExp(`===${key}===([\\s\\S]*?)(?====[A-Z_]+===|$)`);
-      const m = raw.match(re);
-      return m ? m[1].trim() : "";
-    };
-    out.releaseNotes = grab("RELEASE_NOTES");
-    const tweetsBlock = grab("TWITTER_THREAD");
+    const MARKERS = ["RELEASE_NOTES", "TWITTER_THREAD", "REDDIT_TITLE", "REDDIT_BODY"];
+    const blocks = {};
+
+    for (let i = 0; i < MARKERS.length; i++) {
+      const key = MARKERS[i];
+      const startIdx = raw.indexOf(`===${key}===`);
+      if (startIdx === -1) continue;
+      const contentStart = startIdx + key.length + 6; // === is 3 + 3
+      let contentEnd;
+      if (i + 1 < MARKERS.length) {
+        contentEnd = raw.indexOf(`===${MARKERS[i + 1]}===`, contentStart);
+        if (contentEnd === -1) contentEnd = raw.length;
+      } else {
+        contentEnd = raw.length;
+      }
+      blocks[key] = raw.slice(contentStart, contentEnd).trim();
+    }
+
+    out.releaseNotes = blocks.RELEASE_NOTES || "";
+    const tweetsBlock = blocks.TWITTER_THREAD || "";
     if (tweetsBlock) {
-      const stripped = tweetsBlock.replace(/^```(?:json)?\s*/i, "").replace(/```$/i, "").trim();
+      const stripped = tweetsBlock.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "").trim();
       try {
         const arr = JSON.parse(stripped);
         if (Array.isArray(arr)) out.tweets = arr.map((s) => String(s));
@@ -3481,8 +3494,8 @@ const initLaunchConsole = () => {
         out.tweets = stripped.split(/\n{2,}/).map((s) => s.replace(/^\d+[\.)]\s*/, "").trim()).filter(Boolean);
       }
     }
-    out.redditTitle = grab("REDDIT_TITLE");
-    out.redditBody  = grab("REDDIT_BODY");
+    out.redditTitle = blocks.REDDIT_TITLE || "";
+    out.redditBody  = blocks.REDDIT_BODY  || "";
     if (!out.releaseNotes && !out.tweets.length && !out.redditTitle && !out.redditBody) {
       out.rawLeftover = raw;
     }
@@ -3551,14 +3564,14 @@ const initLaunchConsole = () => {
   };
 
   /* ─── render results into the right panel ─── */
-  const renderTweet = (text, idx) => {
+  const renderTweet = (text, idx, total) => {
     const li = document.createElement("li");
     li.className = "lc-tweet";
     const safeText = escapeHtml(text);
     const count = text.length;
     const over = count > 280;
     li.innerHTML = `
-      <span class="lc-tweet-num">${String(idx + 1).padStart(2, "0")} / ${"  "}</span>
+      <span class="lc-tweet-num">${String(idx + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}</span>
       <span class="lc-tweet-text">${safeText}</span>
       <span class="lc-tweet-meta">
         <span class="lc-tweet-count${over ? " is-over" : ""}">${count} / 280</span>
@@ -3581,7 +3594,7 @@ const initLaunchConsole = () => {
       tweetList.hidden = false;
       twitterActions.hidden = false;
       tweetList.innerHTML = "";
-      parsed.tweets.forEach((t, i) => tweetList.appendChild(renderTweet(t, i)));
+      parsed.tweets.forEach((t, i) => tweetList.appendChild(renderTweet(t, i, parsed.tweets.length)));
     }
     /* reddit */
     if (parsed.redditTitle || parsed.redditBody) {
