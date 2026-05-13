@@ -6650,3 +6650,269 @@ h2 {
   .report-section h4 { font-size: 1.3rem; }
   .honesty h4 { font-size: 1.4rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+ *  Launch Console — Light theme overlay (v3).
+ *  Pulls the section back into the warm cream palette of the rest
+ *  of the site while keeping the Apple geometry, glass surfaces,
+ *  segmented tabs, and SF stack. Adds Caveat handwritten flair on
+ *  the eyebrow + a few annotations.
+ * ═══════════════════════════════════════════════════════════════ */
+
+.launch-console {
+  --mc-bg:        var(--paper-strong, #fff7e7);
+  --mc-bg-2:      rgba(255, 255, 255, 0.62);
+  --mc-bg-3:      rgba(255, 255, 255, 0.86);
+  --mc-line:      rgba(28, 22, 18, 0.10);
+  --mc-hair:      rgba(28, 22, 18, 0.05);
+  --mc-cyan:      #0066CC;             /* darker System Blue for AA contrast on cream */
+  --mc-cyan-dim:  #0A84FF;
+  --mc-amber:     #C2680F;             /* darker amber */
+  --mc-amber-dim: #FF9F0A;
+  --mc-red:       #B12A22;
+  --mc-green:     #237B3D;
+  --mc-text:      #1c1612;             /* notebook ink */
+  --mc-text-2:    rgba(28, 22, 18, 0.65);
+  --mc-muted:     rgba(28, 22, 18, 0.40);
+}
+
+.launch-console {
+  background: var(--paper-strong, #fff7e7);
+  background-image:
+    radial-gradient(ellipse at 16% 8%, rgba(0, 102, 204, 0.10) 0%, transparent 42%),
+    radial-gradient(ellipse at 84% 92%, rgba(194, 104, 15, 0.10) 0%, transparent 46%);
+}
+
+/* Drop overlays from the dark variant entirely */
+.launch-console::before { display: none; }
+.launch-console::after  { display: none; }
+
+/* ── Section header: lean handwritten ── */
+.launch-console .lc-section-num {
+  color: var(--mc-cyan);
+}
+.launch-console .lc-section-num::before { background: var(--mc-cyan); }
+.launch-console .lc-section-num small {
+  color: var(--mc-text-2);
+}
+.launch-console .lc-eyebrow {
+  font-family: var(--font-script);
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--mc-cyan);
+}
+.launch-console h2 {
+  color: var(--mc-text);
+}
+.launch-console .lc-sticker {
+  color: var(--copper, #c86b3c);
+  font-family: var(--font-script);
+  font-size: 1.05rem;
+}
+
+/* ── Panels: paper glass ── */
+.lc-panel {
+  background: var(--mc-bg-2);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  border: 0.5px solid var(--mc-line);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.6),
+    0 1px 2px rgba(28, 22, 18, 0.04),
+    0 24px 56px -28px rgba(28, 22, 18, 0.25);
+}
+.lc-panel-head {
+  color: var(--mc-text-2);
+  border-bottom: 0.5px solid var(--mc-line);
+}
+.lc-panel-label { color: var(--mc-text); }
+.lc-panel-meta { color: var(--mc-muted); }
+
+/* ── Checklist: dark hairlines on cream ── */
+.lc-check {
+  border-bottom: 0.5px solid var(--mc-hair);
+  color: var(--mc-text);
+}
+.lc-check-led { border-color: var(--mc-muted); }
+.lc-check-label { color: var(--mc-text); }
+.lc-check-value { color: var(--mc-text-2); }
+.lc-check.is-empty .lc-check-value { color: var(--mc-muted); }
+.lc-check.is-empty .lc-check-led {
+  background: transparent;
+  border-color: var(--mc-amber);
+}
+.lc-check.is-ok .lc-check-led {
+  background: var(--mc-green);
+  border-color: var(--mc-green);
+}
+.lc-check.is-ok .lc-check-value { color: var(--mc-green); }
+
+/* ── Inputs: subtle inset on cream ── */
+.lc-field-label {
+  color: var(--mc-text-2);
+}
+.lc-field input[type="text"],
+.lc-field input[type="password"],
+.lc-field textarea {
+  background: rgba(255, 255, 255, 0.55);
+  border: 0.5px solid var(--mc-line);
+  color: var(--mc-text);
+}
+.lc-field input::placeholder,
+.lc-field textarea::placeholder {
+  color: var(--mc-muted);
+}
+.lc-field input:focus,
+.lc-field textarea:focus {
+  border-color: var(--mc-cyan);
+  box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.16);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Tone / subreddit chips on cream ── */
+.lc-tone-chip {
+  background: rgba(255, 255, 255, 0.55);
+  border: 0.5px solid var(--mc-line);
+  color: var(--mc-text);
+}
+.lc-tone-chip:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(28, 22, 18, 0.18);
+  color: var(--mc-text);
+}
+.lc-tone-chip.is-selected {
+  background: var(--mc-cyan);
+  border-color: var(--mc-cyan);
+  color: #ffffff;
+  box-shadow: 0 6px 18px -8px rgba(0, 102, 204, 0.45);
+}
+
+/* ── Launch button: System Blue capsule (still bold but tuned for cream) ── */
+.lc-launch-btn {
+  background: linear-gradient(180deg, #0A84FF 0%, #0058B6 100%);
+  color: #ffffff;
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.4),
+    0 2px 4px rgba(0, 102, 204, 0.18),
+    0 12px 32px -6px rgba(0, 102, 204, 0.45);
+}
+.lc-launch-btn:hover {
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.5),
+    0 18px 44px -6px rgba(0, 102, 204, 0.55);
+}
+.lc-launch-ring {
+  box-shadow: 0 0 36px rgba(0, 102, 204, 0.32);
+}
+.lc-launch-bay { border-top: 0.5px solid var(--mc-line); }
+.lc-launch-note { color: var(--mc-text-2); }
+.lc-launch-note.is-error { color: var(--mc-red); }
+
+/* ── Tabs: cream segmented control ── */
+.lc-tabs {
+  background: rgba(28, 22, 18, 0.06);
+  border: 0;
+}
+.lc-tab { color: var(--mc-text-2); }
+.lc-tab:hover {
+  color: var(--mc-text);
+  background: rgba(255, 255, 255, 0.45);
+}
+.lc-tab.is-active {
+  color: var(--mc-text);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 1px 2px rgba(28, 22, 18, 0.12),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.8);
+}
+.lc-tab-num { color: var(--mc-muted); }
+.lc-tab.is-active .lc-tab-num { color: var(--mc-cyan); }
+
+/* ── Empty / body / tweet styles ── */
+.lc-pane-empty { color: var(--mc-muted); }
+.lc-pane-body { color: var(--mc-text); }
+.lc-pane-body h1,
+.lc-pane-body h2,
+.lc-pane-body h3 { color: var(--mc-text); }
+.lc-pane-body h2 { border-bottom: 0.5px solid var(--mc-line); }
+.lc-pane-body h3 { color: var(--mc-cyan); }
+.lc-pane-body strong { color: var(--mc-amber); }
+.lc-pane-body em { color: var(--mc-cyan); }
+.lc-pane-body code {
+  background: rgba(28, 22, 18, 0.06);
+  border: 0.5px solid var(--mc-line);
+  color: var(--mc-cyan);
+}
+.lc-pane-body pre {
+  background: rgba(28, 22, 18, 0.06);
+  border: 0.5px solid var(--mc-line);
+  color: var(--mc-text);
+}
+
+.lc-tweet {
+  background: rgba(255, 255, 255, 0.60);
+  border: 0.5px solid var(--mc-line);
+  color: var(--mc-text);
+}
+.lc-tweet-num { color: var(--mc-text-2); }
+.lc-tweet-meta { color: var(--mc-muted); }
+.lc-tweet-count.is-over { color: var(--mc-red); }
+.lc-tweet-copy { color: var(--mc-cyan); }
+
+/* ── Action buttons ── */
+.lc-pane-actions { border-top: 0.5px solid var(--mc-line); }
+.lc-action {
+  background: rgba(255, 255, 255, 0.55);
+  border: 0.5px solid var(--mc-line);
+  color: var(--mc-text);
+}
+.lc-action:hover {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(28, 22, 18, 0.18);
+  color: var(--mc-text);
+}
+.lc-action.lc-action--primary {
+  background: var(--mc-cyan);
+  border-color: var(--mc-cyan);
+  color: #ffffff;
+  box-shadow: 0 6px 18px -8px rgba(0, 102, 204, 0.45);
+}
+.lc-action.lc-action--primary:hover {
+  background: color-mix(in srgb, var(--mc-cyan), white 6%);
+  box-shadow: 0 10px 24px -6px rgba(0, 102, 204, 0.6);
+}
+
+/* ── GitHub dialog: white sheet ── */
+.lc-dialog::backdrop {
+  background: rgba(28, 22, 18, 0.45);
+  backdrop-filter: blur(8px);
+}
+.lc-dialog-form {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(40px) saturate(170%);
+  -webkit-backdrop-filter: blur(40px) saturate(170%);
+  border: 0.5px solid var(--mc-line);
+  box-shadow: 0 32px 80px -16px rgba(28, 22, 18, 0.35);
+}
+.lc-dialog-head { border-bottom: 0.5px solid var(--mc-line); }
+.lc-dialog-head h3 { color: var(--mc-text); }
+.lc-dialog-close { color: var(--mc-muted); }
+.lc-dialog-close:hover { color: var(--mc-text); background: rgba(28, 22, 18, 0.06); }
+.lc-dialog-note { color: var(--mc-text-2); }
+.lc-dialog-note a { color: var(--mc-cyan); }
+.lc-dialog-note code {
+  background: rgba(28, 22, 18, 0.06);
+  color: var(--mc-text);
+}
+.lc-dialog-status.is-info    { color: var(--mc-text-2); background: rgba(255, 255, 255, 0.6);  border: 0.5px solid var(--mc-line); }
+.lc-dialog-status.is-running { color: var(--mc-amber);  background: rgba(194, 104, 15, 0.08); border: 0.5px solid rgba(194, 104, 15, 0.30); }
+.lc-dialog-status.is-error   { color: var(--mc-red);    background: rgba(177, 42, 34, 0.08);  border: 0.5px solid rgba(177, 42, 34, 0.30); }
+.lc-dialog-status.is-success { color: var(--mc-green);  background: rgba(35, 123, 61, 0.10);  border: 0.5px solid rgba(35, 123, 61, 0.30); }
+
+/* LED dots small/light */
+.launch-console .mc-led--cyan  { background: var(--mc-cyan); }
+.launch-console .mc-led--amber { background: var(--mc-amber); }
+.launch-console .mc-led--green { background: var(--mc-green); }
+.launch-console .mc-led--red   { background: var(--mc-red); }
