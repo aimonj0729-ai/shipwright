@@ -5964,3 +5964,583 @@ h2 {
   }
   .launch-console::before { display: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+ *  Launch Console — Apple Design overlay (v2 skin)
+ *  Overrides the Mission Control look with SF-style typography,
+ *  frosted-glass panels, System Blue accents, segmented tabs, and
+ *  spring motion. Drops the // terminal prefixes and all-caps.
+ * ═══════════════════════════════════════════════════════════════ */
+
+.launch-console {
+  /* Apple system color tokens (dark mode) */
+  --mc-bg:        #000000;
+  --mc-bg-2:      rgba(28, 28, 30, 0.74);
+  --mc-bg-3:      rgba(44, 44, 46, 0.86);
+  --mc-line:      rgba(255, 255, 255, 0.10);
+  --mc-hair:      rgba(255, 255, 255, 0.06);
+  --mc-cyan:      #0A84FF;            /* System Blue */
+  --mc-cyan-dim:  #4DA3FF;
+  --mc-amber:     #FF9F0A;            /* System Orange */
+  --mc-amber-dim: #FFB84D;
+  --mc-red:       #FF453A;            /* System Red */
+  --mc-green:     #30D158;            /* System Green */
+  --mc-text:      #FFFFFF;
+  --mc-text-2:    rgba(235, 235, 245, 0.65);
+  --mc-muted:     rgba(235, 235, 245, 0.32);
+
+  --mc-ui:        -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Tight", "Helvetica Neue", sans-serif;
+  --mc-display:   -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter Tight", "Helvetica Neue", sans-serif;
+  --mc-mono:      ui-monospace, "SF Mono", Menlo, "JetBrains Mono", "Azeret Mono", monospace;
+
+  --mc-spring:    cubic-bezier(0.34, 1.4, 0.64, 1);
+  --mc-ease:      cubic-bezier(0.32, 0, 0.32, 1);
+}
+
+.launch-console {
+  background: var(--mc-bg);
+  background-image:
+    radial-gradient(ellipse at 14% 6%, rgba(10, 132, 255, 0.12) 0%, transparent 42%),
+    radial-gradient(ellipse at 88% 96%, rgba(255, 159, 10, 0.08) 0%, transparent 46%);
+  background-size: auto;
+  padding: 96px 0 116px;
+}
+.launch-console::before { display: none; }            /* drop scan-line overlay */
+.launch-console::after  { display: none; }            /* drop vignette */
+
+/* ── Global type & smoothing ── */
+.launch-console,
+.launch-console input,
+.launch-console textarea,
+.launch-console select,
+.launch-console button {
+  font-family: var(--mc-ui);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Section header ── */
+.launch-console .lc-section-num {
+  font-family: var(--mc-display);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--mc-cyan);
+  opacity: 1;
+  font-variation-settings: normal;
+}
+.launch-console .lc-section-num::before {
+  background: var(--mc-cyan);
+}
+.launch-console .lc-section-num small {
+  font-family: var(--mc-ui);
+  font-style: normal;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--mc-text-2);
+}
+.launch-console .lc-eyebrow {
+  font-family: var(--mc-ui);
+  text-transform: none;
+  letter-spacing: -0.01em;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--mc-cyan);
+  margin-bottom: 14px;
+}
+.launch-console h2 {
+  font-family: var(--mc-display);
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  font-variation-settings: normal;
+  font-style: normal;
+  line-height: 1.04;
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  color: var(--mc-text);
+}
+.launch-console .lc-sticker {
+  font-family: var(--mc-ui);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.92rem;
+  color: var(--mc-text-2);
+  letter-spacing: -0.01em;
+  transform: none;
+  animation: none;
+}
+.launch-console .lc-sticker .arrow {
+  font-family: var(--mc-display);
+  font-style: normal;
+  font-weight: 600;
+  color: var(--mc-cyan);
+}
+
+/* ── Panels: frosted glass ── */
+.lc-panel {
+  background: var(--mc-bg-2);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 0.5px solid var(--mc-line);
+  border-radius: 20px;
+  padding: 24px 24px 26px;
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 32px 80px -28px rgba(0, 0, 0, 0.7);
+}
+
+.lc-panel-head {
+  font-family: var(--mc-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--mc-text-2);
+  padding: 0 0 14px;
+  margin: 0 0 16px;
+  border-bottom: 0.5px solid var(--mc-line);
+  gap: 8px;
+}
+.lc-panel-head--alt { margin-top: 26px; }
+.lc-panel-label { color: var(--mc-text); font-weight: 600; }
+.lc-panel-meta {
+  font-family: var(--mc-mono);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.78rem;
+  color: var(--mc-muted);
+}
+
+/* ── LED dots: smaller, no pulse halo ── */
+.mc-led {
+  width: 6px;
+  height: 6px;
+  box-shadow: none;
+  animation: none !important;
+}
+.mc-led--cyan  { background: var(--mc-cyan); }
+.mc-led--amber { background: var(--mc-amber); }
+.mc-led--green { background: var(--mc-green); }
+.mc-led--red   { background: var(--mc-red); animation: led-blink 0.7s steps(2) infinite !important; }
+
+/* ── Pre-flight checklist ── */
+.lc-check {
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  gap: 14px;
+  padding: 10px 0;
+  font-family: var(--mc-ui);
+  font-size: 0.92rem;
+  letter-spacing: -0.01em;
+  border-bottom: 0.5px solid var(--mc-hair);
+  color: var(--mc-text);
+}
+.lc-check-led {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid var(--mc-muted);
+  box-shadow: none !important;
+  animation: none !important;
+  position: relative;
+}
+.lc-check.is-ok .lc-check-led {
+  background: var(--mc-green);
+  border-color: var(--mc-green);
+}
+.lc-check.is-ok .lc-check-led::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mc-display);
+  font-size: 10px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+}
+.lc-check.is-empty .lc-check-led {
+  background: transparent;
+  border-color: var(--mc-amber);
+}
+.lc-check-label {
+  color: var(--mc-text);
+  font-weight: 400;
+  font-family: var(--mc-ui);
+}
+.lc-check-value {
+  font-family: var(--mc-ui);
+  font-size: 0.85rem;
+  letter-spacing: -0.01em;
+  font-style: normal;
+  text-align: right;
+  color: var(--mc-text-2);
+}
+.lc-check.is-empty .lc-check-value {
+  color: var(--mc-muted);
+  font-style: normal;
+}
+.lc-check.is-ok .lc-check-value {
+  color: var(--mc-green);
+  font-weight: 500;
+}
+
+/* ── Manifest fields ── */
+.lc-field-label {
+  font-family: var(--mc-ui);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--mc-text-2);
+  margin: 0 0 8px;
+}
+.lc-field input[type="text"],
+.lc-field input[type="password"],
+.lc-field textarea {
+  font-family: var(--mc-ui);
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 0.5px solid var(--mc-line);
+  border-radius: 12px;
+  color: var(--mc-text);
+  transition: border-color 200ms var(--mc-ease),
+              box-shadow 200ms var(--mc-ease),
+              background 200ms var(--mc-ease);
+}
+.lc-field input::placeholder,
+.lc-field textarea::placeholder {
+  color: var(--mc-muted);
+}
+.lc-field input:focus,
+.lc-field textarea:focus {
+  border-color: var(--mc-cyan);
+  box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  outline: none;
+}
+
+/* ── Tone / subreddit chips: Apple pill style ── */
+.lc-tone-group { gap: 8px; }
+.lc-tone-chip {
+  font-family: var(--mc-ui);
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 0.5px solid rgba(255, 255, 255, 0.10);
+  color: var(--mc-text);
+  border-radius: 999px;
+  transition: background 220ms var(--mc-ease),
+              border-color 220ms var(--mc-ease),
+              transform 220ms var(--mc-spring),
+              color 220ms var(--mc-ease),
+              box-shadow 220ms var(--mc-ease);
+}
+.lc-tone-chip:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--mc-text);
+  transform: translateY(-1px);
+}
+.lc-tone-chip.is-selected {
+  background: var(--mc-cyan);
+  border-color: var(--mc-cyan);
+  color: #ffffff;
+  box-shadow: 0 6px 18px -6px rgba(10, 132, 255, 0.55);
+  transform: none;
+}
+
+/* ── Launch button: Apple-blue capsule ── */
+.lc-launch-bay { margin-top: 28px; padding-top: 22px; border-top: 0.5px solid var(--mc-line); }
+.lc-launch-btn {
+  background: linear-gradient(180deg, #0A84FF 0%, #0066D6 100%);
+  color: #ffffff;
+  border-radius: 18px;
+  padding: 22px 18px;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  font-weight: 600;
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 12px 32px -6px rgba(10, 132, 255, 0.55);
+  transition: transform 240ms var(--mc-spring),
+              box-shadow 240ms var(--mc-ease),
+              filter 240ms var(--mc-ease);
+}
+.lc-launch-btn:hover {
+  transform: translateY(-1px) scale(1.005);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.4),
+    0 18px 44px -6px rgba(10, 132, 255, 0.7);
+}
+.lc-launch-btn:active {
+  transform: scale(0.99);
+}
+.lc-launch-btn:disabled {
+  filter: none;
+  opacity: 0.85;
+}
+.lc-launch-ring {
+  inset: -3px;
+  border: 0;
+  border-radius: 21px;
+  box-shadow: 0 0 36px rgba(10, 132, 255, 0.45);
+  opacity: 0.6;
+  animation: lc-launch-ring-apple 2.8s ease-in-out infinite;
+}
+@keyframes lc-launch-ring-apple {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 0.75; }
+}
+.lc-launch-label {
+  font-family: var(--mc-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-transform: none;
+}
+.lc-launch-sub {
+  font-family: var(--mc-ui);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  opacity: 0.92;
+  margin-top: 2px;
+}
+.lc-launch-btn.is-counting .lc-launch-label {
+  font-family: var(--mc-display);
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+.lc-launch-note {
+  font-family: var(--mc-ui);
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--mc-text-2);
+  text-align: center;
+  margin: 14px 0 0;
+}
+.lc-launch-note.is-error { color: var(--mc-red); }
+
+/* ── Tabs: segmented control ── */
+.lc-tabs {
+  display: inline-flex;
+  padding: 3px;
+  margin: 0 0 22px;
+  background: rgba(118, 118, 128, 0.24);
+  border: 0;
+  border-radius: 12px;
+  gap: 2px;
+}
+.lc-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-family: var(--mc-ui);
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--mc-text-2);
+  background: transparent;
+  border: 0;
+  border-radius: 9px;
+  transition: background 220ms var(--mc-ease),
+              color 220ms var(--mc-ease),
+              box-shadow 220ms var(--mc-ease),
+              transform 220ms var(--mc-spring);
+}
+.lc-tab:hover {
+  color: var(--mc-text);
+  background: rgba(255, 255, 255, 0.05);
+}
+.lc-tab.is-active {
+  color: var(--mc-text);
+  background: rgba(255, 255, 255, 0.16);
+  border-bottom: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35),
+              inset 0 0.5px 0 rgba(255, 255, 255, 0.18);
+}
+.lc-tab-num {
+  font-family: var(--mc-ui);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--mc-muted);
+  opacity: 1;
+}
+.lc-tab.is-active .lc-tab-num { color: var(--mc-cyan); }
+
+/* ── Empty / loading state ── */
+.lc-pane-empty {
+  font-family: var(--mc-ui);
+  text-transform: none;
+  letter-spacing: -0.01em;
+  font-size: 0.95rem;
+  color: var(--mc-muted);
+  padding: 44px 16px;
+}
+
+/* ── Body text ── */
+.lc-pane-body {
+  font-family: var(--mc-ui);
+  font-size: 0.96rem;
+  letter-spacing: -0.005em;
+  color: var(--mc-text);
+}
+.lc-pane-body h1, .lc-pane-body h2, .lc-pane-body h3 {
+  font-family: var(--mc-display);
+  font-variation-settings: normal;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--mc-text);
+}
+.lc-pane-body h2 { border-bottom: 0.5px solid var(--mc-line); padding-bottom: 6px; }
+.lc-pane-body h3 { color: var(--mc-cyan); }
+.lc-pane-body strong { color: var(--mc-amber); }
+.lc-pane-body em { color: var(--mc-cyan); font-style: italic; }
+.lc-pane-body code {
+  font-family: var(--mc-mono);
+  background: rgba(255, 255, 255, 0.08);
+  border: 0.5px solid var(--mc-line);
+  border-radius: 6px;
+  color: var(--mc-cyan);
+  font-size: 0.85em;
+}
+
+/* ── Tweet cards ── */
+.lc-tweet {
+  font-family: var(--mc-ui);
+  letter-spacing: -0.005em;
+  background: rgba(255, 255, 255, 0.05);
+  border: 0.5px solid var(--mc-line);
+  border-radius: 14px;
+  padding: 16px 18px 42px;
+}
+.lc-tweet-num {
+  font-family: var(--mc-ui);
+  font-weight: 600;
+  font-size: 0.76rem;
+  letter-spacing: -0.005em;
+  color: var(--mc-text-2);
+}
+.lc-tweet-meta {
+  font-family: var(--mc-ui);
+  font-size: 0.78rem;
+  letter-spacing: -0.005em;
+  color: var(--mc-muted);
+}
+.lc-tweet-count.is-over { color: var(--mc-red); font-weight: 600; }
+.lc-tweet-copy {
+  font-family: var(--mc-ui);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  color: var(--mc-cyan);
+}
+
+/* ── Action buttons: secondary translucent + primary system blue ── */
+.lc-pane-actions { border-top: 0.5px solid var(--mc-line); gap: 8px; }
+.lc-action {
+  font-family: var(--mc-ui);
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  padding: 9px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 0.5px solid var(--mc-line);
+  border-radius: 10px;
+  color: var(--mc-text);
+  transition: background 220ms var(--mc-ease),
+              border-color 220ms var(--mc-ease),
+              transform 220ms var(--mc-spring),
+              box-shadow 220ms var(--mc-ease);
+}
+.lc-action:hover {
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.20);
+  color: var(--mc-text);
+  transform: translateY(-1px);
+}
+.lc-action.lc-action--primary {
+  background: var(--mc-cyan);
+  border-color: var(--mc-cyan);
+  color: #ffffff;
+  box-shadow: 0 6px 18px -6px rgba(10, 132, 255, 0.55);
+}
+.lc-action.lc-action--primary:hover {
+  background: color-mix(in srgb, var(--mc-cyan), white 10%);
+  box-shadow: 0 10px 24px -6px rgba(10, 132, 255, 0.7);
+}
+
+/* ── Dialog: Apple sheet style ── */
+.lc-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+}
+.lc-dialog-form {
+  background: rgba(28, 28, 30, 0.88);
+  backdrop-filter: blur(60px) saturate(180%);
+  -webkit-backdrop-filter: blur(60px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 28px 30px 26px;
+  box-shadow: 0 48px 96px -16px rgba(0, 0, 0, 0.7);
+}
+.lc-dialog-head { padding-bottom: 12px; border-bottom: 0.5px solid var(--mc-line); }
+.lc-dialog-head h3 {
+  font-family: var(--mc-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--mc-text);
+}
+.lc-dialog-close { color: var(--mc-muted); border-radius: 8px; }
+.lc-dialog-close:hover { color: var(--mc-text); background: rgba(255, 255, 255, 0.08); }
+.lc-dialog-note {
+  font-family: var(--mc-ui);
+  font-size: 0.9rem;
+  letter-spacing: -0.005em;
+  color: var(--mc-text-2);
+}
+.lc-dialog-note a { color: var(--mc-cyan); text-decoration: none; }
+.lc-dialog-note a:hover { text-decoration: underline; }
+.lc-dialog-note code {
+  font-family: var(--mc-mono);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 5px;
+  color: var(--mc-text);
+}
+.lc-dialog-status {
+  font-family: var(--mc-ui);
+  font-size: 0.88rem;
+  letter-spacing: -0.005em;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .lc-launch-ring,
+  .lc-launch-btn.is-counting .lc-launch-label,
+  .lc-tab-pane.is-active {
+    animation: none !important;
+  }
+}
