@@ -304,6 +304,41 @@ select {
   color: var(--copper);
 }
 
+/* Chinese copy is denser than English, so only tighten sizing/spacing in zh mode. */
+[data-lang="zh"] h1 {
+  font-size: clamp(2.7rem, 5.1vw, 5.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+}
+
+[data-lang="zh"] h2 {
+  font-size: clamp(2.25rem, 4.85vw, 5.15rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+[data-lang="zh"] .hero-lede,
+[data-lang="zh"] .section-heading > p,
+[data-lang="zh"] .mission-copy p,
+[data-lang="zh"] .ai-chat-lede,
+[data-lang="zh"] .cta p {
+  line-height: 1.72;
+  letter-spacing: -0.01em;
+}
+
+[data-lang="zh"] .nav-links a,
+[data-lang="zh"] .button,
+[data-lang="zh"] .feature-nav-btn,
+[data-lang="zh"] .quick-sample,
+[data-lang="zh"] .sample-btn,
+[data-lang="zh"] .chip {
+  letter-spacing: -0.01em;
+}
+
+[data-lang="zh"] .eyebrow {
+  line-height: 1.18;
+}
+
 /* ── Layout ── */
 
 .section-shell {
@@ -6916,3 +6951,150 @@ h2 {
 .launch-console .mc-led--amber { background: var(--mc-amber); }
 .launch-console .mc-led--green { background: var(--mc-green); }
 .launch-console .mc-led--red   { background: var(--mc-red); }
+
+/* ═══════════════════════════════════════════════════════════════
+ *  Launch Console — Handwritten character pass (v4).
+ *  Earlier passes only touched the eyebrow; the user wants the
+ *  whole section to FEEL handwritten. Swap labels / values /
+ *  empty states / tab text / launch sub-line to Caveat. Keep
+ *  data values (tone chip text, tab numbers, char counts, action
+ *  buttons) in SF for clarity.
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* Panel section headers: "Pre-flight" / "Launch manifest" / "Standing by" */
+.launch-console .lc-panel-label {
+  font-family: var(--font-script);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--mc-text);
+}
+
+/* Field labels: "Project URL / repo" / "Version tag" / "Release title" / "Tone" / "Subreddit" / "Title" / "Body" */
+.launch-console .lc-field-label {
+  font-family: var(--font-script);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--mc-text);
+  margin-bottom: 6px;
+}
+
+/* Pre-flight check labels: "Project URL / repo" / "AI planner key" / "Last audit score" / "Brand fit answers" */
+.launch-console .lc-check-label {
+  font-family: var(--font-script);
+  font-size: 1.18rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--mc-text);
+}
+
+/* Pre-flight check values: "awaiting input" / "configured" / "run analyzer first" / "skip ok" */
+.launch-console .lc-check-value {
+  font-family: var(--font-script);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  font-style: normal;
+}
+.launch-console .lc-check.is-empty .lc-check-value {
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Tabs: "Release Notes" / "Twitter / X" / "Reddit" — Caveat for text, SF for the 01/02/03 numbers */
+.launch-console .lc-tab {
+  font-family: var(--font-script);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 6px 14px 7px;
+}
+.launch-console .lc-tab-num {
+  font-family: var(--mc-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+/* Launch button: keep SF Display for impact but switch sub-line to Caveat */
+.launch-console .lc-launch-label {
+  /* keep Apple display for the big moment — Caveat would lose authority here */
+}
+.launch-console .lc-launch-sub {
+  font-family: var(--font-script);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: 0.95;
+}
+.launch-console .lc-launch-note {
+  font-family: var(--font-script);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Empty pane placeholders */
+.launch-console .lc-pane-empty {
+  font-family: var(--font-script);
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--mc-muted);
+}
+
+/* Panel meta (right side of header) — keep small mono for the
+ * "{N} chars" status counter; that's data, not a label */
+.launch-console .lc-panel-meta {
+  font-family: var(--mc-mono);
+}
+
+/* Dialog header: handwritten section title */
+.launch-console .lc-dialog-head h3,
+.lc-dialog-head h3 {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.45rem;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--mc-text);
+}
+
+.launch-console .lc-dialog-note {
+  font-family: var(--font-body);
+}
+
+/* Section "01c · Launch" — make the small caption handwritten too */
+.launch-console .lc-section-num small {
+  font-family: var(--font-script);
+  font-size: 0.42em;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--mc-text-2);
+}
+
+/* Tweet number ("01 / ") — script feels right since it's a label */
+.launch-console .lc-tweet-num {
+  font-family: var(--font-script);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* Keep these strictly functional / data-style:
+ *  - .lc-tone-chip (short single-word values)
+ *  - .lc-action (buttons, need clarity at small size)
+ *  - .lc-tweet-meta (char count is data)
+ *  - .lc-tab-num (data already)
+ *  - input/textarea values (user-typed content)
+ */
