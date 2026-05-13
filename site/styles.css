@@ -340,6 +340,17 @@ select {
 .eyebrow {
   margin: 0 0 14px;
   color: var(--section-accent, var(--sea));
+  font-family: var(--font-script);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.1;
+}
+
+/* Opt-back-in: original terminal/mono look for cases that need it
+ * (e.g., dense data labels, code-style status rows). */
+.eyebrow.eyebrow--mono {
   font-family: var(--font-code);
   font-size: 0.78rem;
   font-weight: 700;
@@ -4377,11 +4388,11 @@ h2 {
   position: relative;
   margin: 12px 0 0;
   padding: 22px 0;
-  background: var(--iron);
-  color: var(--paper);
+  background: var(--paper-strong, #fff7e7);
+  color: var(--ink);
   overflow: hidden;
-  border-top: 1px solid color-mix(in srgb, var(--ink), white 22%);
-  border-bottom: 1px solid color-mix(in srgb, var(--ink), white 22%);
+  border-top: 1.5px solid color-mix(in srgb, var(--copper, #c86b3c), transparent 35%);
+  border-bottom: 1.5px solid color-mix(in srgb, var(--copper, #c86b3c), transparent 35%);
   z-index: 1;
 }
 .marquee-strip::before,
@@ -4396,11 +4407,11 @@ h2 {
 }
 .marquee-strip::before {
   left: 0;
-  background: linear-gradient(90deg, var(--iron), transparent);
+  background: linear-gradient(90deg, var(--paper-strong, #fff7e7), transparent);
 }
 .marquee-strip::after {
   right: 0;
-  background: linear-gradient(-90deg, var(--iron), transparent);
+  background: linear-gradient(-90deg, var(--paper-strong, #fff7e7), transparent);
 }
 .marquee-track {
   display: flex;
@@ -4421,16 +4432,18 @@ h2 {
   font-size: clamp(1.6rem, 2.6vw, 2.4rem);
   letter-spacing: -0.01em;
   white-space: nowrap;
+  color: var(--ink);
 }
 .marquee-item.italic {
   font-style: italic;
   font-variation-settings: "opsz" 96, "SOFT" 60, "WONK" 1;
+  color: color-mix(in srgb, var(--ink), transparent 25%);
 }
 .marquee-item.script {
   font-family: var(--font-script);
   font-size: clamp(2rem, 3.2vw, 3rem);
   font-weight: 600;
-  color: var(--amber, #e0a331);
+  color: var(--copper, #c86b3c);
 }
 .marquee-star {
   display: inline-block;
@@ -6543,4 +6556,97 @@ h2 {
   .lc-tab-pane.is-active {
     animation: none !important;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ *  Handwritten layer — more Caveat / scripted character across
+ *  the site, but ONLY where readability is unharmed (short
+ *  headers, labels, and accent lines, never body paragraphs).
+ *  Launch Console + Skills Catalog stay on their own font systems.
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* Card section labels in the Doctor report — "Critical findings",
+ * "Quick wins", "Audit coverage", "Launch metadata", "Next patch" */
+.report-section h4 {
+  font-family: var(--font-script);
+  font-style: normal;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--section-accent, var(--ink));
+  margin-bottom: 10px;
+}
+
+/* Honesty section: "This demo does" / "does not" */
+.honesty h4 {
+  font-family: var(--font-script);
+  font-style: normal;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--section-accent, var(--ink));
+  margin-bottom: 14px;
+}
+
+/* "Try a sample" label in the analyzer */
+.sample-label,
+.quick-samples > span,
+.sample-repos > .sample-label {
+  font-family: var(--font-script);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--copper, #c86b3c);
+}
+
+/* Honesty card label/inner text — keep readable Epilogue but
+ * give the leading word a handwritten accent */
+.honesty-card li::marker {
+  font-family: var(--font-script);
+  font-size: 1.2em;
+  color: var(--section-accent, var(--copper));
+}
+
+/* Form notes ("Real check via Shipwright Doctor API...") gain a
+ * subtle handwritten lead character */
+.form-note,
+.quick-error {
+  font-family: var(--font-script);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted);
+  font-style: normal;
+}
+.quick-error { color: var(--copper, #c86b3c); }
+
+/* Inspection card header words: "Inspection 042 / Almost ready" */
+.card-topline > span {
+  font-family: var(--font-script);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Section-num small caption ("Audit", "Workflow", "Skills" etc.):
+ * keep mono uppercase for that "01b · AUDIT" structured-doc feel —
+ * the script is already on the eyebrow line above. */
+
+/* Mode badge above the analyzer: keep the data-pill character but
+ * dial down typography weight to match the new airy feel. */
+.mode-badge {
+  font-family: var(--font-code);
+}
+
+/* Reduced motion / very-small screens: ensure script size stays
+ * legible on tight viewports. */
+@media (max-width: 540px) {
+  .eyebrow { font-size: 1.2rem; }
+  .report-section h4 { font-size: 1.3rem; }
+  .honesty h4 { font-size: 1.4rem; }
 }
