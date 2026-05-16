@@ -4062,39 +4062,44 @@ const initHeroParticles = () => {
     }));
   };
 
-  /* Cap drawFrame at ~30 FPS — the eye barely notices on this kind of
-   * ambient background, and halving the per-second work makes the main
-   * thread substantially more available for scroll + paint. */
-  let lastDraw = 0;
-  const FRAME_MS = 1000 / 30;
+  /* Full 60fps — the band is small (≤96px tall) with ~600-900 particles
+   * after the v5e slimming, so per-frame work is light. Throttling to 30fps
+   * was making the mouse repulsion feel laggy (up to 33ms input-to-pixel
+   * delay). Keep the rAF tight; the IntersectionObserver still pauses
+   * everything when the band scrolls out of view. */
   const drawFrame = (now) => {
     rafId = requestAnimationFrame(drawFrame);
-    if (now - lastDraw < FRAME_MS) return;
-    lastDraw = now;
 
     ctx.clearRect(0, 0, widthCss, heightCss);
     const breathe = Math.sin(now / 1400) * 0.7;
+    /* Snappier physics: tighter spring + stronger repulsion + slightly
+     * lower damping so particles dart away from the cursor crisply and
+     * snap back into the glyph quickly. */
+    const SPRING = 0.058;
+    const DAMPING = 0.84;
+    const REPEL_R2 = 6400;        // 80px radius
+    const REPEL_STRENGTH = 2.2;
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
       const tx = p.tx;
       const ty = p.ty + breathe;
       const dx = tx - p.x;
       const dy = ty - p.y;
-      p.vx += dx * 0.04;
-      p.vy += dy * 0.04;
+      p.vx += dx * SPRING;
+      p.vy += dy * SPRING;
 
       const mdx = p.x - mouseX;
       const mdy = p.y - mouseY;
       const md2 = mdx * mdx + mdy * mdy;
-      if (md2 < 6400 && md2 > 1) {
-        const force = (6400 - md2) / 6400;
+      if (md2 < REPEL_R2 && md2 > 1) {
+        const force = (REPEL_R2 - md2) / REPEL_R2;
         const d = Math.sqrt(md2);
-        p.vx += (mdx / d) * force * 1.4;
-        p.vy += (mdy / d) * force * 1.4;
+        p.vx += (mdx / d) * force * REPEL_STRENGTH;
+        p.vy += (mdy / d) * force * REPEL_STRENGTH;
       }
 
-      p.vx *= 0.86;
-      p.vy *= 0.86;
+      p.vx *= DAMPING;
+      p.vy *= DAMPING;
       p.x += p.vx;
       p.y += p.vy;
 
