@@ -216,21 +216,66 @@ const ZH_TEXT = {
   "Launch Map 04": "上线地图 04",
   "Signal: evidence required": "信号：需要证据",
   "Launch route with inspection waypoints": "上线检查路线",
+  "Intake": "录入",
+  "Browser": "浏览器",
+  "Install": "安装",
+  "Claims": "声明",
+  "Release": "发布",
+  "Green": "正常",
+  "Watch": "注意",
+  "Clear": "就绪",
   "Repo intake": "仓库录入",
+  "Browser proof": "浏览器取证",
+  "README friction": "README 摩擦点",
+  "Agent claim audit": "Agent 声明审查",
+  "Release package": "发布打包",
   "Confirm the target is real, parse the project type, and refuse vague launch claims before the audit begins.": "先确认目标真实，再拒绝模糊上线声明。",
+  "If the target is vague, every later green check becomes theatre instead of proof.": "如果目标本身含糊，后面的绿灯都只是表演，不是证据。",
+  "GitHub URL, project type, and one concrete launch surface to inspect.": "GitHub URL、项目类型，以及一个明确要检查的上线界面。",
+  "Normalize the target, lock the audit mode, and reject hand-wavy claims.": "先标准化目标、锁定审查模式，并拒绝模糊表述。",
+  "A clean diff can still ship broken routes, console noise, and clipped mobile UI.": "再干净的 diff，也可能把坏路由、控制台报错和移动端裁切一起发出去。",
+  "Opened URL, console state, network health, and proof of CTA, loading, empty, and error states.": "已打开的 URL、控制台状态、网络健康度，以及 CTA、加载、空态、错误态的证据。",
+  "Fix visible breakage first, then re-run at 390px and 768px.": "先修可见损坏，再回到 390px 和 768px 复跑。",
+  "README confidence collapses when the first real install asks for undocumented setup.": "第一次真实安装一旦碰到文档外步骤，README 的可信度就会崩掉。",
+  "Env keys, version floor, exact commands, and the first successful output.": "环境变量、最低版本、准确命令，以及第一次成功输出。",
+  "Add missing setup steps, expected output, and rollback notes before launch.": "发布前补上缺失步骤、预期输出和回滚说明。",
+  "AI-generated 'done' claims drift away from the real product faster than teams notice.": "AI 生成的“已完成”声明，往往比团队意识到得更快偏离真实产品。",
+  "Working UI path, file references, no TODO placeholders, and verified integrations.": "真实可走通的 UI 路径、文件引用、无 TODO 占位，以及已验证的集成。",
+  "Cut fake claims, mark placeholders, and trim unfinished surfaces.": "删掉假声明、标出占位，并裁掉未完成界面。",
+  "Solid code still stalls if packaging, proof, and the next action are missing.": "代码本身没问题，也会因为打包、证据和下一步动作缺失而卡住发布。",
+  "Repo topics, release notes, launch post, and contributor-ready next patch.": "仓库 topics、发布说明、上线帖子，以及贡献者可接手的下一补丁。",
+  "Ship one proof-led release package, not a vague announcement.": "发布时拿出一套有证据的材料，而不是一段空泛公告。",
   "Click a waypoint to preload the analyzer with a matching audit scenario.": "点击节点，加载对应检查场景。",
+  "Waypoint loaded into the analyzer. Review the report or run the demo audit.": "节点已加载到审查台。查看报告，或继续跑演示审查。",
   "Evidence": "证据",
   "Every green light needs an observed browser state, command output, or file reference.": "每个通过结果都要有证据。",
+  "Evidence required": "需要的证据",
   "Risk": "风险",
   "Markers call out launch blockers before they become public support requests.": "提前发现会卡住用户的问题。",
   "Patch": "修复",
+  "Patch signal": "修复信号",
   "The route ends with the smallest next fix, not a vague quality score.": "最后给出下一步该修什么。",
   "How it becomes real": "它如何落地",
+  "From agent claim to proof.": "从 Agent 声称完成，到真正拿到证据。",
   "From static demo to agent-powered launch gate.": "从页面演示，到 Agent 上线检查。",
+  "Claim": "声明",
+  "Open": "打开",
+  "Package": "打包",
+  "Input": "输入",
+  "Check": "检查动作",
+  "Output artifact": "输出产物",
+  "Repo, README, live URL, and the agent's finished-sounding claims.": "仓库、README、线上 URL，以及 Agent 那些听起来像做完了的声明。",
   "Catch hallucinated claims, fake buttons, TODOs, and unverified integrations.": "找出假功能、假按钮、TODO 和没验证的集成。",
+  "P0/P1 findings list, dead-link inventory, and stripped fake-complete claims.": "P0/P1 问题清单、死链接清单，以及剔除后的假完成声明。",
+  "Live URL, primary CTA path, and the viewport widths people actually use.": "线上 URL、主 CTA 路径，以及用户真实会用到的视口宽度。",
   "Open the app, check console/network health, interactions, mobile layout, and trust gaps.": "打开页面，检查报错、网络、交互、移动端和信任问题。",
+  "Console proof, viewport notes, broken-state screenshots, and the next browser fix.": "控制台证据、视口备注、坏状态截图，以及下一步浏览器修复。",
+  "Public quickstart, env setup, version requirements, and first-run commands.": "公开 quickstart、环境配置、版本要求，以及首次运行命令。",
   "Follow the public install path like a stranger and record exactly where adoption breaks.": "按新用户视角走安装流程，记录哪里卡住。",
+  "Missing-step log, expected output block, and a smaller patchable quickstart.": "缺失步骤日志、预期输出块，以及更小可补丁化的 quickstart。",
+  "Fixed findings, product promise, release diff, and one proof-led screenshot or report.": "已修问题、产品承诺、发布 diff，以及一张带证据的截图或报告。",
   "Generate topics, description, release notes, launch post, and next contributor issues.": "生成 topics、描述、发布说明、上线文案和后续 issue。",
+  "Release package, launch copy, contributor-facing issues, and a clean next patch.": "发布材料、上线文案、面向贡献者的 issues，以及干净的下一补丁。",
   "Honest status": "真实状态",
   "What this demo does and does not do.": "这个演示能做什么。",
   "This demo does": "这个演示会",
@@ -248,10 +293,16 @@ const ZH_TEXT = {
   "and run them locally with Claude Code or Codex.": "并在 Claude Code 或 Codex 中本地运行。",
   "All 10 skills": "全部 10 个技能",
   "From trend discovery to launch.": "从趋势发现到正式发布。",
+  "Install the workflow, not just the promise.": "安装整套工作流，而不只是相信一句承诺。",
   "Discovery": "发现",
   "Planning": "规划",
   "Launch": "发布",
   "Meta": "元工作流",
+  "Find what is worth building before you waste a launch slot.": "先找到真正值得做的东西，再决定把发布机会押在哪。",
+  "Turn rough ideas into scoped work that can survive implementation.": "把粗糙想法整理成真正能落地、能交付的范围。",
+  "Run the checks that turn agent confidence into evidence.": "把 Agent 的自信，变成可验证的证据。",
+  "Package the public release so the proof survives outside your repo.": "把公开发布材料整理好，让证据在仓库外也站得住。",
+  "Turn one repeated launch ritual into an installable tool of your own.": "把一套重复的发布动作，变成你自己的可安装工具。",
   "Scan GitHub Trending and separate tools, opportunities, and hype traps.": "扫描 GitHub Trending，区分工具、机会和炒作陷阱。",
   "Turn a hot repo or trend into a differentiated product opportunity.": "把热门仓库或趋势转成有差异化的产品机会。",
   "Convert a rough idea into a lean PRD with scope and acceptance criteria.": "把粗略想法转成带范围和验收标准的精简 PRD。",
@@ -485,6 +536,14 @@ const applyLanguage = (language, options = {}) => {
 const refreshLocalizedContent = () => {
   translateTextNodes();
   translateAttributes();
+};
+
+const syncReportModeMirror = () => {
+  const source = document.getElementById("modeBadge");
+  const mirror = document.getElementById("reportModeMirror");
+  if (!source || !mirror) return;
+  mirror.textContent = source.textContent || translateLiteral("Detecting mode…");
+  mirror.dataset.mode = source.dataset.mode || "detecting";
 };
 
 const initLanguageToggle = () => {
@@ -1223,6 +1282,7 @@ const updateModeBadge = () => {
     el.textContent = translateLiteral("Browser-only mode · backend unreachable");
     el.dataset.mode = "browser";
   }
+  syncReportModeMirror();
 };
 
 const severityLabel = {
@@ -1844,9 +1904,12 @@ const initInspectionRadar = () => {
   const status = radar.querySelector("#radarStatus");
   const title = radar.querySelector("#radarTitle");
   const detail = radar.querySelector("#radarDetail");
+  const risk = radar.querySelector("#radarRisk");
+  const evidence = radar.querySelector("#radarEvidence");
+  const patch = radar.querySelector("#radarPatch");
   const actionNote = radar.querySelector("#radarActionNote");
 
-  if (!nodes.length || !detailCard || !code || !status || !title || !detail) {
+  if (!nodes.length || !detailCard || !code || !status || !title || !detail || !risk || !evidence || !patch) {
     return;
   }
 
@@ -1860,9 +1923,12 @@ const initInspectionRadar = () => {
     });
 
     code.textContent = node.dataset.code || "";
-    status.textContent = node.dataset.status || "";
-    title.textContent = node.dataset.title || "";
-    detail.textContent = node.dataset.detail || "";
+    status.textContent = translateLiteral(node.dataset.status || "");
+    title.textContent = translateLiteral(node.dataset.title || "");
+    detail.textContent = translateLiteral(node.dataset.detail || "");
+    risk.textContent = translateLiteral(node.dataset.risk || "");
+    evidence.textContent = translateLiteral(node.dataset.evidence || "");
+    patch.textContent = translateLiteral(node.dataset.patch || "");
     detailCard.dataset.status = node.dataset.status || "";
 
     if (applyToAnalyzer) {
@@ -1878,7 +1944,7 @@ const initInspectionRadar = () => {
       renderReport();
 
       if (actionNote) {
-        actionNote.textContent = `${node.dataset.title || "Waypoint"} loaded into the analyzer. Review the report or run the demo audit.`;
+        actionNote.textContent = translateLiteral("Waypoint loaded into the analyzer. Review the report or run the demo audit.");
       }
     }
   };
@@ -2047,6 +2113,23 @@ const initWorkflowSlides = () => {
 
   const wrapper = document.querySelector(".workflow-steps");
   if (wrapper) observer.observe(wrapper);
+};
+
+const initV6WorkflowState = () => {
+  const steps = [...document.querySelectorAll(".workflow-step")];
+  if (steps.length === 0) return;
+
+  const setActiveStep = (current) => {
+    steps.forEach((step) => {
+      step.classList.toggle("is-active", step === current);
+    });
+  };
+
+  steps.forEach((step) => {
+    step.addEventListener("pointerenter", () => setActiveStep(step));
+    step.addEventListener("focusin", () => setActiveStep(step));
+    step.addEventListener("click", () => setActiveStep(step));
+  });
 };
 
 /* ── Audience icon pop-in ── */
@@ -4554,6 +4637,7 @@ initAIChatDrag();
 initBrandWizard();
 initLaunchConsole();
 initSectionNumbers();
+initV6WorkflowState();
 
 if (!prefersReduced) {
   initHeroSplitH1();

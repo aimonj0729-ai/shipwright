@@ -41,7 +41,8 @@
       href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@500;600;700;800&family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700;6..96,800;6..96,900&family=Caveat:wght@500;600;700&family=Epilogue:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght,SOFT,WONK@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter+Tight:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260513-dark-contrast" />
+    <link rel="stylesheet" href="./styles.css?v=20260520-v6-pencil" />
+    <link rel="stylesheet" href="./styles-v6.css?v=20260520-v6-pencil" />
     <script>
       (function(){var t=localStorage.getItem("shipwright-theme")||((window.matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light");var l=localStorage.getItem("shipwright-lang")||"en";document.documentElement.setAttribute("data-theme",t);document.documentElement.setAttribute("data-lang",l);document.documentElement.setAttribute("lang",l==="zh"?"zh-CN":"en")})();
     </script>
@@ -362,38 +363,44 @@
                 </div>
               </div>
 
-              <div class="target-summary">
-                <span id="targetBadge">aimonj0729-ai/shipwright</span>
-                <span id="typeBadge">Skill pack</span>
+              <div class="report-console-strip" aria-label="Audit status">
+                <span class="report-console-chip" id="targetBadge">aimonj0729-ai/shipwright</span>
+                <span class="report-console-chip" id="typeBadge">Skill pack</span>
+                <span class="report-console-chip" id="reportModeMirror">Detecting mode…</span>
               </div>
 
-              <div class="report-section">
-                <h4>Critical findings</h4>
-                <ul id="findingsList" class="finding-list"></ul>
-              </div>
+              <div class="report-console-grid">
+                <div class="report-main-stack">
+                  <div class="report-section">
+                    <h4>Critical findings</h4>
+                    <ul id="findingsList" class="finding-list"></ul>
+                  </div>
 
-              <div class="report-section" id="quickWinsSection" hidden>
-                <h4>Quick wins</h4>
-                <ul id="quickWinsList" class="check-list quick-wins-list"></ul>
-              </div>
-
-              <div class="report-section report-columns">
-                <div>
-                  <h4>Audit coverage</h4>
-                  <ul id="coverageList" class="check-list"></ul>
+                  <div class="report-section" id="quickWinsSection" hidden>
+                    <h4>Quick wins</h4>
+                    <ul id="quickWinsList" class="check-list quick-wins-list"></ul>
+                  </div>
                 </div>
-                <div>
-                  <h4>Launch metadata</h4>
-                  <ul id="metadataList" class="check-list"></ul>
-                </div>
-              </div>
 
-              <div class="report-section markdown-box">
-                <h4>Next patch</h4>
-                <p id="nextPatch">
-                  Add expected install output, include a demo report above the fold, and verify the
-                  first-use path from a clean checkout.
-                </p>
+                <div class="report-side-stack">
+                  <div class="report-section">
+                    <h4>Audit coverage</h4>
+                    <ul id="coverageList" class="check-list"></ul>
+                  </div>
+
+                  <div class="report-section">
+                    <h4>Launch metadata</h4>
+                    <ul id="metadataList" class="check-list"></ul>
+                  </div>
+
+                  <div class="report-section markdown-box">
+                    <h4>Next patch</h4>
+                    <p id="nextPatch">
+                      Add expected install output, include a demo report above the fold, and verify the
+                      first-use path from a clean checkout.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div class="report-actions">
@@ -986,6 +993,9 @@
                 data-status="Green"
                 data-title="Repo intake"
                 data-detail="Confirm the target is real, parse the project type, and refuse vague launch claims before the audit begins."
+                data-risk="If the target is vague, every later green check becomes theatre instead of proof."
+                data-evidence="GitHub URL, project type, and one concrete launch surface to inspect."
+                data-patch="Normalize the target, lock the audit mode, and reject hand-wavy claims."
                 data-target="https://github.com/aimonj0729-ai/shipwright"
                 data-type="skill"
               >
@@ -1001,6 +1011,9 @@
                 data-status="Watch"
                 data-title="Browser proof"
                 data-detail="Open the product path, record console and network health, then verify CTA, loading, empty, and error states."
+                data-risk="A clean diff can still ship broken routes, console noise, and clipped mobile UI."
+                data-evidence="Opened URL, console state, network health, and proof of CTA, loading, empty, and error states."
+                data-patch="Fix visible breakage first, then re-run at 390px and 768px."
                 data-target="https://github.com/vercel/next.js"
                 data-type="web"
               >
@@ -1016,6 +1029,9 @@
                 data-status="Risk"
                 data-title="README friction"
                 data-detail="Walk the install path like a stranger: env keys, version constraints, first successful output, and rollback notes."
+                data-risk="README confidence collapses when the first real install asks for undocumented setup."
+                data-evidence="Env keys, version floor, exact commands, and the first successful output."
+                data-patch="Add missing setup steps, expected output, and rollback notes before launch."
                 data-target="https://github.com/aimonj0729-ai/shipwright"
                 data-type="template"
               >
@@ -1031,6 +1047,9 @@
                 data-status="Watch"
                 data-title="Agent claim audit"
                 data-detail="Compare what the agent said was finished against working UI, code evidence, TODOs, placeholders, and dead links."
+                data-risk="AI-generated 'done' claims drift away from the real product faster than teams notice."
+                data-evidence="Working UI path, file references, no TODO placeholders, and verified integrations."
+                data-patch="Cut fake claims, mark placeholders, and trim unfinished surfaces."
                 data-target="https://github.com/modelcontextprotocol/servers"
                 data-type="mcp"
               >
@@ -1046,6 +1065,9 @@
                 data-status="Clear"
                 data-title="Release package"
                 data-detail="Shape the launch payload: GitHub topics, release notes, proof-led post copy, and the next contributor issues."
+                data-risk="Solid code still stalls if packaging, proof, and the next action are missing."
+                data-evidence="Repo topics, release notes, launch post, and contributor-ready next patch."
+                data-patch="Ship one proof-led release package, not a vague announcement."
                 data-target="https://github.com/anthropics/anthropic-sdk-python"
                 data-type="cli"
               >
@@ -1065,6 +1087,26 @@
               Confirm the target is real, parse the project type, and refuse vague launch claims
               before the audit begins.
             </p>
+            <div class="radar-detail-grid" aria-label="Waypoint inspection detail">
+              <article class="radar-detail-block">
+                <span>Risk</span>
+                <p id="radarRisk">
+                  If the target is vague, every later green check becomes theatre instead of proof.
+                </p>
+              </article>
+              <article class="radar-detail-block">
+                <span>Evidence required</span>
+                <p id="radarEvidence">
+                  GitHub URL, project type, and one concrete launch surface to inspect.
+                </p>
+              </article>
+              <article class="radar-detail-block">
+                <span>Patch signal</span>
+                <p id="radarPatch">
+                  Normalize the target, lock the audit mode, and reject hand-wavy claims.
+                </p>
+              </article>
+            </div>
             <div class="radar-detail-meter" aria-hidden="true">
               <span></span>
               <span></span>
@@ -1098,28 +1140,92 @@
         <p class="section-num" aria-hidden="true">04 <small>Workflow</small></p>
         <div class="section-heading compact-heading">
           <p class="eyebrow">How it becomes real</p>
-          <h2 id="workflow-title">From static demo to agent-powered launch gate.</h2>
+          <h2 id="workflow-title">From agent claim to proof.</h2>
         </div>
         <div class="workflow-steps">
-          <article>
-            <span>1</span>
+          <article class="workflow-step is-active">
+            <div class="workflow-step-top">
+              <span>1</span>
+              <p>Claim</p>
+            </div>
             <h3>Agent output review</h3>
-            <p>Catch hallucinated claims, fake buttons, TODOs, and unverified integrations.</p>
+            <div class="workflow-proof-table">
+              <div>
+                <em>Input</em>
+                <p>Repo, README, live URL, and the agent's finished-sounding claims.</p>
+              </div>
+              <div>
+                <em>Check</em>
+                <p>Catch hallucinated claims, fake buttons, TODOs, and unverified integrations.</p>
+              </div>
+              <div>
+                <em>Output artifact</em>
+                <p>P0/P1 findings list, dead-link inventory, and stripped fake-complete claims.</p>
+              </div>
+            </div>
           </article>
-          <article>
-            <span>2</span>
+          <article class="workflow-step">
+            <div class="workflow-step-top">
+              <span>2</span>
+              <p>Open</p>
+            </div>
             <h3>Browser launch audit</h3>
-            <p>Open the app, check console/network health, interactions, mobile layout, and trust gaps.</p>
+            <div class="workflow-proof-table">
+              <div>
+                <em>Input</em>
+                <p>Live URL, primary CTA path, and the viewport widths people actually use.</p>
+              </div>
+              <div>
+                <em>Check</em>
+                <p>Open the app, check console/network health, interactions, mobile layout, and trust gaps.</p>
+              </div>
+              <div>
+                <em>Output artifact</em>
+                <p>Console proof, viewport notes, broken-state screenshots, and the next browser fix.</p>
+              </div>
+            </div>
           </article>
-          <article>
-            <span>3</span>
+          <article class="workflow-step">
+            <div class="workflow-step-top">
+              <span>3</span>
+              <p>Install</p>
+            </div>
             <h3>README install audit</h3>
-            <p>Follow the public install path like a stranger and record exactly where adoption breaks.</p>
+            <div class="workflow-proof-table">
+              <div>
+                <em>Input</em>
+                <p>Public quickstart, env setup, version requirements, and first-run commands.</p>
+              </div>
+              <div>
+                <em>Check</em>
+                <p>Follow the public install path like a stranger and record exactly where adoption breaks.</p>
+              </div>
+              <div>
+                <em>Output artifact</em>
+                <p>Missing-step log, expected output block, and a smaller patchable quickstart.</p>
+              </div>
+            </div>
           </article>
-          <article>
-            <span>4</span>
+          <article class="workflow-step">
+            <div class="workflow-step-top">
+              <span>4</span>
+              <p>Package</p>
+            </div>
             <h3>GitHub release checklist</h3>
-            <p>Generate topics, description, release notes, launch post, and next contributor issues.</p>
+            <div class="workflow-proof-table">
+              <div>
+                <em>Input</em>
+                <p>Fixed findings, product promise, release diff, and one proof-led screenshot or report.</p>
+              </div>
+              <div>
+                <em>Check</em>
+                <p>Generate topics, description, release notes, launch post, and next contributor issues.</p>
+              </div>
+              <div>
+                <em>Output artifact</em>
+                <p>Release package, launch copy, contributor-facing issues, and a clean next patch.</p>
+              </div>
+            </div>
           </article>
         </div>
       </section>
@@ -1161,58 +1267,117 @@
       <section id="skills-catalog" class="skills-catalog section-shell" aria-labelledby="catalog-title">
         <p class="section-num" aria-hidden="true">05 <small>Skills</small></p>
         <p class="eyebrow">All 10 skills</p>
-        <h2 id="catalog-title">From trend discovery to launch.</h2>
-        <div class="catalog-grid">
-          <article class="catalog-card">
-            <span class="catalog-tag">Discovery</span>
-            <h4>github-radar</h4>
-            <p>Scan GitHub Trending and separate tools, opportunities, and hype traps.</p>
-          </article>
-          <article class="catalog-card">
-            <span class="catalog-tag">Discovery</span>
-            <h4>trend-to-product</h4>
-            <p>Turn a hot repo or trend into a differentiated product opportunity.</p>
-          </article>
-          <article class="catalog-card">
-            <span class="catalog-tag">Planning</span>
-            <h4>idea-to-prd</h4>
-            <p>Convert a rough idea into a lean PRD with scope and acceptance criteria.</p>
-          </article>
-          <article class="catalog-card">
-            <span class="catalog-tag">Planning</span>
-            <h4>prd-to-issues</h4>
-            <p>Break a PRD into GitHub-ready issues ordered by delivery sequence.</p>
-          </article>
-          <article class="catalog-card">
-            <span class="catalog-tag">QA</span>
-            <h4>launch-readiness</h4>
-            <p>Audit a project for README, install, demo, trust, and conversion gaps.</p>
-          </article>
-          <article class="catalog-card">
-            <span class="catalog-tag">QA</span>
-            <h4>browser-launch-audit</h4>
-            <p>Verify a web app in a real browser before shipping.</p>
-          </article>
-          <article class="catalog-card">
-            <span class="catalog-tag">QA</span>
-            <h4>readme-install-audit</h4>
-            <p>Test if a first-time user can install from the README alone.</p>
-          </article>
-          <article class="catalog-card">
-            <span class="catalog-tag">QA</span>
-            <h4>agent-output-review</h4>
-            <p>Catch hallucinated or fake-complete AI-generated work.</p>
-          </article>
-          <article class="catalog-card">
-            <span class="catalog-tag">Launch</span>
-            <h4>github-release-checklist</h4>
-            <p>Package a repo for public release with metadata and launch copy.</p>
-          </article>
-          <article class="catalog-card">
-            <span class="catalog-tag">Meta</span>
-            <h4>workflow-to-skill</h4>
-            <p>Turn a repeated workflow into a clean, installable skill.</p>
-          </article>
+        <h2 id="catalog-title">Install the workflow, not just the promise.</h2>
+        <div class="catalog-groups">
+          <section class="catalog-cluster">
+            <div class="catalog-cluster-head">
+              <span class="catalog-cluster-num">01</span>
+              <div>
+                <h3>Discovery</h3>
+                <p>Find what is worth building before you waste a launch slot.</p>
+              </div>
+            </div>
+            <div class="catalog-cluster-grid">
+              <article class="catalog-card">
+                <span class="catalog-tag">Discovery</span>
+                <h4>github-radar</h4>
+                <p>Scan GitHub Trending and separate tools, opportunities, and hype traps.</p>
+              </article>
+              <article class="catalog-card">
+                <span class="catalog-tag">Discovery</span>
+                <h4>trend-to-product</h4>
+                <p>Turn a hot repo or trend into a differentiated product opportunity.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="catalog-cluster">
+            <div class="catalog-cluster-head">
+              <span class="catalog-cluster-num">02</span>
+              <div>
+                <h3>Planning</h3>
+                <p>Turn rough ideas into scoped work that can survive implementation.</p>
+              </div>
+            </div>
+            <div class="catalog-cluster-grid">
+              <article class="catalog-card">
+                <span class="catalog-tag">Planning</span>
+                <h4>idea-to-prd</h4>
+                <p>Convert a rough idea into a lean PRD with scope and acceptance criteria.</p>
+              </article>
+              <article class="catalog-card">
+                <span class="catalog-tag">Planning</span>
+                <h4>prd-to-issues</h4>
+                <p>Break a PRD into GitHub-ready issues ordered by delivery sequence.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="catalog-cluster">
+            <div class="catalog-cluster-head">
+              <span class="catalog-cluster-num">03</span>
+              <div>
+                <h3>QA</h3>
+                <p>Run the checks that turn agent confidence into evidence.</p>
+              </div>
+            </div>
+            <div class="catalog-cluster-grid catalog-cluster-grid--qa">
+              <article class="catalog-card">
+                <span class="catalog-tag">QA</span>
+                <h4>launch-readiness</h4>
+                <p>Audit a project for README, install, demo, trust, and conversion gaps.</p>
+              </article>
+              <article class="catalog-card">
+                <span class="catalog-tag">QA</span>
+                <h4>browser-launch-audit</h4>
+                <p>Verify a web app in a real browser before shipping.</p>
+              </article>
+              <article class="catalog-card">
+                <span class="catalog-tag">QA</span>
+                <h4>readme-install-audit</h4>
+                <p>Test if a first-time user can install from the README alone.</p>
+              </article>
+              <article class="catalog-card">
+                <span class="catalog-tag">QA</span>
+                <h4>agent-output-review</h4>
+                <p>Catch hallucinated or fake-complete AI-generated work.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="catalog-cluster">
+            <div class="catalog-cluster-head">
+              <span class="catalog-cluster-num">04</span>
+              <div>
+                <h3>Launch</h3>
+                <p>Package the public release so the proof survives outside your repo.</p>
+              </div>
+            </div>
+            <div class="catalog-cluster-grid">
+              <article class="catalog-card">
+                <span class="catalog-tag">Launch</span>
+                <h4>github-release-checklist</h4>
+                <p>Package a repo for public release with metadata and launch copy.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="catalog-cluster">
+            <div class="catalog-cluster-head">
+              <span class="catalog-cluster-num">05</span>
+              <div>
+                <h3>Meta</h3>
+                <p>Turn one repeated launch ritual into an installable tool of your own.</p>
+              </div>
+            </div>
+            <div class="catalog-cluster-grid">
+              <article class="catalog-card">
+                <span class="catalog-tag">Meta</span>
+                <h4>workflow-to-skill</h4>
+                <p>Turn a repeated workflow into a clean, installable skill.</p>
+              </article>
+            </div>
+          </section>
         </div>
       </section>
 
@@ -1345,6 +1510,6 @@
       <span></span><span></span><span></span><span></span><span></span>
     </div>
 
-    <script src="./app.js?v=20260516-v5f" type="module"></script>
+    <script src="./app.js?v=20260520-v6" type="module"></script>
   </body>
 </html>
