@@ -3924,11 +3924,10 @@ const motionController = (() => {
   const state = {
     reduced: reducedQuery.matches,
     hidden: document.hidden,
-    scrolling: false,
     effects: new Map(),
   };
 
-  const shouldAnimate = () => !state.reduced && !state.hidden && !state.scrolling;
+  const shouldAnimate = () => !state.reduced && !state.hidden;
 
   const startAll = () => {
     state.effects.forEach((eff) => {
@@ -3962,30 +3961,12 @@ const motionController = (() => {
     if (shouldAnimate()) startAll(); else stopAll();
   });
 
-  /* Scroll-aware pause: while the user is actively scrolling we suspend
-   * every registered rAF effect; resume 180ms after the last scroll tick. */
-  let scrollIdleTimer = 0;
-  window.addEventListener("scroll", () => {
-    if (!state.scrolling) {
-      state.scrolling = true;
-      document.body.classList.add("is-scrolling");
-      stopAll();
-    }
-    clearTimeout(scrollIdleTimer);
-    scrollIdleTimer = window.setTimeout(() => {
-      state.scrolling = false;
-      document.body.classList.remove("is-scrolling");
-      if (shouldAnimate()) startAll();
-    }, 180);
-  }, { passive: true });
-
   document.body.classList.toggle("sw-reduced-motion", state.reduced);
 
   return {
     register,
     get reduced() { return state.reduced; },
     get hidden() { return state.hidden; },
-    get scrolling() { return state.scrolling; },
     shouldAnimate,
   };
 })();

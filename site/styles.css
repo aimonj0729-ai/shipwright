@@ -7306,17 +7306,11 @@ h2 {
   height: 100%;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.42;
-  will-change: opacity;
-  transition: opacity 180ms ease;
+  opacity: 0.35;
 }
 [data-theme="light"] .hero-particles {
-  opacity: 0.28;
+  opacity: 0.22;
 }
-/* While the user is actively scrolling, fade the hero particles out so the
- * canvas rAF + repaint doesn't compete with scroll. JS toggles is-scrolling
- * on <body>. */
-body.is-scrolling .hero-particles { opacity: 0; }
 .hero > * { position: relative; z-index: 1; }
 .hero-particles.is-fading-in { animation: hp-fade-in 800ms ease-out both; }
 @keyframes hp-fade-in {
