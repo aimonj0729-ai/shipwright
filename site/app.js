@@ -4033,11 +4033,11 @@ const initHeroParticles = () => {
     canvas.style.height = `${heightCss}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    /* Height-driven font: SHIPWRIGHT fills ~78% of band height. */
-    const fontPx = Math.min(220, Math.max(96, Math.floor(heightCss * 0.78)));
-    /* Step 8/9 reads well at band scale; total particles ~700-1100. */
-    const stepPx = widthCss > 900 ? 8 : 9;
-    const targets = sampleTextTargets("SHIPWRIGHT", fontPx, stepPx);
+    /* Lowercase "shipwright" sized to fill the slim band. */
+    const fontPx = Math.min(140, Math.max(58, Math.floor(heightCss * 0.92)));
+    /* Smaller band ⇒ smaller step keeps glyph legible. */
+    const stepPx = widthCss > 900 ? 6 : 7;
+    const targets = sampleTextTargets("shipwright", fontPx, stepPx);
     const palette = themeColors();
 
     if (motionController.reduced) {
