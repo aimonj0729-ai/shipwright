@@ -4021,18 +4021,22 @@ const initHeroParticles = () => {
   };
 
   const buildParticles = () => {
-    const rect = hero.getBoundingClientRect();
+    /* Canvas is now a dedicated full-width band row beneath the hero copy,
+     * not an absolute backdrop behind it. Measure the canvas directly so
+     * the SHIPWRIGHT glyph fills the band vertically. */
+    const rect = canvas.getBoundingClientRect();
     widthCss = Math.max(320, Math.floor(rect.width));
-    heightCss = Math.max(280, Math.floor(rect.height));
+    heightCss = Math.max(140, Math.floor(rect.height));
     canvas.width = widthCss * dpr;
     canvas.height = heightCss * dpr;
     canvas.style.width = `${widthCss}px`;
     canvas.style.height = `${heightCss}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const fontPx = Math.min(280, Math.max(140, Math.floor(widthCss / 5.6)));
-    /* Step 7/8 — balance between density (visible glyph) and CPU. */
-    const stepPx = widthCss > 900 ? 7 : 8;
+    /* Height-driven font: SHIPWRIGHT fills ~78% of band height. */
+    const fontPx = Math.min(220, Math.max(96, Math.floor(heightCss * 0.78)));
+    /* Step 8/9 reads well at band scale; total particles ~700-1100. */
+    const stepPx = widthCss > 900 ? 8 : 9;
     const targets = sampleTextTargets("SHIPWRIGHT", fontPx, stepPx);
     const palette = themeColors();
 
@@ -4058,7 +4062,16 @@ const initHeroParticles = () => {
     }));
   };
 
+  /* Cap drawFrame at ~30 FPS — the eye barely notices on this kind of
+   * ambient background, and halving the per-second work makes the main
+   * thread substantially more available for scroll + paint. */
+  let lastDraw = 0;
+  const FRAME_MS = 1000 / 30;
   const drawFrame = (now) => {
+    rafId = requestAnimationFrame(drawFrame);
+    if (now - lastDraw < FRAME_MS) return;
+    lastDraw = now;
+
     ctx.clearRect(0, 0, widthCss, heightCss);
     const breathe = Math.sin(now / 1400) * 0.7;
     for (let i = 0; i < particles.length; i++) {
@@ -4088,7 +4101,6 @@ const initHeroParticles = () => {
       ctx.fillStyle = p.color;
       ctx.fillRect(p.x - 1.1, p.y - 1.1, 2.2, 2.2);
     }
-    rafId = requestAnimationFrame(drawFrame);
   };
 
   const onMouseMove = (event) => {
