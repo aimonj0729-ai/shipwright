@@ -3924,10 +3924,11 @@ const motionController = (() => {
   const state = {
     reduced: reducedQuery.matches,
     hidden: document.hidden,
+    scrolling: false,
     effects: new Map(),
   };
 
-  const shouldAnimate = () => !state.reduced && !state.hidden;
+  const shouldAnimate = () => !state.reduced && !state.hidden && !state.scrolling;
 
   const startAll = () => {
     state.effects.forEach((eff) => {
@@ -3961,12 +3962,30 @@ const motionController = (() => {
     if (shouldAnimate()) startAll(); else stopAll();
   });
 
+  /* Scroll-aware pause: while the user is actively scrolling we suspend
+   * every registered rAF effect; resume 180ms after the last scroll tick. */
+  let scrollIdleTimer = 0;
+  window.addEventListener("scroll", () => {
+    if (!state.scrolling) {
+      state.scrolling = true;
+      document.body.classList.add("is-scrolling");
+      stopAll();
+    }
+    clearTimeout(scrollIdleTimer);
+    scrollIdleTimer = window.setTimeout(() => {
+      state.scrolling = false;
+      document.body.classList.remove("is-scrolling");
+      if (shouldAnimate()) startAll();
+    }, 180);
+  }, { passive: true });
+
   document.body.classList.toggle("sw-reduced-motion", state.reduced);
 
   return {
     register,
     get reduced() { return state.reduced; },
     get hidden() { return state.hidden; },
+    get scrolling() { return state.scrolling; },
     shouldAnimate,
   };
 })();
@@ -4030,8 +4049,10 @@ const initHeroParticles = () => {
     canvas.style.height = `${heightCss}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const fontPx = Math.min(280, Math.max(120, Math.floor(widthCss / 6)));
-    const stepPx = widthCss > 900 ? 6 : 7;
+    const fontPx = Math.min(260, Math.max(120, Math.floor(widthCss / 6.5)));
+    /* Wider sampling step ⇒ ~40% fewer particles, much smoother on scroll
+     * resume. Hero remains visually identical at typical viewing distance. */
+    const stepPx = widthCss > 900 ? 8 : 9;
     const targets = sampleTextTargets("SHIPWRIGHT", fontPx, stepPx);
     const palette = themeColors();
 
@@ -4123,14 +4144,15 @@ const initHeroParticles = () => {
   hero.addEventListener("pointerleave", onMouseLeave);
   window.addEventListener("resize", onResize);
 
-  // Visibility observer — pause when off-screen
+  // Visibility observer — pause when off-screen. Higher threshold means we
+  // stop drawing much earlier on scroll-down, freeing the main thread.
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting && motionController.shouldAnimate()) start();
         else stop();
       });
-    }, { threshold: 0.05 });
+    }, { threshold: 0.3 });
     io.observe(hero);
   } else {
     start();
