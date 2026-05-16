@@ -4104,7 +4104,8 @@ const initHeroParticles = () => {
   };
 
   const onMouseMove = (event) => {
-    const rect = hero.getBoundingClientRect();
+    /* Coords relative to the canvas band, not the full hero. */
+    const rect = canvas.getBoundingClientRect();
     mouseX = event.clientX - rect.left;
     mouseY = event.clientY - rect.top;
   };
