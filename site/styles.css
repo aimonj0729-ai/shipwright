@@ -352,9 +352,9 @@ select {
   display: grid;
   grid-template-columns: minmax(0, 1.04fr) minmax(320px, 0.76fr);
   gap: clamp(24px, 4vw, 56px);
-  align-items: center;
-  min-height: auto;
-  padding: clamp(28px, 3.6vw, 44px) 0 clamp(24px, 3vw, 36px);
+  align-items: start;
+  min-height: clamp(460px, 62svh, 640px);
+  padding: clamp(28px, 3.6vw, 48px) 0 clamp(24px, 3vw, 40px);
 }
 
 /* ── Section accent scoping ── */
@@ -7306,10 +7306,10 @@ h2 {
   height: 100%;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.35;
+  opacity: 0.6;
 }
 [data-theme="light"] .hero-particles {
-  opacity: 0.22;
+  opacity: 0.55;
 }
 .hero > * { position: relative; z-index: 1; }
 .hero-particles.is-fading-in { animation: hp-fade-in 800ms ease-out both; }

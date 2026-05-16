@@ -4030,10 +4030,9 @@ const initHeroParticles = () => {
     canvas.style.height = `${heightCss}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const fontPx = Math.min(260, Math.max(120, Math.floor(widthCss / 6.5)));
-    /* Wider sampling step ⇒ ~40% fewer particles, much smoother on scroll
-     * resume. Hero remains visually identical at typical viewing distance. */
-    const stepPx = widthCss > 900 ? 8 : 9;
+    const fontPx = Math.min(280, Math.max(140, Math.floor(widthCss / 5.6)));
+    /* Step 7/8 — balance between density (visible glyph) and CPU. */
+    const stepPx = widthCss > 900 ? 7 : 8;
     const targets = sampleTextTargets("SHIPWRIGHT", fontPx, stepPx);
     const palette = themeColors();
 
@@ -4042,7 +4041,7 @@ const initHeroParticles = () => {
       ctx.clearRect(0, 0, widthCss, heightCss);
       targets.forEach((t, i) => {
         ctx.fillStyle = palette[i % palette.length];
-        ctx.fillRect(t.x, t.y, 1.6, 1.6);
+        ctx.fillRect(t.x - 1.1, t.y - 1.1, 2.2, 2.2);
       });
       particles = [];
       return;
@@ -4087,7 +4086,7 @@ const initHeroParticles = () => {
       p.y += p.vy;
 
       ctx.fillStyle = p.color;
-      ctx.fillRect(p.x - 0.8, p.y - 0.8, 1.6, 1.6);
+      ctx.fillRect(p.x - 1.1, p.y - 1.1, 2.2, 2.2);
     }
     rafId = requestAnimationFrame(drawFrame);
   };
