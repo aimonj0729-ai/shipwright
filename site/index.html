@@ -76,6 +76,7 @@
 
     <main id="top">
       <section class="hero section-shell">
+        <canvas class="hero-particles" id="heroParticles" aria-hidden="true"></canvas>
         <div class="hero-copy">
           <p class="eyebrow">Launch QA for <span class="cycle-word" data-words="vibe-coded|AI-built|weekend|indie|side-project">vibe-coded</span> projects</p>
           <h1>Before you ship the AI-built app, make it survive first contact.</h1>
@@ -185,13 +186,13 @@
       </div>
 
       <nav class="feature-nav" id="featureNav" aria-label="Features">
-        <a href="#ai-chat-section" class="feature-nav-btn" data-target="ai-chat-section">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <span>Plan</span>
-        </a>
         <a href="#analyzer" class="feature-nav-btn" data-target="analyzer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <span>Audit</span>
+        </a>
+        <a href="#ai-chat-section" class="feature-nav-btn" data-target="ai-chat-section">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Plan</span>
         </a>
         <a href="#skills-catalog" class="feature-nav-btn" data-target="skills-catalog">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
@@ -214,29 +215,29 @@
           </p>
         </div>
         <div class="mission-grid" aria-label="Shipwright function areas">
-          <a class="mission-card route-plan" href="#ai-chat-section">
-            <span class="mission-index">01</span>
-            <strong>Plan from a rough idea</strong>
-            <p>Let the AI Planner ask follow-up questions and turn a vague website concept into a buildable plan.</p>
-            <em>Start with an idea</em>
-          </a>
           <a class="mission-card route-audit" href="#analyzer">
-            <span class="mission-index">02</span>
+            <span class="mission-index">01</span>
             <strong>Audit a repo or demo</strong>
             <p>Paste a GitHub URL or live demo and get a launch-readiness report with the next patch.</p>
             <em>Run launch QA</em>
           </a>
-          <a class="mission-card route-skills" href="#skills-catalog">
-            <span class="mission-index">03</span>
-            <strong>Install the workflow</strong>
-            <p>Use the open-source skills inside Codex or Claude Code for evidence-backed local checks.</p>
-            <em>Browse skills</em>
+          <a class="mission-card route-plan" href="#ai-chat-section">
+            <span class="mission-index">02</span>
+            <strong>Plan from a rough idea</strong>
+            <p>Let the AI Planner ask follow-up questions and turn a vague website concept into a buildable plan.</p>
+            <em>Start with an idea</em>
           </a>
           <a class="mission-card route-flow" href="#workflow">
-            <span class="mission-index">04</span>
+            <span class="mission-index">03</span>
             <strong>Ship with a sequence</strong>
             <p>Move from agent claims to browser proof, install proof, release copy, and public launch.</p>
             <em>See workflow</em>
+          </a>
+          <a class="mission-card route-skills" href="#skills-catalog">
+            <span class="mission-index">04</span>
+            <strong>Install the workflow</strong>
+            <p>Use the open-source skills inside Codex or Claude Code for evidence-backed local checks.</p>
+            <em>Browse skills</em>
           </a>
         </div>
       </section>
@@ -451,7 +452,7 @@
       <section id="brand-check" class="brand-check section-shell" aria-labelledby="brand-check-title">
         <div class="section-heading">
           <div>
-            <p class="section-num" aria-hidden="true">01b <small>Brand fit</small></p>
+            <p class="section-num" aria-hidden="true">02 <small>Brand fit</small></p>
             <p class="eyebrow eyebrow--script">Beyond the code check</p>
             <h2 id="brand-check-title">Does your site match what you actually want?</h2>
             <span class="sticker" style="display:inline-block; margin-top: 10px;" aria-hidden="true">
@@ -634,7 +635,7 @@
       <section id="launch-console" class="launch-console dark-section" aria-labelledby="launch-console-title">
         <div class="lc-shell">
           <div class="lc-section-heading">
-            <p class="section-num lc-section-num" aria-hidden="true">01c <small>Launch</small></p>
+            <p class="section-num lc-section-num" aria-hidden="true">03 <small>Launch</small></p>
             <p class="eyebrow lc-eyebrow">Mission control · T-minus to launch</p>
             <h2 id="launch-console-title">Take the report off the page. Ship it.</h2>
             <span class="sticker sticker--right lc-sticker" aria-hidden="true">
@@ -1094,7 +1095,7 @@
       <div class="wave-divider" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,15 1440,30 L1440,60 L0,60Z" fill="currentColor"/></svg></div>
 
       <section id="workflow" class="workflow section-shell" aria-labelledby="workflow-title">
-        <p class="section-num" aria-hidden="true">02 <small>Workflow</small></p>
+        <p class="section-num" aria-hidden="true">04 <small>Workflow</small></p>
         <div class="section-heading compact-heading">
           <p class="eyebrow">How it becomes real</p>
           <h2 id="workflow-title">From static demo to agent-powered launch gate.</h2>
@@ -1158,7 +1159,7 @@
       </section>
 
       <section id="skills-catalog" class="skills-catalog section-shell" aria-labelledby="catalog-title">
-        <p class="section-num" aria-hidden="true">03 <small>Skills</small></p>
+        <p class="section-num" aria-hidden="true">05 <small>Skills</small></p>
         <p class="eyebrow">All 10 skills</p>
         <h2 id="catalog-title">From trend discovery to launch.</h2>
         <div class="catalog-grid">
@@ -1216,7 +1217,7 @@
       </section>
 
       <section id="ai-chat-section" class="ai-chat-section section-shell" aria-labelledby="ai-chat-title">
-        <p class="section-num" aria-hidden="true">04 <small>Plan</small></p>
+        <p class="section-num" aria-hidden="true">06 <small>Plan</small></p>
         <div class="planner-shell">
           <div class="planner-copy">
             <p class="eyebrow">AI-powered planning</p>
@@ -1337,6 +1338,13 @@
       </svg>
     </button>
 
-    <script src="./app.js?v=20260513-i18n" type="module"></script>
+    <!-- v5 custom cursor mount points -->
+    <div class="sw-cursor-ring" id="swCursorRing" aria-hidden="true"></div>
+    <div class="sw-cursor-dot" id="swCursorDot" aria-hidden="true"></div>
+    <div class="sw-cursor-trail" id="swCursorTrail" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <script src="./app.js?v=20260516-v5" type="module"></script>
   </body>
 </html>

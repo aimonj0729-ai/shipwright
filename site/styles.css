@@ -6719,7 +6719,7 @@ h2 {
 }
 
 /* Section-num small caption ("Audit", "Workflow", "Skills" etc.):
- * keep mono uppercase for that "01b · AUDIT" structured-doc feel —
+ * keep mono uppercase for that "01 · AUDIT" structured-doc feel —
  * the script is already on the eyebrow line above. */
 
 /* Mode badge above the analyzer: keep the data-pill character but
@@ -7237,7 +7237,7 @@ h2 {
   font-family: var(--font-body);
 }
 
-/* Section "01c · Launch" — make the small caption handwritten too */
+/* Section "03 · Launch" — make the small caption handwritten too */
 .launch-console .lc-section-num small {
   font-family: var(--font-script);
   font-size: 0.42em;
@@ -7282,4 +7282,297 @@ h2 {
   /* On narrow viewports the hero collapses; the floating sticker just
    * becomes noise that overlaps the eyebrow or h1 — hide it. */
   .hero .hero-sticker { display: none; }
+}
+
+/* ============================================================
+ * v5 — Dynamic animation layer
+ * Sections (in order below):
+ *   1. Hero Canvas particle backdrop
+ *   2. Custom cursor (ring + dot + trail) — supersedes .cursor-follower
+ *   3. Inspection Radar data stream overlay
+ *   4. Launch Console ignition sparks layer
+ *   5. Brand-check printer paper effect
+ *   6. ASCII ship easter egg
+ *   7. Captain's Log easter egg mode
+ *   8. prefers-reduced-motion overrides for all of the above
+ * ============================================================ */
+
+/* ── 1. Hero Canvas particle backdrop ───────────────────────── */
+.hero { position: relative; }
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  will-change: opacity;
+}
+[data-theme="light"] .hero-particles {
+  opacity: 0.32;
+  mix-blend-mode: multiply;
+}
+.hero > * { position: relative; z-index: 1; }
+.hero-particles.is-fading-in { animation: hp-fade-in 800ms ease-out both; }
+@keyframes hp-fade-in {
+  from { opacity: 0; }
+  to { opacity: var(--hp-target-opacity, 0.55); }
+}
+
+/* ── 2. Custom cursor (ring + dot + trail) ──────────────────── */
+.sw-cursor-ring,
+.sw-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate3d(-100px, -100px, 0);
+  will-change: transform;
+  mix-blend-mode: difference;
+  opacity: 0;
+  transition: opacity 200ms ease, width 220ms cubic-bezier(0.22, 1, 0.36, 1),
+              height 220ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-radius 220ms ease,
+              border-color 200ms ease;
+}
+.sw-cursor-ring {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid #fff;
+  border-radius: 50%;
+  margin-left: -14px;
+  margin-top: -14px;
+}
+.sw-cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  margin-left: -3px;
+  margin-top: -3px;
+}
+.sw-cursor-ring.is-visible,
+.sw-cursor-dot.is-visible { opacity: 0.9; }
+.sw-cursor-ring.is-hover {
+  width: 46px;
+  height: 46px;
+  margin-left: -23px;
+  margin-top: -23px;
+  border-color: rgba(255, 181, 71, 0.9);
+  border-width: 1.5px;
+  background: rgba(255, 181, 71, 0.08);
+}
+.sw-cursor-ring.is-text {
+  width: 4px;
+  height: 22px;
+  margin-left: -2px;
+  margin-top: -11px;
+  border-radius: 2px;
+  border-color: rgba(76, 213, 255, 0.95);
+  background: rgba(76, 213, 255, 0.4);
+}
+.sw-cursor-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.sw-cursor-trail.is-visible { opacity: 0.7; }
+.sw-cursor-trail span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  margin-top: -2px;
+  background: currentColor;
+  border-radius: 50%;
+  color: rgba(76, 213, 255, 0.6);
+  mix-blend-mode: difference;
+  transform: translate3d(-100px, -100px, 0);
+  will-change: transform, opacity;
+}
+.sw-cursor-trail span:nth-child(1) { opacity: 0.55; }
+.sw-cursor-trail span:nth-child(2) { opacity: 0.42; transform: scale(0.92) translate3d(-100px, -100px, 0); }
+.sw-cursor-trail span:nth-child(3) { opacity: 0.32; transform: scale(0.84) translate3d(-100px, -100px, 0); }
+.sw-cursor-trail span:nth-child(4) { opacity: 0.2;  transform: scale(0.76) translate3d(-100px, -100px, 0); }
+.sw-cursor-trail span:nth-child(5) { opacity: 0.12; transform: scale(0.68) translate3d(-100px, -100px, 0); }
+
+/* When sw-cursor is active, hide system cursor on most surfaces */
+body.sw-cursor-on,
+body.sw-cursor-on * {
+  cursor: none !important;
+}
+/* But keep system cursor in text inputs for caret visibility */
+body.sw-cursor-on input,
+body.sw-cursor-on textarea {
+  cursor: text !important;
+}
+
+/* Hide on touch / no fine pointer */
+@media (hover: none), (pointer: coarse) {
+  .sw-cursor-ring,
+  .sw-cursor-dot,
+  .sw-cursor-trail { display: none !important; }
+  body.sw-cursor-on,
+  body.sw-cursor-on * { cursor: auto !important; }
+}
+
+/* ── 3. Inspection Radar data stream overlay ────────────────── */
+.radar-stream-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.85;
+  mix-blend-mode: screen;
+}
+
+/* ── 4. Launch Console ignition sparks layer ────────────────── */
+.lc-sparks-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9;
+}
+
+/* ── 5. Brand-check printer paper effect ────────────────────── */
+.brand-report.is-printing {
+  position: relative;
+}
+.brand-report .printer-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  margin-bottom: 14px;
+  font: 600 0.72rem/1 var(--font-code, monospace);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(255, 181, 71, 0.95);
+  background: linear-gradient(90deg, rgba(255, 181, 71, 0.06), rgba(255, 181, 71, 0.16), rgba(255, 181, 71, 0.06));
+  border-top: 1px solid rgba(255, 181, 71, 0.4);
+  border-bottom: 1px solid rgba(255, 181, 71, 0.4);
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+.brand-report.is-printing .printer-head {
+  opacity: 1;
+  transform: translateY(0);
+}
+.brand-report .printer-head .printer-led {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 181, 71, 0.95);
+  box-shadow: 0 0 8px rgba(255, 181, 71, 0.8);
+  animation: printer-led-pulse 600ms ease-in-out infinite;
+}
+.brand-report .printer-head .printer-label { flex: 1; }
+.brand-report .printer-head .printer-bytes { opacity: 0.8; }
+.brand-report.is-printing .brand-report-body {
+  animation: printer-shudder 280ms ease-in-out infinite;
+}
+@keyframes printer-led-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 6px rgba(255, 181, 71, 0.6); }
+  50%      { transform: scale(1.3); box-shadow: 0 0 14px rgba(255, 181, 71, 1); }
+}
+@keyframes printer-shudder {
+  0%, 100% { transform: translate(0, 0); }
+  25%      { transform: translate(0.4px, -0.2px); }
+  75%      { transform: translate(-0.4px, 0.3px); }
+}
+
+/* ── 6. ASCII ship easter egg ───────────────────────────────── */
+.sw-ascii-ship {
+  position: fixed;
+  top: 70px;
+  right: -360px;
+  z-index: 200;
+  font: 600 0.95rem/1 var(--font-code, monospace);
+  letter-spacing: 0.08em;
+  color: rgba(76, 213, 255, 0.95);
+  text-shadow: 0 0 8px rgba(76, 213, 255, 0.6);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: ship-sail 6s linear forwards;
+}
+[data-theme="light"] .sw-ascii-ship {
+  color: rgba(36, 86, 160, 0.95);
+  text-shadow: 0 0 6px rgba(36, 86, 160, 0.4);
+}
+@keyframes ship-sail {
+  0%   { right: -360px; opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { right: calc(100% + 40px); opacity: 0; }
+}
+
+/* ── 7. Captain's Log easter egg mode ───────────────────────── */
+body.captains-log {
+  filter: sepia(0.32) contrast(1.04) saturate(1.08);
+  transition: filter 600ms ease;
+}
+body.captains-log,
+body.captains-log h1,
+body.captains-log h2,
+body.captains-log h3,
+body.captains-log p,
+body.captains-log a,
+body.captains-log button {
+  font-family: var(--font-script, "Caveat"), var(--font-body, sans-serif) !important;
+}
+body.captains-log::after {
+  content: "🏴‍☠ Captain's Log mode — 8s";
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9000;
+  padding: 8px 16px;
+  font: 600 0.85rem/1 var(--font-script, "Caveat"), monospace;
+  letter-spacing: 0.04em;
+  color: #6b4a1f;
+  background: rgba(254, 240, 196, 0.95);
+  border: 1.5px solid rgba(107, 74, 31, 0.5);
+  border-radius: 22px;
+  box-shadow: 0 6px 18px rgba(107, 74, 31, 0.25);
+  pointer-events: none;
+  animation: captains-log-banner 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes captains-log-banner {
+  from { opacity: 0; transform: translate(-50%, 20px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ── 8. prefers-reduced-motion overrides for v5 ─────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-particles.is-fading-in { animation: none; opacity: 0.4; }
+  .sw-cursor-ring,
+  .sw-cursor-dot,
+  .sw-cursor-trail { display: none !important; }
+  body.sw-cursor-on,
+  body.sw-cursor-on * { cursor: auto !important; }
+  .brand-report.is-printing .brand-report-body { animation: none; }
+  .brand-report .printer-head .printer-led { animation: none; }
+  .sw-ascii-ship { animation: ascii-ship-fade 2.4s ease-in-out forwards; }
+  @keyframes ascii-ship-fade {
+    0%, 100% { right: 24px; opacity: 0; }
+    20%, 80% { right: 24px; opacity: 1; }
+  }
+  body.captains-log { transition: none; }
+  body.captains-log::after { animation: none; }
 }

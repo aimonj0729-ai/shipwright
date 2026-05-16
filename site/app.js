@@ -1480,6 +1480,13 @@ const renderLiveReport = (report) => {
     `Critical issues: ${report.summary.criticalIssues}`,
     `Checked at: ${new Date(report.timestamp).toLocaleString()}`,
   ];
+  if (report.actionPlan) {
+    meta.splice(
+      3,
+      0,
+      `Action plan: ${report.actionPlan.immediate?.length || 0} must-fix · ${report.actionPlan.quickWins?.length || 0} quick wins`
+    );
+  }
   metadataList.innerHTML = simpleListTemplate(meta);
 
   const topFinding = report.findings[0];
@@ -1507,7 +1514,7 @@ const renderLiveReport = (report) => {
     `## Findings`,
     ...(report.findings || []).map((f) => `### [${f.severity}] ${f.title}\n\n- **Description:** ${f.description}\n- **Evidence:** ${f.evidence}\n- **Impact:** ${f.impact}\n- **Fix:** ${f.fix}${f.claudePrompt ? `\n- **Claude prompt:** \`${f.claudePrompt}\`` : ""}`),
   ];
-  currentMarkdown = mdLines.join("\n");
+  currentMarkdown = report.reportMarkdown || mdLines.join("\n");
   refreshLocalizedContent();
 };
 
@@ -3634,6 +3641,8 @@ const initLaunchConsole = () => {
     setNote("Generating release notes · Twitter thread · Reddit body…", "");
 
     await animateCountdown();
+    /* v5: ignition sparks burst from the launch button right at IGNITION */
+    try { emitLaunchSparks(launchBtn); } catch { /* swallow */ }
 
     const cfg = getAIConfig();
     const base = String(cfg.base || "https://api.openai.com").replace(/\/+$/, "");
@@ -3903,6 +3912,614 @@ const initLaunchConsole = () => {
   dialogConfirm.addEventListener("click", pushGithubRelease);
 };
 
+/* ============================================================
+ *  v5 — Dynamic animation layer
+ *  Modules: motionController · Hero particles · custom cursor ·
+ *  radar data stream · launch sparks · printer · easter eggs.
+ * ============================================================ */
+
+/* ── motionController: global pause/resume + reduced/hidden awareness ── */
+const motionController = (() => {
+  const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const state = {
+    reduced: reducedQuery.matches,
+    hidden: document.hidden,
+    effects: new Map(),
+  };
+
+  const shouldAnimate = () => !state.reduced && !state.hidden;
+
+  const startAll = () => {
+    state.effects.forEach((eff) => {
+      if (!eff.running && eff.start) {
+        try { eff.start(); eff.running = true; } catch { /* swallow */ }
+      }
+    });
+  };
+  const stopAll = () => {
+    state.effects.forEach((eff) => {
+      if (eff.running && eff.stop) {
+        try { eff.stop(); eff.running = false; } catch { /* swallow */ }
+      }
+    });
+  };
+
+  const register = (name, { start, stop }) => {
+    state.effects.set(name, { start, stop, running: false });
+    if (shouldAnimate() && start) {
+      try { start(); state.effects.get(name).running = true; } catch { /* swallow */ }
+    }
+  };
+
+  reducedQuery.addEventListener?.("change", (e) => {
+    state.reduced = e.matches;
+    if (shouldAnimate()) startAll(); else stopAll();
+    document.body.classList.toggle("sw-reduced-motion", state.reduced);
+  });
+  document.addEventListener("visibilitychange", () => {
+    state.hidden = document.hidden;
+    if (shouldAnimate()) startAll(); else stopAll();
+  });
+
+  document.body.classList.toggle("sw-reduced-motion", state.reduced);
+
+  return {
+    register,
+    get reduced() { return state.reduced; },
+    get hidden() { return state.hidden; },
+    shouldAnimate,
+  };
+})();
+
+/* ── Hero Canvas particle text ── */
+const initHeroParticles = () => {
+  const canvas = document.getElementById("heroParticles");
+  if (!canvas) return;
+  const hero = canvas.closest(".hero");
+  if (!hero) return;
+
+  const ctx = canvas.getContext("2d", { alpha: true });
+  if (!ctx) return;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let particles = [];
+  let rafId = 0;
+  let running = false;
+  let mouseX = -1e4;
+  let mouseY = -1e4;
+  let widthCss = 0;
+  let heightCss = 0;
+  let resizeTimer = 0;
+
+  const themeColors = () => {
+    const isLight = document.documentElement.getAttribute("data-theme") === "light";
+    return isLight
+      ? ["rgba(36, 86, 160, 0.85)", "rgba(204, 122, 38, 0.85)", "rgba(72, 116, 184, 0.85)"]
+      : ["rgba(76, 213, 255, 0.85)", "rgba(255, 181, 71, 0.85)", "rgba(180, 220, 255, 0.85)"];
+  };
+
+  const sampleTextTargets = (text, fontPx, stepPx) => {
+    const off = document.createElement("canvas");
+    off.width = widthCss;
+    off.height = heightCss;
+    const octx = off.getContext("2d");
+    if (!octx) return [];
+    octx.fillStyle = "#000";
+    octx.textBaseline = "middle";
+    octx.textAlign = "center";
+    octx.font = `900 ${fontPx}px "Inter", "Helvetica Neue", sans-serif`;
+    octx.fillText(text, widthCss / 2, heightCss / 2);
+    const data = octx.getImageData(0, 0, widthCss, heightCss).data;
+    const targets = [];
+    for (let y = 0; y < heightCss; y += stepPx) {
+      for (let x = 0; x < widthCss; x += stepPx) {
+        const idx = (y * widthCss + x) * 4 + 3;
+        if (data[idx] > 128) targets.push({ x, y });
+      }
+    }
+    return targets;
+  };
+
+  const buildParticles = () => {
+    const rect = hero.getBoundingClientRect();
+    widthCss = Math.max(320, Math.floor(rect.width));
+    heightCss = Math.max(280, Math.floor(rect.height));
+    canvas.width = widthCss * dpr;
+    canvas.height = heightCss * dpr;
+    canvas.style.width = `${widthCss}px`;
+    canvas.style.height = `${heightCss}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const fontPx = Math.min(280, Math.max(120, Math.floor(widthCss / 6)));
+    const stepPx = widthCss > 900 ? 6 : 7;
+    const targets = sampleTextTargets("SHIPWRIGHT", fontPx, stepPx);
+    const palette = themeColors();
+
+    if (motionController.reduced) {
+      // Static one-shot draw: just dots at targets, no rAF.
+      ctx.clearRect(0, 0, widthCss, heightCss);
+      targets.forEach((t, i) => {
+        ctx.fillStyle = palette[i % palette.length];
+        ctx.fillRect(t.x, t.y, 1.6, 1.6);
+      });
+      particles = [];
+      return;
+    }
+
+    particles = targets.map((t, i) => ({
+      x: Math.random() * widthCss,
+      y: Math.random() * heightCss,
+      tx: t.x,
+      ty: t.y,
+      vx: (Math.random() - 0.5) * 4,
+      vy: (Math.random() - 0.5) * 4,
+      color: palette[i % palette.length],
+    }));
+  };
+
+  const drawFrame = (now) => {
+    ctx.clearRect(0, 0, widthCss, heightCss);
+    const breathe = Math.sin(now / 1400) * 0.7;
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      const tx = p.tx;
+      const ty = p.ty + breathe;
+      const dx = tx - p.x;
+      const dy = ty - p.y;
+      p.vx += dx * 0.04;
+      p.vy += dy * 0.04;
+
+      const mdx = p.x - mouseX;
+      const mdy = p.y - mouseY;
+      const md2 = mdx * mdx + mdy * mdy;
+      if (md2 < 6400 && md2 > 1) {
+        const force = (6400 - md2) / 6400;
+        const d = Math.sqrt(md2);
+        p.vx += (mdx / d) * force * 1.4;
+        p.vy += (mdy / d) * force * 1.4;
+      }
+
+      p.vx *= 0.86;
+      p.vy *= 0.86;
+      p.x += p.vx;
+      p.y += p.vy;
+
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x - 0.8, p.y - 0.8, 1.6, 1.6);
+    }
+    rafId = requestAnimationFrame(drawFrame);
+  };
+
+  const onMouseMove = (event) => {
+    const rect = hero.getBoundingClientRect();
+    mouseX = event.clientX - rect.left;
+    mouseY = event.clientY - rect.top;
+  };
+  const onMouseLeave = () => { mouseX = -1e4; mouseY = -1e4; };
+
+  const onResize = () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      buildParticles();
+    }, 220);
+  };
+
+  const start = () => {
+    if (running) return;
+    running = true;
+    buildParticles();
+    canvas.classList.add("is-fading-in");
+    if (!motionController.reduced) {
+      rafId = requestAnimationFrame(drawFrame);
+    }
+  };
+  const stop = () => {
+    running = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = 0;
+  };
+
+  hero.addEventListener("pointermove", onMouseMove);
+  hero.addEventListener("pointerleave", onMouseLeave);
+  window.addEventListener("resize", onResize);
+
+  // Visibility observer — pause when off-screen
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && motionController.shouldAnimate()) start();
+        else stop();
+      });
+    }, { threshold: 0.05 });
+    io.observe(hero);
+  } else {
+    start();
+  }
+
+  motionController.register("hero-particles", { start, stop });
+};
+
+/* ── Custom cursor (ring + dot + 5-dot trail + magnetic hover) ── */
+const initCursorFX = () => {
+  if (window.matchMedia("(hover: none), (pointer: coarse)").matches) return;
+  if (motionController.reduced) return;
+  const ring = document.getElementById("swCursorRing");
+  const dot = document.getElementById("swCursorDot");
+  const trailEl = document.getElementById("swCursorTrail");
+  if (!ring || !dot || !trailEl) return;
+
+  // Disable older cursor follower if it appended one
+  document.querySelectorAll(".cursor-follower").forEach((el) => el.remove());
+
+  document.body.classList.add("sw-cursor-on");
+
+  let mx = window.innerWidth / 2;
+  let my = window.innerHeight / 2;
+  let rx = mx;
+  let ry = my;
+  const trailDots = Array.from(trailEl.querySelectorAll("span"));
+  const trailPos = trailDots.map(() => ({ x: mx, y: my }));
+  let magneticTarget = null;
+  let firstMove = false;
+
+  const INTERACTIVE = "a, button, .feature-nav-btn, .quick-sample, .sample-btn, .button, .ai-explain-btn, .skill-card, .skill-tile, .mission-card, summary, [role='button'], .lc-tone-chip, .lc-tab-btn, .lc-action, .chip";
+  const TEXT_INPUT = "input[type='text'], input[type='url'], input[type='email'], input[type='password'], input[type='search'], textarea";
+
+  const onMove = (event) => {
+    mx = event.clientX;
+    my = event.clientY;
+    if (!firstMove) {
+      firstMove = true;
+      ring.classList.add("is-visible");
+      dot.classList.add("is-visible");
+      trailEl.classList.add("is-visible");
+    }
+  };
+
+  const onOver = (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (!target) return;
+    ring.classList.remove("is-hover", "is-text");
+    magneticTarget = null;
+    if (target.closest(TEXT_INPUT)) {
+      ring.classList.add("is-text");
+    } else {
+      const interactive = target.closest(INTERACTIVE);
+      if (interactive) {
+        ring.classList.add("is-hover");
+        magneticTarget = interactive;
+      }
+    }
+  };
+  const onOut = () => { magneticTarget = null; };
+
+  window.addEventListener("pointermove", onMove, { passive: true });
+  document.addEventListener("pointerover", onOver);
+  document.addEventListener("pointerout", onOut);
+
+  const tick = () => {
+    let targetX = mx;
+    let targetY = my;
+    if (magneticTarget && magneticTarget.isConnected) {
+      const rect = magneticTarget.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const inside = mx >= rect.left && mx <= rect.right && my >= rect.top && my <= rect.bottom;
+      if (inside) {
+        targetX = cx * 0.4 + mx * 0.6;
+        targetY = cy * 0.4 + my * 0.6;
+      }
+    }
+    rx += (targetX - rx) * 0.22;
+    ry += (targetY - ry) * 0.22;
+    ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+    dot.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
+
+    let prevX = mx;
+    let prevY = my;
+    for (let i = 0; i < trailDots.length; i++) {
+      const p = trailPos[i];
+      p.x += (prevX - p.x) * (0.32 - i * 0.04);
+      p.y += (prevY - p.y) * (0.32 - i * 0.04);
+      trailDots[i].style.transform = `translate3d(${p.x}px, ${p.y}px, 0)`;
+      prevX = p.x;
+      prevY = p.y;
+    }
+    rafId = requestAnimationFrame(tick);
+  };
+  let rafId = requestAnimationFrame(tick);
+
+  motionController.register("cursor-fx", {
+    start: () => { if (!rafId) rafId = requestAnimationFrame(tick); },
+    stop: () => { if (rafId) cancelAnimationFrame(rafId); rafId = 0; },
+  });
+};
+
+/* ── Inspection Radar data stream overlay ── */
+const initRadarDataStream = () => {
+  const section = document.getElementById("inspection-radar");
+  if (!section) return;
+  const svg = section.querySelector(".radar-svg");
+  const sweep = section.querySelector(".radar-sweep");
+  if (!svg || !sweep) return;
+  const host = svg.parentElement;
+  if (!host) return;
+
+  if (motionController.reduced) return;
+
+  const canvas = document.createElement("canvas");
+  canvas.className = "radar-stream-canvas";
+  canvas.setAttribute("aria-hidden", "true");
+  host.style.position = host.style.position || "relative";
+  host.appendChild(canvas);
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let widthCss = 0;
+  let heightCss = 0;
+  let particles = [];
+  let pings = [];
+  let rafId = 0;
+  let running = false;
+  let lastSpawn = 0;
+
+  const resize = () => {
+    const rect = host.getBoundingClientRect();
+    widthCss = Math.max(200, Math.floor(rect.width));
+    heightCss = Math.max(160, Math.floor(rect.height));
+    canvas.width = widthCss * dpr;
+    canvas.height = heightCss * dpr;
+    canvas.style.width = `${widthCss}px`;
+    canvas.style.height = `${heightCss}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+
+  const spawnParticle = () => {
+    const cx = widthCss / 2;
+    const cy = heightCss / 2;
+    const angle = Math.random() * Math.PI * 2;
+    const startRadius = Math.min(widthCss, heightCss) * 0.48;
+    return {
+      angle,
+      r: startRadius,
+      speed: 60 + Math.random() * 100,
+      cx, cy,
+      life: 1,
+    };
+  };
+
+  const tick = (now) => {
+    if (!lastSpawn) lastSpawn = now;
+    const dt = Math.min(48, now - (tick.last || now));
+    tick.last = now;
+    ctx.clearRect(0, 0, widthCss, heightCss);
+
+    if (now - lastSpawn > 110 && particles.length < 60) {
+      particles.push(spawnParticle());
+      lastSpawn = now;
+    }
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.r -= (p.speed * dt) / 1000;
+      const x = p.cx + Math.cos(p.angle) * p.r;
+      const y = p.cy + Math.sin(p.angle) * p.r;
+      const t = p.r / (Math.min(widthCss, heightCss) * 0.48);
+      const alpha = Math.max(0, Math.min(1, t * 1.4));
+      ctx.fillStyle = `rgba(76, 213, 255, ${alpha * 0.85})`;
+      ctx.fillRect(x - 1, y - 1, 2, 2);
+      if (p.r < 18) particles.splice(i, 1);
+    }
+
+    for (let i = pings.length - 1; i >= 0; i--) {
+      const ping = pings[i];
+      ping.age += dt;
+      const lifeFrac = ping.age / ping.duration;
+      if (lifeFrac >= 1) { pings.splice(i, 1); continue; }
+      const radius = 6 + lifeFrac * 28;
+      ctx.beginPath();
+      ctx.arc(ping.x, ping.y, radius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(255, 181, 71, ${(1 - lifeFrac) * 0.85})`;
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+    }
+
+    rafId = requestAnimationFrame(tick);
+  };
+
+  const start = () => {
+    if (running) return;
+    running = true;
+    resize();
+    lastSpawn = 0;
+    tick.last = 0;
+    rafId = requestAnimationFrame(tick);
+  };
+  const stop = () => {
+    running = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = 0;
+    particles = [];
+    pings = [];
+  };
+
+  window.addEventListener("resize", () => { if (running) resize(); });
+
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && motionController.shouldAnimate()) start();
+        else stop();
+      });
+    }, { threshold: 0.15 });
+    io.observe(section);
+  } else {
+    start();
+  }
+
+  motionController.register("radar-stream", { start, stop });
+};
+
+/* ── Launch Console ignition sparks (one-shot, called from runLaunchSequence) ── */
+const emitLaunchSparks = (anchorEl) => {
+  if (motionController.reduced) return;
+  if (!anchorEl) return;
+  const host = anchorEl.closest(".launch-console") || document.body;
+  const hostRect = host.getBoundingClientRect();
+  const anchorRect = anchorEl.getBoundingClientRect();
+  const originX = anchorRect.left + anchorRect.width / 2 - hostRect.left;
+  const originY = anchorRect.top + anchorRect.height / 2 - hostRect.top;
+
+  const canvas = document.createElement("canvas");
+  canvas.className = "lc-sparks-canvas";
+  canvas.setAttribute("aria-hidden", "true");
+  host.style.position = host.style.position || "relative";
+  host.appendChild(canvas);
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) { canvas.remove(); return; }
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const widthCss = Math.floor(hostRect.width);
+  const heightCss = Math.floor(hostRect.height);
+  canvas.width = widthCss * dpr;
+  canvas.height = heightCss * dpr;
+  canvas.style.width = `${widthCss}px`;
+  canvas.style.height = `${heightCss}px`;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const sparks = [];
+  const count = 72;
+  for (let i = 0; i < count; i++) {
+    const angle = -Math.PI / 2 + (Math.random() - 0.5) * (Math.PI * 0.55);
+    const speed = 3.2 + Math.random() * 4.6;
+    sparks.push({
+      x: originX,
+      y: originY,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: 1,
+      decay: 0.012 + Math.random() * 0.012,
+      size: 1.2 + Math.random() * 1.6,
+    });
+  }
+
+  const start = performance.now();
+  const duration = 1400;
+  const tick = (now) => {
+    const elapsed = now - start;
+    ctx.clearRect(0, 0, widthCss, heightCss);
+    let alive = 0;
+    for (let i = 0; i < sparks.length; i++) {
+      const s = sparks[i];
+      if (s.life <= 0) continue;
+      s.vy += 0.16;
+      s.x += s.vx;
+      s.y += s.vy;
+      s.life -= s.decay;
+      if (s.life <= 0) continue;
+      alive++;
+      const hue = 36 + (1 - s.life) * 18; // amber → red
+      ctx.fillStyle = `hsla(${hue}, 95%, ${50 + s.life * 18}%, ${s.life})`;
+      ctx.fillRect(s.x - s.size / 2, s.y - s.size / 2, s.size, s.size);
+    }
+    if (alive > 0 && elapsed < duration) {
+      requestAnimationFrame(tick);
+    } else {
+      canvas.remove();
+    }
+  };
+  requestAnimationFrame(tick);
+};
+
+/* ── Brand-check printer effect: wraps reportBody with printer head while streaming ── */
+const initReportPrinter = () => {
+  const report = document.getElementById("brandReport");
+  const reportBody = document.getElementById("brandReportBody");
+  if (!report || !reportBody) return;
+
+  // Create printer head element
+  const head = document.createElement("div");
+  head.className = "printer-head";
+  head.innerHTML = `
+    <span class="printer-led" aria-hidden="true"></span>
+    <span class="printer-label">PRINTING REPORT</span>
+    <span class="printer-bytes" id="printerBytes">0 chars</span>
+  `;
+  report.insertBefore(head, reportBody);
+
+  const bytesEl = head.querySelector("#printerBytes");
+
+  // Wrap simpleMarkdown / innerHTML assignments via MutationObserver so we
+  // toggle .is-printing class while the assistant is streaming.
+  const observer = new MutationObserver(() => {
+    const loadingMarker = reportBody.querySelector(".brand-report-loading");
+    const isStreaming = !!loadingMarker;
+    report.classList.toggle("is-printing", isStreaming);
+    if (bytesEl) bytesEl.textContent = `${reportBody.textContent.length} chars`;
+  });
+  observer.observe(reportBody, { childList: true, subtree: true, characterData: true });
+
+  // Hide printer head when report becomes hidden again
+  const hiddenObserver = new MutationObserver(() => {
+    if (report.hasAttribute("hidden")) {
+      report.classList.remove("is-printing");
+    }
+  });
+  hiddenObserver.observe(report, { attributes: true, attributeFilter: ["hidden"] });
+};
+
+/* ── Easter eggs: long-press logo → ASCII ship; Konami → Captain's Log ── */
+const initEasterEggs = () => {
+  const logo = document.querySelector(".brand");
+  let pressTimer = 0;
+  let shipCoolUntil = 0;
+
+  const launchShip = () => {
+    if (performance.now() < shipCoolUntil) return;
+    shipCoolUntil = performance.now() + 10000;
+    const ship = document.createElement("div");
+    ship.className = "sw-ascii-ship";
+    ship.textContent = "~~~⛵~~~  Shipwright ahoy!  ~~~";
+    document.body.appendChild(ship);
+    window.setTimeout(() => ship.remove(), motionController.reduced ? 2600 : 6200);
+  };
+
+  if (logo) {
+    logo.addEventListener("pointerdown", () => {
+      pressTimer = window.setTimeout(launchShip, 1500);
+    });
+    const cancel = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = 0; } };
+    logo.addEventListener("pointerup", cancel);
+    logo.addEventListener("pointerleave", cancel);
+    logo.addEventListener("pointercancel", cancel);
+  }
+
+  /* Konami code: ↑ ↑ ↓ ↓ ← → ← → b a */
+  const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+  let buffer = [];
+  let bufferUntil = 0;
+  let logActiveUntil = 0;
+
+  document.addEventListener("keydown", (event) => {
+    const now = performance.now();
+    if (now > bufferUntil) buffer = [];
+    bufferUntil = now + 5000;
+    const k = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+    buffer.push(k);
+    if (buffer.length > KONAMI.length) buffer = buffer.slice(-KONAMI.length);
+    if (buffer.length === KONAMI.length && buffer.every((v, i) => v === KONAMI[i])) {
+      buffer = [];
+      if (now < logActiveUntil) return;
+      logActiveUntil = now + 8000;
+      document.body.classList.add("captains-log");
+      window.setTimeout(() => document.body.classList.remove("captains-log"), 8000);
+    }
+  });
+};
+
 /* ── Init everything ── */
 
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -3921,9 +4538,16 @@ initSectionNumbers();
 if (!prefersReduced) {
   initHeroSplitH1();
   initCycleWords();
-  initCursorFollower();
+  // v5: initCursorFX replaces initCursorFollower (richer ring+dot+trail+magnetic)
+  initCursorFX();
   initMagneticEverywhere();
 }
+
+/* ── v5 — Dynamic animation modules ── */
+initHeroParticles();
+initRadarDataStream();
+initReportPrinter();
+initEasterEggs();
 
 if (!prefersReduced) {
   initHeroReveal();

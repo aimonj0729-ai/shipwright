@@ -2,6 +2,7 @@ import type { Finding, BrowserCheckResult } from "./types"
 
 const MAX_REDIRECTS = 5
 const TIMEOUT_MS = 15000
+const MAX_HTML_BYTES = 600_000
 
 function isPrivateHostname(hostname: string): boolean {
   const lower = hostname.toLowerCase().trim()
@@ -39,9 +40,19 @@ interface FetchOutcome {
   responseTimeMs?: number
   finalUrl?: string
   headers?: Record<string, string>
+  bodyText?: string
+  bodyBytes?: number
   error?: string
   isTimeout?: boolean
   blockedHost?: string
+}
+
+interface PageEvidence {
+  title?: string
+  hasMetaDescription: boolean
+  hasViewportMeta: boolean
+  htmlBytes?: number
+  findings: Finding[]
 }
 
 async function fetchWithSafeRedirects(initialUrl: URL): Promise<FetchOutcome> {
@@ -88,12 +99,16 @@ async function fetchWithSafeRedirects(initialUrl: URL): Promise<FetchOutcome> {
         headerEntries[key.toLowerCase()] = value
       })
 
+      const body = await readHtmlSnippet(res, headerEntries)
+
       return {
         ok: true,
         status: res.status,
         responseTimeMs: Date.now() - start,
         finalUrl: currentUrl.toString(),
         headers: headerEntries,
+        bodyText: body.text,
+        bodyBytes: body.bytes,
       }
     } catch (err: unknown) {
       clearTimeout(timer)
@@ -107,6 +122,140 @@ async function fetchWithSafeRedirects(initialUrl: URL): Promise<FetchOutcome> {
   }
 
   return { ok: false, error: "Too many redirects" }
+}
+
+async function readHtmlSnippet(
+  res: Response,
+  headers: Record<string, string>
+): Promise<{ text?: string; bytes?: number }> {
+  const contentType = headers["content-type"] ?? ""
+  if (!contentType.toLowerCase().includes("text/html")) {
+    return {}
+  }
+
+  const declaredLength = Number(headers["content-length"] ?? "0")
+  if (declaredLength > MAX_HTML_BYTES) {
+    return { bytes: declaredLength }
+  }
+
+  const reader = res.body?.getReader()
+  if (!reader) return {}
+
+  const chunks: Uint8Array[] = []
+  let bytes = 0
+
+  while (bytes < MAX_HTML_BYTES) {
+    const { done, value } = await reader.read()
+    if (done) break
+    if (!value) continue
+    chunks.push(value)
+    bytes += value.byteLength
+  }
+
+  const merged = new Uint8Array(bytes)
+  let offset = 0
+  for (const chunk of chunks) {
+    merged.set(chunk, offset)
+    offset += chunk.byteLength
+  }
+
+  return {
+    bytes,
+    text: new TextDecoder("utf-8", { fatal: false }).decode(merged),
+  }
+}
+
+function analyzePageEvidence(html: string | undefined, htmlBytes: number | undefined): PageEvidence {
+  const findings: Finding[] = []
+  const evidence: PageEvidence = {
+    hasMetaDescription: false,
+    hasViewportMeta: false,
+    htmlBytes,
+    findings,
+  }
+
+  if (!html) {
+    if (htmlBytes && htmlBytes > MAX_HTML_BYTES) {
+      findings.push({
+        id: "url-html-too-heavy",
+        title: "HTML payload is heavy",
+        severity: "P2",
+        category: "Performance",
+        description: "The initial HTML response is large enough to slow mobile first render.",
+        evidence: `HTML content-length: ${htmlBytes} bytes`,
+        impact: "Mobile users wait longer before the browser can parse and render the page.",
+        fix: "Reduce server-rendered payload, defer non-critical markup, and move large inline data below the fold.",
+      })
+    }
+    return evidence
+  }
+
+  const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)
+  const title = normalizeHtmlText(titleMatch?.[1] ?? "")
+  evidence.title = title || undefined
+  evidence.hasMetaDescription = /<meta\s+[^>]*name=["']description["'][^>]*content=["'][^"']{20,}["'][^>]*>/i.test(html)
+  evidence.hasViewportMeta = /<meta\s+[^>]*name=["']viewport["'][^>]*>/i.test(html)
+
+  if (!title) {
+    findings.push({
+      id: "url-no-title",
+      title: "Page has no document title",
+      severity: "P1",
+      category: "Browser",
+      description: "The fetched HTML does not include a usable <title>.",
+      evidence: "No non-empty <title> tag detected in initial HTML.",
+      impact: "Search results, tabs, bookmarks, and social previews look unfinished.",
+      fix: "Add a concise page title that names the product and promise.",
+    })
+  }
+
+  if (!evidence.hasMetaDescription) {
+    findings.push({
+      id: "url-no-meta-description",
+      title: "Page has no useful meta description",
+      severity: "P2",
+      category: "Browser",
+      description: "The fetched HTML does not include a description meta tag with enough content.",
+      evidence: "No meta name=\"description\" with at least 20 characters detected.",
+      impact: "Search and social previews may be vague or auto-generated.",
+      fix: "Add a concrete meta description explaining what the page does and who it is for.",
+    })
+  }
+
+  if (!evidence.hasViewportMeta) {
+    findings.push({
+      id: "url-no-viewport",
+      title: "Page is missing mobile viewport metadata",
+      severity: "P1",
+      category: "Mobile",
+      description: "The fetched HTML has no viewport meta tag.",
+      evidence: "No meta name=\"viewport\" tag detected.",
+      impact: "Mobile browsers may render the page at desktop width, making it feel slow and broken.",
+      fix: "Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> to the document head.",
+    })
+  }
+
+  if (htmlBytes && htmlBytes > 350_000) {
+    findings.push({
+      id: "url-large-html",
+      title: "Initial HTML is large for mobile",
+      severity: "P2",
+      category: "Performance",
+      description: "The first HTML response is large enough to delay parsing on mobile devices.",
+      evidence: `HTML bytes read: ${htmlBytes}`,
+      impact: "Slow networks and lower-power phones will take longer to reach interactive UI.",
+      fix: "Split below-the-fold sections, remove inline payloads, and lazy-load non-critical widgets.",
+    })
+  }
+
+  return evidence
+}
+
+function normalizeHtmlText(value: string): string {
+  return value
+    .replace(/<[^>]*>/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
 }
 
 export async function checkUrl(rawUrl: string): Promise<BrowserCheckResult> {
@@ -217,6 +366,8 @@ export async function checkUrl(rawUrl: string): Promise<BrowserCheckResult> {
   const responseTimeMs = outcome.responseTimeMs!
   const headers = outcome.headers ?? {}
   const redirectUrl = outcome.finalUrl !== url.toString() ? outcome.finalUrl : undefined
+  const pageEvidence = analyzePageEvidence(outcome.bodyText, outcome.bodyBytes)
+  findings.push(...pageEvidence.findings)
 
   if (statusCode >= 400) {
     findings.push({
@@ -291,6 +442,10 @@ export async function checkUrl(rawUrl: string): Promise<BrowserCheckResult> {
     responseTimeMs,
     hasHttps,
     headers,
+    pageTitle: pageEvidence.title,
+    hasMetaDescription: pageEvidence.hasMetaDescription,
+    hasViewportMeta: pageEvidence.hasViewportMeta,
+    htmlBytes: pageEvidence.htmlBytes,
     findings,
   }
 }

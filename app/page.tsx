@@ -195,6 +195,8 @@ function ReportView({ report }: { report: DoctorReport }) {
         <SummaryCard label="Suggestions" count={report.summary.suggestions} color="#0d9488" />
       </div>
 
+      <ActionPlanView actionPlan={report.actionPlan} />
+
       {report.findings.length > 0 && (
         <div style={styles.findingsSection}>
           <h3 style={styles.findingsTitle}>Findings</h3>
@@ -208,6 +210,58 @@ function ReportView({ report }: { report: DoctorReport }) {
         <div style={{ ...styles.errorBox, borderColor: "#059669", background: "#f0fdf4", color: "#065f46" }}>
           No issues found — your project looks launch-ready!
         </div>
+      )}
+    </div>
+  )
+}
+
+function ActionPlanView({ actionPlan }: { actionPlan: DoctorReport["actionPlan"] }) {
+  const totalActions =
+    actionPlan.immediate.length + actionPlan.quickWins.length + actionPlan.followUps.length
+
+  return (
+    <section style={styles.actionPlan}>
+      <div style={styles.actionPlanHeader}>
+        <div>
+          <h3 style={styles.actionPlanTitle}>Agent Fix Plan</h3>
+          <p style={styles.actionPlanDecision}>{actionPlan.shipDecision}</p>
+        </div>
+        <span style={styles.actionPlanCount}>{totalActions} actions</span>
+      </div>
+
+      <div style={styles.actionColumns}>
+        <ActionList title="Must fix" items={actionPlan.immediate} />
+        <ActionList title="Quick wins" items={actionPlan.quickWins} />
+        <ActionList title="Follow-ups" items={actionPlan.followUps} />
+      </div>
+
+      <details style={styles.promptDetails}>
+        <summary style={styles.promptSummary}>Copy-paste prompt for Claude/Codex</summary>
+        <pre style={styles.promptPre}>{actionPlan.agentPrompt}</pre>
+      </details>
+    </section>
+  )
+}
+
+function ActionList({
+  title,
+  items,
+}: {
+  title: string
+  items: DoctorReport["actionPlan"]["immediate"]
+}) {
+  return (
+    <div style={styles.actionList}>
+      <strong style={styles.actionListTitle}>{title}</strong>
+      {items.length === 0 ? (
+        <p style={styles.actionEmpty}>None</p>
+      ) : (
+        items.map((item) => (
+          <div key={item.id} style={styles.actionItem}>
+            <span style={styles.actionSeverity}>{item.severity}</span>
+            <span>{item.title}</span>
+          </div>
+        ))
       )}
     </div>
   )
@@ -424,6 +478,97 @@ const styles: Record<string, React.CSSProperties> = {
   },
   summaryCount: { fontSize: "24px", fontWeight: 700 },
   summaryLabel: { fontSize: "12px", color: "#78716c", marginTop: "4px" },
+  actionPlan: {
+    padding: "18px",
+    marginBottom: "28px",
+    border: "1px solid #ccfbf1",
+    borderRadius: "12px",
+    background: "linear-gradient(135deg, #f0fdfa, #fff)",
+  },
+  actionPlanHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "16px",
+    marginBottom: "16px",
+  },
+  actionPlanTitle: {
+    margin: "0 0 6px",
+    fontSize: "18px",
+    fontWeight: 700,
+  },
+  actionPlanDecision: {
+    margin: 0,
+    color: "#0f766e",
+    fontSize: "14px",
+    lineHeight: 1.5,
+  },
+  actionPlanCount: {
+    alignSelf: "flex-start",
+    padding: "4px 10px",
+    borderRadius: "999px",
+    background: "#ccfbf1",
+    color: "#115e59",
+    fontSize: "12px",
+    fontWeight: 700,
+    whiteSpace: "nowrap" as const,
+  },
+  actionColumns: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+    gap: "10px",
+  },
+  actionList: {
+    padding: "12px",
+    border: "1px solid #d6d3d1",
+    borderRadius: "10px",
+    background: "rgba(255,255,255,0.7)",
+  },
+  actionListTitle: {
+    display: "block",
+    marginBottom: "8px",
+    fontSize: "13px",
+    color: "#292524",
+  },
+  actionEmpty: {
+    margin: 0,
+    color: "#78716c",
+    fontSize: "13px",
+  },
+  actionItem: {
+    display: "flex",
+    gap: "8px",
+    alignItems: "flex-start",
+    marginTop: "8px",
+    color: "#44403c",
+    fontSize: "13px",
+    lineHeight: 1.45,
+  },
+  actionSeverity: {
+    flexShrink: 0,
+    color: "#0f766e",
+    fontFamily: "monospace",
+    fontWeight: 700,
+  },
+  promptDetails: {
+    marginTop: "14px",
+  },
+  promptSummary: {
+    cursor: "pointer",
+    color: "#0f766e",
+    fontWeight: 700,
+    fontSize: "13px",
+  },
+  promptPre: {
+    margin: "10px 0 0",
+    padding: "12px",
+    overflowX: "auto" as const,
+    whiteSpace: "pre-wrap" as const,
+    borderRadius: "8px",
+    background: "#134e4a",
+    color: "#f0fdfa",
+    fontSize: "12px",
+    lineHeight: 1.5,
+  },
   findingsSection: { marginTop: "8px" },
   findingsTitle: {
     fontSize: "18px",

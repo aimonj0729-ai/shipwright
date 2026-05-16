@@ -26,12 +26,16 @@ export interface Finding {
 export interface DoctorReport {
   score: number
   grade: Grade
+  verdict: string
   inputType: DoctorInputType
   inputValue: string
   timestamp: string
   findings: Finding[]
   summary: DoctorSummary
   checks: CheckResults
+  actionPlan: DoctorActionPlan
+  reportMarkdown: string
+  nextPatch: string
 }
 
 export interface DoctorSummary {
@@ -40,6 +44,23 @@ export interface DoctorSummary {
   improvements: number
   suggestions: number
   quickWins: Finding[]
+}
+
+export interface DoctorActionItem {
+  id: string
+  severity: Severity
+  category: string
+  title: string
+  fix: string
+  prompt: string
+}
+
+export interface DoctorActionPlan {
+  shipDecision: string
+  immediate: DoctorActionItem[]
+  quickWins: DoctorActionItem[]
+  followUps: DoctorActionItem[]
+  agentPrompt: string
 }
 
 export interface CheckResults {
@@ -74,6 +95,10 @@ export interface BrowserCheckResult {
   responseTimeMs?: number
   hasHttps: boolean
   headers?: Record<string, string>
+  pageTitle?: string
+  hasMetaDescription?: boolean
+  hasViewportMeta?: boolean
+  htmlBytes?: number
   findings: Finding[]
 }
 
