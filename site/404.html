@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>404 · This dock is empty — Shipwright</title>
+    <meta name="theme-color" content="#0b1119" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f2eadb" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@500;700&family=Caveat:wght@500&family=Epilogue:wght@500;700&display=swap"
+    />
+    <style>
+      :root {
+        --paper: #f2eadb;
+        --ink: #17201d;
+        --muted: #536059;
+        --line: rgba(31, 42, 39, 0.18);
+        --amber: #e0a331;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #101a17;
+          --ink: #fff1dc;
+          --muted: #aab3a7;
+          --line: rgba(255, 241, 220, 0.18);
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        min-height: 100vh;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Epilogue", "Helvetica Neue", sans-serif;
+        display: grid;
+        place-items: center;
+        padding: 32px;
+        line-height: 1.55;
+      }
+      .panel {
+        max-width: 520px;
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: clamp(28px, 5vw, 44px);
+        background: color-mix(in oklab, var(--paper) 92%, transparent);
+      }
+      .meta {
+        font: 600 0.7rem/1 "Azeret Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--amber);
+        margin: 0 0 12px;
+      }
+      h1 {
+        font-family: "Caveat", "Bradley Hand", cursive;
+        font-weight: 500;
+        font-size: clamp(2.4rem, 6vw, 3.2rem);
+        margin: 0 0 14px;
+        letter-spacing: 0.01em;
+      }
+      p {
+        margin: 0 0 22px;
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+      a.btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: 1px solid var(--ink);
+        background: var(--ink);
+        color: var(--paper);
+        text-decoration: none;
+        font: 600 0.92rem/1 "Inter Tight", "Epilogue", sans-serif;
+        transition: transform 200ms ease, opacity 200ms ease;
+      }
+      a.btn:hover { transform: translateY(-1px); opacity: 0.92; }
+      a.btn.secondary {
+        background: transparent;
+        color: var(--ink);
+      }
+      .ascii {
+        font: 600 0.85rem/1.2 "Azeret Mono", monospace;
+        color: var(--muted);
+        margin: 18px 0 0;
+        white-space: pre;
+        opacity: 0.6;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="panel" role="main">
+      <p class="meta">404 · No port at this heading</p>
+      <h1>This dock is empty.</h1>
+      <p>
+        The page you were looking for either never shipped or got pulled back to harbor.
+        Head back to the launch deck and try a different route.
+      </p>
+      <pre class="ascii">~~~⛵ Shipwright ahoy! ~~~</pre>
+      <div class="actions">
+        <a class="btn" href="/">Back to harbor</a>
+        <a class="btn secondary" href="https://github.com/aimonj0729-ai/shipwright">View on GitHub</a>
+      </div>
+    </main>
+  </body>
+</html>
