@@ -6665,6 +6665,7 @@ h2 {
 }
 
 /* Honesty section: "This demo does" / "does not" */
+.honesty h3,
 .honesty h4 {
   font-family: var(--font-script);
   font-style: normal;
@@ -6734,6 +6735,7 @@ h2 {
 @media (max-width: 540px) {
   .eyebrow { font-size: 1.2rem; }
   .report-section h4 { font-size: 1.3rem; }
+  .honesty h3,
   .honesty h4 { font-size: 1.4rem; }
 }
 
@@ -7603,6 +7605,7 @@ h2,
 
 .eyebrow,
 .report-section h4,
+.honesty h3,
 .honesty h4,
 .sample-label,
 .quick-samples > span,
@@ -7666,6 +7669,7 @@ h2,
 
   .eyebrow,
   .report-section h4,
+  .honesty h3,
   .honesty h4,
   .launch-console .lc-field-label,
   .launch-console .lc-check-label {
