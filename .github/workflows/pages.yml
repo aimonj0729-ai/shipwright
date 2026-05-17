@@ -40,7 +40,12 @@ jobs:
           sleep 2
           curl --fail --silent http://127.0.0.1:4173/ | grep "Analyze launch risk"
           curl --fail --head --silent http://127.0.0.1:4173/styles.css >/dev/null
+          curl --fail --head --silent http://127.0.0.1:4173/styles-v6.css >/dev/null
           curl --fail --head --silent http://127.0.0.1:4173/app.js >/dev/null
+          curl --fail --head --silent http://127.0.0.1:4173/robots.txt >/dev/null
+          curl --fail --head --silent http://127.0.0.1:4173/sitemap.xml >/dev/null
+          curl --fail --head --silent http://127.0.0.1:4173/manifest.webmanifest >/dev/null
+          curl --fail --silent http://127.0.0.1:4173/404.html | grep -q "This dock is empty"
 
   deploy:
     needs: smoke
