@@ -1,11 +1,13 @@
 :root {
   /* v4.0 font system — 5 roles, each with a distinct visual character */
-  --font-display: "Bodoni Moda", Didot, "Bodoni 72", Georgia, serif;     /* dramatic h1 (hero only) */
-  --font-heading: "Fraunces", "Bodoni Moda", Georgia, serif;             /* section h2/h3 — contemporary serif with character */
+  --font-display: "Rubik Dirt", "Bodoni Moda", Didot, "Bodoni 72", Georgia, serif; /* rough art-poster display */
+  --font-heading: "Chicle", "Fraunces", "Bodoni Moda", Georgia, serif;   /* hand-painted section h2/h3 */
   --font-body: "Epilogue", "Helvetica Neue", sans-serif;                 /* body paragraphs */
   --font-ui: "Inter Tight", "Epilogue", "Helvetica Neue", sans-serif;    /* compact UI labels, buttons */
   --font-code: "Azeret Mono", "SFMono-Regular", Consolas, monospace;     /* data, code, severity tags only */
-  --font-script: "Caveat", "Bradley Hand", cursive;                      /* handwritten annotations — sparingly */
+  --font-script: "Rock Salt", "Caveat", "Bradley Hand", cursive;         /* hand-drawn annotations — sparingly */
+  --font-soft-script: "Caveat", "Bradley Hand", cursive;                 /* faster-reading handwritten notes */
+  --font-ornament: "Bungee Shade", "Rubik Dirt", fantasy;                /* tiny decorative punches only */
 
   --ink: #17201d;
   --muted: #536059;
@@ -7571,4 +7573,102 @@ body.captains-log::after {
   }
   body.captains-log { transition: none; }
   body.captains-log::after { animation: none; }
+}
+
+/* ── 9. Art-font pass — expressive type without sacrificing body readability ── */
+h1,
+h2,
+.report-header h3,
+.radar-detail-card h3,
+.footer-brand {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+h2,
+.workflow-step h3,
+.catalog-card h4,
+.brand-check .section-heading h2,
+.mission-card strong,
+.audience-card h3,
+.pain-card h3,
+.launch-card h3 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.eyebrow,
+.report-section h4,
+.honesty h4,
+.sample-label,
+.quick-samples > span,
+.sample-repos > .sample-label,
+.card-topline > span,
+.launch-console .lc-panel-label,
+.launch-console .lc-field-label,
+.launch-console .lc-check-label,
+.launch-console .lc-tab,
+.launch-console .lc-pane-empty,
+.launch-console .lc-launch-sub,
+.launch-console .lc-launch-note {
+  font-family: var(--font-script);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.catalog-tag,
+.severity,
+.feature-nav-btn,
+.mode-badge,
+.report-console-chip,
+.radar-node span,
+.radar-detail-block span,
+.workflow-step-top p,
+.workflow-proof-table em,
+.planner-steps span,
+.lc-tab-num,
+.lc-panel-meta,
+.lc-tone-chip,
+.lc-action {
+  font-family: var(--font-code);
+}
+
+.section-num small,
+.mission-index,
+.brand,
+.marquee-item.script {
+  font-family: var(--font-ornament);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.ai-chat-lede,
+.catalog-card p,
+.workflow-proof-table p,
+.report-section p,
+.honesty-card li,
+.planner-steps p {
+  font-family: var(--font-body);
+}
+
+@media (max-width: 680px) {
+  h1,
+  h2,
+  .report-header h3,
+  .radar-detail-card h3 {
+    line-height: 0.95;
+  }
+
+  .eyebrow,
+  .report-section h4,
+  .honesty h4,
+  .launch-console .lc-field-label,
+  .launch-console .lc-check-label {
+    font-family: var(--font-soft-script);
+  }
 }
