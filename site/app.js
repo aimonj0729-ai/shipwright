@@ -4671,3 +4671,18 @@ if (!prefersReduced) {
 }
 
 initReveal();
+
+/* A11y: tag every decorative inline SVG with aria-hidden so screen readers
+ * skip the "graphic" announcement. We exclude SVGs that already declare
+ * semantic intent via role / aria-label / aria-labelledby / <title>. */
+(function tagDecorativeSvgs() {
+  const svgs = document.querySelectorAll(
+    "svg:not([aria-hidden]):not([aria-label]):not([aria-labelledby]):not([role='img']):not([role='presentation'])"
+  );
+  svgs.forEach((svg) => {
+    if (!svg.querySelector("title")) {
+      svg.setAttribute("aria-hidden", "true");
+      svg.setAttribute("focusable", "false");
+    }
+  });
+})();

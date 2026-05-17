@@ -7672,3 +7672,33 @@ h2,
     font-family: var(--font-soft-script);
   }
 }
+
+/* ─── Print stylesheet ───────────────────────────────────────
+ * Hide every pure-decoration layer when the page is printed.
+ * Keep all content, navigation, and report text intact. */
+@media print {
+  .hero-particles,
+  .sw-cursor-ring,
+  .sw-cursor-dot,
+  .sw-cursor-trail,
+  .ai-chat-fab,
+  .ai-chat-window,
+  .lc-sparks-canvas,
+  .radar-stream-canvas,
+  .scroll-progress,
+  .back-to-top,
+  .grain,
+  .sw-ascii-ship,
+  .floating-finding,
+  .cursor-glow,
+  .cursor-follower {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+  a {
+    text-decoration: underline;
+  }
+}
